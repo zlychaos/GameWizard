@@ -1,3 +1,10 @@
 #work by Yue Huang
 #2.21.2014
 
+GameWizzard is a general framework for developing multi-player card games and building on-line C/S structure gaming platforms.
+
+This language is designed for both professional card game developers and card game fans eager to DIY their own-rule card games. 
+
+Developing card games could be quite a hard work, because cards are different from each other, and there are so many of them! Typically, you need to not only design, but also draw your cards. However, without these physical cards you drew, it may be impossible to start your own card game with your friends.
+
+By using GameWizzard, you can create your game much easier. You will no longer need to worry about the tedious and repeating drawing works. Program will also make the game easier to share and update. Players from all over the world can join your game online.
