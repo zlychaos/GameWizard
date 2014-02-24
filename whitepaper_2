@@ -1,0 +1,66 @@
+How is your language different from current languages aimed at this problem area?
+
+Our language, GameWizard aims to provide an easy way to design a game. As many game-designer languages bring simplicity by narrowing types of games to very small categories( card games, maze games, etc ), we try to give game designers/programmers more flexibility. People can create a tabletop game using GameWizard simply by defining groups, players, components and states, processes of the game. Example1 gives a general view of how a game can be defined.
+
+Also, as GameWizard favors multiplayer games, we provides a easy way to setup a game and let players remotely join.
+
+# --------Example1------------------------------ 
+
+define game myCardGame
+    define group group1, group2
+
+    define player player1
+        belongs_to: group1
+    define player player2 
+        belongs_to: group2
+
+    define component comp1 
+        belongs_to: global
+        name: Heart1
+        value: 1
+
+        ...all the cards...
+
+    define component comp52 
+        belongs_to: global
+        name: SpadeK
+        value: 13
+
+    define state the_state
+        belong_to: global
+        type: enum{ "on-going", "group1-win", "group2-win" }
+
+    define process distribute_cards
+        player1.getComponent() //randomly get one of the components defined
+        plyser2.getComponent() //for simpilicity, components can be reused unlimitedly here
+
+    define process initilize_game
+        the_state := "on-going"
+        for i = 1:10
+            distribute_cards
+
+    define process display_result
+        print the_state
+
+    init: initilize_game
+    end: display_result
+    player_set: player1, player2
+
+    group1.getState(name="score", value=0)
+    group2.getState(name="score", value=0)
+    while True:
+        for player in all_players:
+            card = promtPlayerUseOneCard(player)// promt the player to use one card and lose it
+            if player belong_to group1:
+                group1.score += card.value
+            else:
+                group2.score += card.value
+            if group1.score >= 100:
+                the_state:="group1-win"
+                end // end the game
+            if group2.score >= 100:
+                the_state:="group2-win"
+                end
+        distribute_cards
+
+# End of Example1 ------------------------------
