@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-public class Server implements Runnable {
+public class Server {
 	
 	public ServerSocket waiting_server;
 	public Vector<ServerConnection> connections;
@@ -27,25 +27,21 @@ public class Server implements Runnable {
 			sc.sendBroadcast(msg); 
 		}
 	}
-
-	@Override
-	public void run() {
-		while(true){
-			
-			Socket skt;
-			try {
-				skt = waiting_server.accept();
-				ServerConnection conn = new ServerConnection(skt);
-				connections.add(conn);
-				new Thread(conn).start();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
+	
+	public ServerConnection waitForPlayer(){
+		Socket skt;
+		ServerConnection conn = null;
+		try {
+			skt = waiting_server.accept();
+			conn = new ServerConnection(skt);
+			connections.add(conn);
+			new Thread(conn).start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+		return conn;
 	}
+
 
 }
