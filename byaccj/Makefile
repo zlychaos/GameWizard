@@ -2,7 +2,7 @@
 # byacc/j from http://troi.lincom-asg.com/~rjamison/byacc/
 
 JFLEX  = bin/jflex 
-BYACCJ = ./yacc.linux -J
+BYACCJ = ./yacc.macosx -J
 JAVAC  = javac
 
 # targets:
@@ -20,8 +20,8 @@ clean:
 Parser.class: Yylex.java Parser.java
 	$(JAVAC) Parser.java
 
-Yylex.java: calc.flex
-	$(JFLEX) calc.flex
+Yylex.java: GameWizard.flex
+	$(JFLEX) GameWizard.flex
 
-Parser.java: calc.y
-	$(BYACCJ) calc.y
+Parser.java: GameWizard.y
+	$(BYACCJ) GameWizard.y
