@@ -27,9 +27,11 @@ PLAYER_C = "num_of_players"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
 STRING = \"[^\"]*\" 
-NL  = \n | \r | \r\n
+delim = [ \t\n]
+ws = {delim}+
 
 %%
+
 
 /* operators */
 "+" | 
@@ -44,15 +46,13 @@ NL  = \n | \r | \r\n
 ";" |
 ":"  { return (int) yycharat(0); }
 
-
-/* newline */
-/*{NL}   { return Parser.NL; }*/
+{ws}  {/*do nothing*/}
 
 /* float */
 /*{NUM}  { yyparser.yylval = new ParserVal(Double.parseDouble(yytext()));*/
 /*         return Parser.NUM; }*/
 
-{INTEGER}  { yyparser.yylval = new ParserVal(Integer.parseInteger(yytext()));
+{INTEGER}  { yyparser.yylval = new ParserVal(Integer.parseInt(yytext()));
 		return Parser.INTEGER;}
 {STRING}   { yyparser.yylval = new ParserVal(yytext()); return Parser.STRING;}
 

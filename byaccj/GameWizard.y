@@ -15,20 +15,16 @@
   import java.io.*;
 %}
       
-%token NL          /* newline  */
-%token <dval> NUM  /* a number */
 %token GAME_DF
 %token GAME_NM
 %token PLAYER_C
 %token GAME_PORT
-%token INTEGER
-%token STRING
+%token <ival> INTEGER
+%token <sval> STRING
 
-%type <dval> exp
 
 %left '-' '+'
 %left '*' '/'
-%left NEG          /* negation--unary minus */
 %right '^'         /* exponentiation        */
       
 %%
@@ -36,7 +32,7 @@ input: game_df;    {}
 game_df : GAME_DF '{' game_df_content '}';  {}
 game_df_content : GAME_NM ':' STRING ';'
                   PLAYER_C ':' INTEGER ';'
-                  GAME_PORT ':' INTEGER ';';  {Util.writeGameJava($2,$4,$6);}
+                  GAME_PORT ':' INTEGER ';';  {Util.writeGameJava($3,$7,$11);}
 
 %%
 

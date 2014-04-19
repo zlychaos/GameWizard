@@ -2,7 +2,7 @@
 # byacc/j from http://troi.lincom-asg.com/~rjamison/byacc/
 
 JFLEX  = bin/jflex 
-BYACCJ = ./yacc.macosx -J
+BYACCJ = ./yacc.linux -J
 JAVAC  = javac
 
 # targets:
@@ -15,7 +15,7 @@ run: Parser.class
 build: clean Parser.class
 
 clean:
-	rm -f *~ *.class *.java
+	rm -f *~ *.class 
 
 Parser.class: Yylex.java Parser.java
 	$(JAVAC) Parser.java

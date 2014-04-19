@@ -1,13 +1,14 @@
+import java.io.*;
 
 public class Util {
 	public static void writeGameJava(String name, int player_count, int port){
 		try {
 			 
-			String content = "public class Game{"+
-								+"pulic static String name="+name+";"+
-								+"public static int player_count="+player_count+";"+
-								+"public static int port="+port+";"+
-							"}";
+			String content = "public class Game{"
+							+"	public static String name="+name+";"
+							+"	public static int player_count="+player_count+";"
+							+"	public static int port="+port+";"
+							+"}";
  
 			File file = new File("Game.java");
  
@@ -21,6 +22,7 @@ public class Util {
 			bw.write(content);
 			bw.close();
  
+			System.out.println("Done");
  
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,0 +1,5 @@
+define game{
+	name : "Hello_world";
+	num_of_players : 8;
+	server_listening_port: 4115;
+}
