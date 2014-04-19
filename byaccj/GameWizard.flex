@@ -48,8 +48,8 @@ NL  = \n | \r | \r\n
 /*{NL}   { return Parser.NL; }*/
 
 /* float */
-/*{NUM}  { yyparser.yylval = new ParserVal(Double.parseDouble(yytext()));
-         return Parser.NUM; }*/
+/*{NUM}  { yyparser.yylval = new ParserVal(Double.parseDouble(yytext()));*/
+/*         return Parser.NUM; }*/
 
 {INTEGER}  { yyparser.yylval = new ParserVal(Integer.parseInteger(yytext()));
 		return Parser.INTEGER;}
