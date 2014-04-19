@@ -1,0 +1,540 @@
+%{
+/*------------------------------------------------------------------
+ * Copyright (C)
+ *   1996, 1997, 1998 Dmitri Bronnikov, All rights reserved.
+ *
+ * THIS GRAMMAR IS PROVIDED "AS IS" WITHOUT  ANY  EXPRESS  OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS  FOR  A  PARTICULAR
+ * PURPOSE, OR NON-INFRINGMENT.
+ *
+ * Bronikov@inreach.com
+ *
+ *------------------------------------------------------------------
+ *
+ * VERSION 1.06 DATE 20 AUG 1998
+ *
+ *------------------------------------------------------------------
+ *
+ * UPDATES
+ *
+ * 1.06 Correction of Java 1.1 syntax
+ * 1.05 Yet more Java 1.1
+ *      <qualified name>.<allocation expression>
+ * 1.04 More Java 1.1 features:
+ *      <class name>.this
+ *      <type name>.class
+ * 1.03 Added Java 1.1 features:
+ *      inner classes,
+ *      anonymous classes,
+ *      non-static initializer blocks,
+ *      array initialization by new operator
+ * 1.02 Corrected cast expression syntax
+ * 1.01 All shift/reduce conflicts, except dangling else, resolved
+ *
+ *------------------------------------------------------------------
+ *
+ * PARSING CONFLICTS RESOLVED
+ *
+ * Some Shift/Reduce conflicts have been resolved at the expense of
+ * the grammar defines a superset of the language. The following
+ * actions have to be performed to complete program syntax checking:
+ *
+ * 1) Check that modifiers applied to a class, interface, field,
+ *    or constructor are allowed in respectively a class, inteface,
+ *    field or constructor declaration. For example, a class
+ *    declaration should not allow other modifiers than abstract,
+ *    final and public.
+ *
+ * 2) For an expression statement, check it is either increment, or
+ *    decrement, or assignment expression.
+ *
+ * 3) Check that type expression in a cast operator indicates a type.
+ *    Some of the compilers that I have tested will allow simultaneous
+ *    use of identically named type and variable in the same scope
+ *    depending on context.
+ *
+ * 4) Change lexical definition to change '[' optionally followed by
+ *    any number of white-space characters immediately followed by ']'
+ *    to OP_DIM token. I defined this token as [\[]{white_space}*[\]]
+ *    in the lexer.
+ *
+ *------------------------------------------------------------------
+ *
+ * UNRESOLVED SHIFT/REDUCE CONFLICTS
+ *
+ * Dangling else in if-then-else
+ *
+ *------------------------------------------------------------------
+ */
+%}
+
+%token BOOLEAN BREAK
+%token CONTINUE
+%token ELSE
+%token FOR
+%token IF INT STRING
+%token RETURN
+%token WHILE
+%token OP_INC OP_DEC
+%token OP_SHL OP_SHR OP_SHRR
+%token OP_GE OP_LE OP_EQ OP_NE
+%token OP_LAND OP_LOR
+%token OP_DIM
+%token IDENTIFIER LITERAL TRUE FALSE
+
+%start Start
+
+%%
+
+Start: START
+
+PrimitiveType
+	: BOOLEAN
+	| INT
+	| STRING
+	;
+
+QualifiedName
+	: IDENTIFIER
+	| QualifiedName '.' IDENTIFIER
+	;
+
+Dims
+	: OP_DIM
+	| Dims OP_DIM
+	;
+
+
+
+TypeSpecifier
+	: TypeName
+	| TypeName Dims
+	;
+
+
+TypeName
+	: PrimitiveType
+	| QualifiedName
+	;
+
+ClassNameList
+        : QualifiedName
+        | ClassNameList ',' QualifiedName
+	;
+
+
+AssignmentOperator
+	: '='
+	;
+
+
+SemiColons
+	: ';'
+        | SemiColons ';'
+        ;
+
+
+PackageStatement
+	: PACKAGE QualifiedName SemiColons
+	;
+
+TypeDeclarations
+	: TypeDeclarationOptSemi
+	| TypeDeclarations TypeDeclarationOptSemi
+	;
+
+TypeDeclarationOptSemi
+        : TypeDeclaration
+        | TypeDeclaration SemiColons
+        ;
+
+
+TypeDeclaration
+	: ClassHeader '{' FieldDeclarations '}'
+	| ClassHeader '{' '}'
+	;
+
+
+FieldDeclarations
+	: FieldDeclarationOptSemi
+        | FieldDeclarations FieldDeclarationOptSemi
+	;
+
+FieldDeclarationOptSemi
+        : FieldDeclaration
+        | FieldDeclaration SemiColons
+        ;
+
+FieldDeclaration
+	: FieldVariableDeclaration ';'
+	| MethodDeclaration
+	| ConstructorDeclaration
+        | NonStaticInitializer
+        | TypeDeclaration
+	;
+
+FieldVariableDeclaration
+	: TypeSpecifier VariableDeclarators
+	;
+
+VariableDeclarators
+	: VariableDeclarator
+	| VariableDeclarators ',' VariableDeclarator
+	;
+
+VariableDeclarator
+	: DeclaratorName
+	| DeclaratorName '=' VariableInitializer
+	;
+
+VariableInitializer
+	: Expression
+	| '{' '}'
+        | '{' ArrayInitializers '}'
+        ;
+
+ArrayInitializers
+	: VariableInitializer
+	| ArrayInitializers ',' VariableInitializer
+	| ArrayInitializers ','
+	;
+
+MethodDeclaration
+	:           TypeSpecifier MethodDeclarator        MethodBody
+	;
+
+MethodDeclarator
+	: DeclaratorName '(' ParameterList ')'
+	| DeclaratorName '(' ')'
+	| MethodDeclarator OP_DIM
+	;
+
+ParameterList
+	: Parameter
+	| ParameterList ',' Parameter
+	;
+
+Parameter
+	: TypeSpecifier DeclaratorName
+	;
+
+DeclaratorName
+	: IDENTIFIER
+        | DeclaratorName OP_DIM
+        ;
+
+
+MethodBody
+	: Block
+	| ';'
+	;
+
+ConstructorDeclaration
+	: ConstructorDeclarator        Block
+	;
+
+ConstructorDeclarator
+	: IDENTIFIER '(' ParameterList ')'
+	| IDENTIFIER '(' ')'
+	;
+
+NonStaticInitializer
+        : Block
+        ;
+
+
+Block
+	: '{' LocalVariableDeclarationsAndStatements '}'
+	| '{' '}'
+        ;
+
+LocalVariableDeclarationsAndStatements
+	: LocalVariableDeclarationOrStatement
+	| LocalVariableDeclarationsAndStatements LocalVariableDeclarationOrStatement
+	;
+
+LocalVariableDeclarationOrStatement
+	: LocalVariableDeclarationStatement
+	| Statement
+	;
+
+LocalVariableDeclarationStatement
+	: TypeSpecifier VariableDeclarators ';'
+        | FINAL TypeSpecifier VariableDeclarators ';'
+	;
+
+Statement
+	: EmptyStatement
+	| LabelStatement
+	| ExpressionStatement ';'
+        | SelectionStatement
+        | IterationStatement
+	| Block
+	;
+
+EmptyStatement
+	: ';'
+        ;
+
+LabelStatement
+	: IDENTIFIER ':'
+        | CASE ConstantExpression ':'
+        ;
+
+ExpressionStatement
+	: Expression
+	;
+
+SelectionStatement
+	: IF '(' Expression ')' Statement
+        | IF '(' Expression ')' Statement ELSE Statement
+        | SWITCH '(' Expression ')' Block
+        ;
+
+IterationStatement
+	: WHILE '(' Expression ')' Statement
+	| DO Statement WHILE '(' Expression ')' ';'
+	| FOR '(' ForInit ForExpr ForIncr ')' Statement
+	| FOR '(' ForInit ForExpr         ')' Statement
+	;
+
+ForInit
+	: ExpressionStatements ';'
+	| LocalVariableDeclarationStatement
+	| ';'
+	;
+
+ForExpr
+	: Expression ';'
+	| ';'
+	;
+
+ForIncr
+	: ExpressionStatements
+	;
+
+ExpressionStatements
+	: ExpressionStatement
+	| ExpressionStatements ',' ExpressionStatement
+	;
+
+JumpStatement
+	: BREAK            ';'
+       | CONTINUE            ';'
+	| RETURN            ';'
+	;
+
+
+PrimaryExpression
+	: QualifiedName
+	| NotJustName
+	;
+
+NotJustName
+	: NewAllocationExpression
+	| ComplexPrimary
+	;
+
+ComplexPrimary
+	: '(' Expression ')'
+	| ComplexPrimaryNoParenthesis
+	;
+
+ComplexPrimaryNoParenthesis
+	: LITERAL
+	| BOOLLIT
+	| ArrayAccess
+	| FieldAccess
+	| MethodCall
+	;
+
+ArrayAccess
+	: QualifiedName '[' Expression ']'
+	| ComplexPrimary '[' Expression ']'
+	;
+
+FieldAccess
+	: NotJustName '.' IDENTIFIER
+	| RealPostfixExpression '.' IDENTIFIER
+        | QualifiedName '.' THIS
+        | QualifiedName '.' CLASS
+        | PrimitiveType '.' CLASS
+	;
+
+MethodCall
+	: MethodAccess '(' ArgumentList ')'
+	| MethodAccess '(' ')'
+	;
+
+MethodAccess
+	: ComplexPrimaryNoParenthesis
+	| SpecialName
+	| QualifiedName
+	;
+
+
+ArgumentList
+	: Expression
+	| ArgumentList ',' Expression
+	;
+
+NewAllocationExpression
+        : PlainNewAllocationExpression
+        | QualifiedName '.' PlainNewAllocationExpression
+        ;
+
+PlainNewAllocationExpression
+    	: ArrayAllocationExpression
+    	| ClassAllocationExpression
+    	| ArrayAllocationExpression '{' '}'
+    	| ClassAllocationExpression '{' '}'
+    	| ArrayAllocationExpression '{' ArrayInitializers '}'
+    	| ClassAllocationExpression '{' FieldDeclarations '}'
+    	;
+
+ClassAllocationExpression
+	: NEW TypeName '(' ArgumentList ')'
+	| NEW TypeName '('              ')'
+        ;
+
+ArrayAllocationExpression
+	: NEW TypeName DimExprs Dims
+	| NEW TypeName DimExprs
+        | NEW TypeName Dims
+	;
+
+DimExprs
+	: DimExpr
+	| DimExprs DimExpr
+	;
+
+DimExpr
+	: '[' Expression ']'
+	;
+
+
+PostfixExpression
+	: PrimaryExpression
+	;
+
+UnaryExpression
+	: ArithmeticUnaryOperator CastExpression
+	| LogicalUnaryExpression
+	;
+
+LogicalUnaryExpression
+	: PostfixExpression
+	| LogicalUnaryOperator UnaryExpression
+	;
+
+LogicalUnaryOperator
+	: '~'
+	| '!'
+	;
+
+ArithmeticUnaryOperator
+	: '+'
+	| '-'
+	;
+
+
+
+
+
+
+
+
+CastExpression
+	: UnaryExpression
+	| '(' PrimitiveTypeExpression ')' CastExpression
+	| '(' ClassTypeExpression ')' CastExpression
+	| '(' Expression ')' LogicalUnaryExpression
+	;
+
+PrimitiveTypeExpression
+	: PrimitiveType
+        | PrimitiveType Dims
+        ;
+
+ClassTypeExpression
+	: QualifiedName Dims
+        ;
+
+MultiplicativeExpression
+	: CastExpression
+	| MultiplicativeExpression '*' CastExpression
+	| MultiplicativeExpression '/' CastExpression
+	| MultiplicativeExpression '%' CastExpression
+	;
+
+AdditiveExpression
+	: MultiplicativeExpression
+        | AdditiveExpression '+' MultiplicativeExpression
+	| AdditiveExpression '-' MultiplicativeExpression
+        ;
+
+ShiftExpression
+	: AdditiveExpression
+	;
+
+RelationalExpression
+	: ShiftExpression
+        | RelationalExpression '<' ShiftExpression
+	| RelationalExpression '>' ShiftExpression
+	| RelationalExpression OP_LE ShiftExpression
+	| RelationalExpression OP_GE ShiftExpression
+	;
+
+EqualityExpression
+	: RelationalExpression
+        | EqualityExpression OP_EQ RelationalExpression
+        | EqualityExpression OP_NE RelationalExpression
+        ;
+
+AndExpression
+	: EqualityExpression
+        | AndExpression '&' EqualityExpression
+        ;
+
+ExclusiveOrExpression
+	: AndExpression
+	| ExclusiveOrExpression '^' AndExpression
+	;
+
+InclusiveOrExpression
+	: ExclusiveOrExpression
+	| InclusiveOrExpression '|' ExclusiveOrExpression
+	;
+
+ConditionalAndExpression
+	: InclusiveOrExpression
+	| ConditionalAndExpression OP_LAND InclusiveOrExpression
+	;
+
+ConditionalOrExpression
+	: ConditionalAndExpression
+	| ConditionalOrExpression OP_LOR ConditionalAndExpression
+	;
+
+ConditionalExpression
+	: ConditionalOrExpression
+	;
+
+AssignmentExpression
+	: ConditionalExpression
+	| UnaryExpression AssignmentOperator AssignmentExpression
+	;
+
+
+
+Expression
+	: AssignmentExpression
+        ;
+
+ConstantExpression
+	: ConditionalExpression
+	;
+
+%%
+
