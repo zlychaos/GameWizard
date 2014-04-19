@@ -17,6 +17,12 @@
       
 %token NL          /* newline  */
 %token <dval> NUM  /* a number */
+%token GAME_DF
+%token GAME_NM
+%token PLAYER_C
+%token GAME_PORT
+%token INTEGER
+%token STRING
 
 %type <dval> exp
 
@@ -26,25 +32,11 @@
 %right '^'         /* exponentiation        */
       
 %%
-
-input:   /* empty string */
-       | input line
-       ;
-      
-line:    NL      { if (interactive) System.out.print("Expression: "); }
-       | exp NL  { System.out.println(" = " + $1); 
-                   if (interactive) System.out.print("Expression: "); }
-       ;
-      
-exp:     NUM                { $$ = $1; }
-       | exp '+' exp        { $$ = $1 + $3; }
-       | exp '-' exp        { $$ = $1 - $3; new foo();}
-       | exp '*' exp        { $$ = $1 * $3; }
-       | exp '/' exp        { $$ = $1 / $3; }
-       | '-' exp  %prec NEG { $$ = -$2; }
-       | exp '^' exp        { $$ = Math.pow($1, $3); }
-       | '(' exp ')'        { $$ = $2; }
-       ;
+input: game_df;    {}
+game_df : GAME_DF '{' game_df_content '}';  {}
+game_df_content : GAME_NM ':' STRING ';'
+                  PLAYER_C ':' INTEGER ';'
+                  GAME_PORT ':' INTEGER ';';  {Util.writeGameJava($2,$4,$6);}
 
 %%
 

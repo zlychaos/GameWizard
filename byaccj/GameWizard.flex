@@ -21,12 +21,12 @@
   }
 %}
 
-GAME_DEF = "define game"
+GAME_DF = "define game"
 GAME_NM = "name"
 PLAYER_C = "num_of_players"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
-STRING = ["][^"]*["] 
+STRING = \"[^\"]*\" 
 NL  = \n | \r | \r\n
 
 %%
@@ -41,7 +41,8 @@ NL  = \n | \r | \r\n
 ")" |
 "{" |
 "}" |
-";"  { return (int) yycharat(0); }
+";" |
+":"  { return (int) yycharat(0); }
 
 
 /* newline */
