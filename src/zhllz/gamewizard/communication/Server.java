@@ -28,14 +28,14 @@ public class Server {
 		}
 	}
 	
-	public ServerConnection waitForPlayer(){
+	public ServerConnection waitForPlayer(ICommunicatable game){
 		Socket skt;
 		ServerConnection conn = null;
 		try {
 			skt = waiting_server.accept();
-			conn = new ServerConnection(skt);
+			conn = new ServerConnection(skt, game);
 			connections.add(conn);
-//			new Thread(conn).start();
+			new Thread(conn).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,12 +47,23 @@ public class Server {
 	public static void main(String[] args) {
 		Server s = new Server(4119);
 		
-		ServerConnection sc1 = s.waitForPlayer();
-		ServerConnection sc2 = s.waitForPlayer();
+		ICommunicatable game = new ICommunicatable(){
+
+			@Override
+			public String getResponse(String request) {
+				return request;
+			}
+			
+		};
+		
+		ServerConnection sc1 = s.waitForPlayer(game);
+		ServerConnection sc2 = s.waitForPlayer(game);
+		
 		
 		try {
 			s.broadcast("This is a broadcast!");
-			sc1.waitForInput("This is a promt!");
+			String input = sc1.waitForInput("This is a promt!");
+			System.out.println(input);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

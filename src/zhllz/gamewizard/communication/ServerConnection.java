@@ -5,63 +5,137 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Date;
+import java.util.Random;
 
-public class ServerConnection {
-//public class ServerConnection implements Runnable {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+//public class ServerConnection {
+public class ServerConnection implements Runnable {
 	
 	Socket conn;
 	BufferedReader inFromClient;
 	DataOutputStream outToClient;
+	ICommunicatable game;
 	
-	public ServerConnection(Socket conn) throws IOException {
+	Random rand = new Random();
+	public boolean waiting_for_response;
+	public String request_id;
+	public String response;
+	
+	public boolean should_listen;
+	
+	public ServerConnection(Socket conn, ICommunicatable game) throws IOException {
 		super();
 		this.conn = conn;
+		this.game = game;
 		inFromClient = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		outToClient = new DataOutputStream(conn.getOutputStream());
+		
+		this.response = null;
+		this.waiting_for_response = false;
+		this.should_listen = true;
 	}
 	
-//	//Find response for commands
-//	public String getResult(String command){
-//		String result = null;
-//		if(command==null)
-//			return result;
-//		return result;
-//	}
-	
 	public String waitForInput(String promt) throws IOException{
-		outToClient.writeBytes(promt+"\n");
-		String command = inFromClient.readLine();
-		return command;
+		
+		String response = null;
+		
+		try {
+			JSONObject req = new JSONObject();
+			this.request_id = (new Date()).toString()+rand.nextInt();
+			req.put(StrController.TYPE ,StrController.REQUEST);
+			req.put(StrController.Req_ID, this.request_id);
+			req.put(StrController.REQUEST, promt);
+			this.outToClient.writeBytes(req.toString()+"\n");
+			this.waiting_for_response = true;
+			
+			while(this.should_listen){
+				if(this.response == null)
+					Thread.sleep(100);
+				else{
+					response = this.response;
+					break;
+				}
+			}
+			this.waiting_for_response = false;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			this.should_listen = false;
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			this.should_listen = false;
+			e.printStackTrace();
+		}
+		return response;
 	}
 	
 	public void sendBroadcast(String msg) throws IOException{
-		outToClient.writeBytes(MsgType.BROADCAST+MsgType.separator+msg+"\n");
+		
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put(StrController.TYPE, StrController.BROADCAST);
+			jo.put(StrController.MSG, msg);
+			outToClient.writeBytes(jo.toString()+"\n");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
-//	
-//	@Override
-//	public void run() {
-//		
-//		while(true){
-//			try {
-//				Thread.sleep(100);
-//				String command = inFromClient.readLine();
-//				//System.out.println(command);
-//				String response = getResult(command);
-//				if(response==null){
-//					conn.close();
-//					// TODO The player is offline
-//					break;
-//				}
-//				outToClient.writeBytes(response+"\n");
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		
-//	}
-//
+	
+	@Override
+	public void run() {
+		
+		while(true){
+			try {
+				
+				String jsonMsg = inFromClient.readLine();
+				if(jsonMsg == null){
+					conn.close();
+					break;
+				}
+				
+				JSONObject jo = new JSONObject(jsonMsg);
+				String type = jo.getString(StrController.TYPE);
+				
+				if(type.equals(StrController.REQUEST)){
+					String Req_ID = jo.getString(StrController.Req_ID);
+					String request = jo.getString(StrController.REQUEST);
+					String res = game.getResponse(request);
+					JSONObject resp = new JSONObject();
+					resp.put(StrController.TYPE, StrController.RESPONSE);
+					resp.put(StrController.Resp_ID, Req_ID);
+					resp.put(StrController.RESPONSE, res);
+					outToClient.writeBytes(resp.toString()+"\n");
+				}
+				else if(type.equals(StrController.RESPONSE)){
+					String ID = jo.getString(StrController.Resp_ID);
+					if(waiting_for_response && ID.equals(request_id)){
+						this.response = jo.getString(StrController.RESPONSE);
+					}
+					else{
+						System.out.println("Debug: "+request_id+" | "+ID);
+						System.out.println("An unwanted response received...");
+					}
+				}
+				else{
+					System.out.println("An unknown msg received..");
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 }
