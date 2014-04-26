@@ -22,7 +22,7 @@
 %token PLAYER_C
 %token PLAYER
 %token SKILL
-%token STATEMENT_LIST
+%token <sval> STATEMENT_LIST
 
 %token <sval> ID
 %token METHOD
@@ -51,7 +51,7 @@ cards_df_content : cards_df_content card_df_content  {}
                | card_df_content {}
 		;
 card_df_content: ID '{' METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}' '}' 
-			{}
+			{Uitl.writeCardsJava($1); }
 		;
 
 character_df :  CHARACTER_DF '[' characters_df_content ']' {}

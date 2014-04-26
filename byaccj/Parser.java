@@ -157,83 +157,144 @@ final ParserVal dup_yyval(ParserVal val)
 }
 //#### end semantic value section ####
 public final static short GAME_DF=257;
-public final static short GAME_NM=258;
-public final static short PLAYER_C=259;
-public final static short GAME_PORT=260;
-public final static short INTEGER=261;
-public final static short STRING=262;
+public final static short CARD_DF=258;
+public final static short CHARACTER_DF=259;
+public final static short GAME_NM=260;
+public final static short PLAYER_C=261;
+public final static short PLAYER=262;
+public final static short SKILL=263;
+public final static short STATEMENT_LIST=264;
+public final static short ID=265;
+public final static short METHOD=266;
+public final static short GAME_PORT=267;
+public final static short INTEGER=268;
+public final static short STRING=269;
+public final static short STEATEMENT_LIST=270;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    2,
+    0,    1,    3,    2,    4,    4,    5,    6,    7,    7,
+    8,    9,    9,    9,   10,
 };
 final static short yylen[] = {                            2,
-    1,    4,   12,
+    2,    4,   12,    4,    2,    1,   11,    4,    2,    1,
+    5,    4,    4,    0,   15,
 };
 final static short yydefred[] = {                         0,
-    0,    0,    1,    0,    0,    0,    0,    2,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    3,
+    0,    0,    0,    0,    0,    1,    0,    0,    0,    0,
+    2,    0,    0,    6,    0,    0,    4,    5,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    3,    7,
 };
 final static short yydgoto[] = {                          2,
-    3,    6,
+    3,    6,    8,   13,   14,    0,    0,    0,    0,    0,
 };
-final static short yysindex[] = {                      -257,
- -122,    0,    0, -256,  -55, -121, -255,    0,  -54, -253,
-  -50, -252,  -49, -249,  -46, -248,  -45,    0,
+final static short yysindex[] = {                      -256,
+ -121,    0, -255, -254,  -87,    0,  -53, -118, -257, -260,
+    0, -113,  -93,    0,  -48, -253,    0,    0, -249,  -26,
+  -43, -246, -251, -247,  -40,  -21, -245, -102,  -35, -244,
+ -243, -101,  -32,  -97,    0,    0,
 };
 final static short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,    0,
+    0,    0,    0,    0,   16,    0,    0,    0,    0,    0,
 };
-final static int YYTABLESIZE=14;
+final static int YYTABLESIZE=172;
 static short yytable[];
 static { yytable();}
 static void yytable(){
-yytable = new short[]{                          1,
-    4,    5,    7,    8,   10,   11,    9,   12,   13,   14,
-   15,   16,   17,   18,
+yytable = new short[]{                         17,
+    1,    4,    5,    9,   10,    7,   11,   12,   15,   16,
+   19,   21,   20,   22,   23,   24,   25,   26,   27,   28,
+   30,   29,   31,   34,   33,   32,   35,   36,   18,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,   12,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
-yycheck = new short[] {                        257,
-  123,  258,   58,  125,   59,  259,  262,   58,  261,   59,
-  260,   58,  261,   59,
+yycheck = new short[] {                         93,
+  257,  123,  258,   91,   58,  260,  125,  265,  269,  123,
+   59,  261,  266,   40,   58,  262,  268,  265,   59,   41,
+  123,  267,   58,  125,  268,  270,   59,  125,   13,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,  265,
 };
 }
 final static short YYFINAL=2;
-final static short YYMAXTOKEN=262;
+final static short YYMAXTOKEN=270;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,"'*'","'+'",null,
+null,null,null,null,null,null,null,null,null,null,"'('","')'","'*'","'+'",null,
 "'-'",null,"'/'",null,null,null,null,null,null,null,null,null,null,"':'","';'",
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+"'['",null,"']'","'^'",null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,"'^'",null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-"'{'",null,"'}'",null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,"'{'",null,"'}'",null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,"GAME_DF","GAME_NM","PLAYER_C","GAME_PORT",
-"INTEGER","STRING",
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+null,null,null,null,null,null,null,null,"GAME_DF","CARD_DF","CHARACTER_DF",
+"GAME_NM","PLAYER_C","PLAYER","SKILL","STATEMENT_LIST","ID","METHOD",
+"GAME_PORT","INTEGER","STRING","STEATEMENT_LIST",
 };
 final static String yyrule[] = {
 "$accept : input",
-"input : game_df",
+"input : game_df card_df",
 "game_df : GAME_DF '{' game_df_content '}'",
 "game_df_content : GAME_NM ':' STRING ';' PLAYER_C ':' INTEGER ';' GAME_PORT ':' INTEGER ';'",
+"card_df : CARD_DF '[' cards_df_content ']'",
+"cards_df_content : cards_df_content card_df_content",
+"cards_df_content : card_df_content",
+"card_df_content : ID '{' METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}' '}'",
+"character_df : CHARACTER_DF '[' characters_df_content ']'",
+"characters_df_content : characters_df_content character_df_content",
+"characters_df_content : character_df_content",
+"character_df_content : ID '{' variable_list skill_df '}'",
+"variable_list : ID ':' INTEGER ';'",
+"variable_list : ID ':' STRING ';'",
+"variable_list :",
+"skill_df : SKILL ':' '[' ID '{' METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}' '}' ']'",
 };
 
-//#line 38 "GameWizard.y"
+//#line 79 "GameWizard.y"
 
   private Yylex lexer;
 
@@ -292,7 +353,7 @@ final static String yyrule[] = {
       System.out.println("Have a nice day");
     }
   }
-//#line 224 "Parser.java"
+//#line 285 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -447,18 +508,66 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 31 "GameWizard.y"
+//#line 40 "GameWizard.y"
 {}
 break;
 case 2:
-//#line 32 "GameWizard.y"
+//#line 42 "GameWizard.y"
 {}
 break;
 case 3:
-//#line 35 "GameWizard.y"
+//#line 46 "GameWizard.y"
 {Util.writeGameJava(val_peek(9).sval,val_peek(5).ival,val_peek(1).ival);}
 break;
-//#line 385 "Parser.java"
+case 4:
+//#line 48 "GameWizard.y"
+{}
+break;
+case 5:
+//#line 50 "GameWizard.y"
+{}
+break;
+case 6:
+//#line 51 "GameWizard.y"
+{}
+break;
+case 7:
+//#line 54 "GameWizard.y"
+{Uitl.writeCardsJava(val_peek(10).sval); }
+break;
+case 8:
+//#line 57 "GameWizard.y"
+{}
+break;
+case 9:
+//#line 59 "GameWizard.y"
+{}
+break;
+case 10:
+//#line 60 "GameWizard.y"
+{}
+break;
+case 11:
+//#line 65 "GameWizard.y"
+{}
+break;
+case 12:
+//#line 67 "GameWizard.y"
+{}
+break;
+case 13:
+//#line 68 "GameWizard.y"
+{}
+break;
+case 14:
+//#line 69 "GameWizard.y"
+{}
+break;
+case 15:
+//#line 76 "GameWizard.y"
+{}
+break;
+//#line 494 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
