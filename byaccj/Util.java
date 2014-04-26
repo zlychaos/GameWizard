@@ -36,15 +36,36 @@ public class Util {
             }
             outputFile.createNewFile();          
             BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-            out.write("public class "+card_name+" implements Card\n");
+            out.write("public class "+card_name+" implements Card{\n");
             out.write("public void method(Player dealer){\n");
             out.write(method_content);
-            out.write("\n}\n");
+            out.write("\n}\n}");
             out.flush();
             out.close();
          }catch(IOException ex){
              ex.printStackTrace();
          }
+    }
+    
+    public static writeCharacterJava(String character_name, String variable_list, String method_content){
+        File outputFile = new File(card_name+".java");
+        try{
+           if(outputFile.exists()) {
+               outputFile.delete();
+           }
+           outputFile.createNewFile();          
+           BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+           out.write("public class "+card_name+" implements Character{\n");
+           out.write(variable_list);
+           out.write("\npublic void method(Player dealer){\n");
+           out.write(method_content);
+           out.write("\n}\n}");
+           out.flush();
+           out.close();
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
+   }
 
 
 
