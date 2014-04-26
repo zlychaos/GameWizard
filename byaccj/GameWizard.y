@@ -23,8 +23,8 @@
 %token PLAYER
 %token SKILL
 %token <sval> STATEMENT_LIST
-
 %token <sval> ID
+%token <sval> S
 %token METHOD
 
 %token GAME_PORT
@@ -37,21 +37,21 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: game_df card_df    {}
+input: card_df {}
      ;
 game_df : GAME_DF '{' game_df_content '}'  {}
 	;
 game_df_content : GAME_NM ':' STRING ';'
                   PLAYER_C ':' INTEGER ';'
-                  GAME_PORT ':' INTEGER ';'  {Util.writeGameJava($3,$7,$11);}
+                  GAME_PORT ':' INTEGER ';'  {Util.writeGameJava($3,$7,$11);System.out.println("4");}
 		;
-card_df : CARD_DF '[' cards_df_content ']' {}
+card_df : CARD_DF '[' cards_df_content ']' {System.out.println("2");}
 	;
-cards_df_content : cards_df_content card_df_content  {}
-               | card_df_content {}
+cards_df_content : cards_df_content card_df_content  {System.out.println("1");}
+               | card_df_content {System.out.println("3");}
 		;
-card_df_content: ID '{' METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}' '}' 
-			{Uitl.writeCardsJava($1); }
+card_df_content: ID '{' METHOD '{' STATEMENT_LIST  '}' '}' 
+			{System.out.println("5");Util.writeCardsJava($1,$5); }
 		;
 
 character_df :  CHARACTER_DF '[' characters_df_content ']' {}

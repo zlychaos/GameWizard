@@ -28,7 +28,7 @@ public class Util {
 		}
 	}
 
-    public static writeCardsJava(String card_name, String method_content){
+    public static void writeCardsJava(String card_name, String method_content){
          File outputFile = new File(card_name+".java");
          try{
             if(outputFile.exists()) {
@@ -36,7 +36,7 @@ public class Util {
             }
             outputFile.createNewFile();          
             BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-            out.write("public class "+card_name+" implements Card{\n");
+            out.write("public class "+"gen_"+card_name+" implements Card{\n");
             out.write("public void method(Player dealer){\n");
             out.write(method_content);
             out.write("\n}\n}");
@@ -47,15 +47,15 @@ public class Util {
          }
     }
     
-    public static writeCharacterJava(String character_name, String variable_list, String method_content){
-        File outputFile = new File(card_name+".java");
+    public static void writeCharacterJava(String character_name, String variable_list, String method_content){
+        File outputFile = new File(character_name+".java");
         try{
            if(outputFile.exists()) {
                outputFile.delete();
            }
            outputFile.createNewFile();          
            BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-           out.write("public class "+card_name+" implements Character{\n");
+           out.write("public class "+character_name+" implements Character{\n");
            out.write(variable_list);
            out.write("\npublic void method(Player dealer){\n");
            out.write(method_content);

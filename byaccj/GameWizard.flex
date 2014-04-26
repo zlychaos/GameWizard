@@ -39,8 +39,7 @@ delim = [ \t\n]
 ws = {delim}+
 
 /*used as debug*/
-STATEMENT_LIST = [#].*[#]
-
+STATEMENT_LIST = #.*#
 %%
 
 
@@ -55,6 +54,8 @@ STATEMENT_LIST = [#].*[#]
 "{" |
 "}" |
 ";" |
+"[" |
+"]" |
 ":" { return (int) yycharat(0); }
 
 {ws}  {/*do nothing*/}
@@ -79,7 +80,8 @@ STATEMENT_LIST = [#].*[#]
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
 
 /*debug*/
-{STATEMENT_LIST} {return Parser.STATEMENT_LIST;} 
+
+{STATEMENT_LIST} {yyparser.yylval = new ParserVal(yytext()); return Parser.STATEMENT_LIST;} 
 
 /* whitespace */
 [ \t]+ { }
