@@ -23,7 +23,8 @@
 
 GAME_DF = "define game"
 GAME_NM = "game_name"
-CARD_DF = "define card"
+CARD_DF = "define cards"
+CHARACTER_DF = "define characters"
 PLAYER_C = "num_of_players"
 METHOD = "method"
 PLAYER = "Player"
@@ -66,6 +67,8 @@ STATEMENT_LIST = [#].*[#]
 {STRING}   { yyparser.yylval = new ParserVal(yytext()); return Parser.STRING;}
 
 {GAME_DF}  {return Parser.GAME_DF;}
+{CARD_DF} {return Parser.CARD_DF;}
+{CHARACTER_DF} {return Parser.CHARACTER_DF;}
 {GAME_NM}  {return Parser.GAME_NM;}
 {PLAYER_C}  {return Parser.PLAYER_C;}
 {GAME_PORT}  {return Parser.GAME_PORT;}
