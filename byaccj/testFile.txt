@@ -1,3 +1,9 @@
+define game{
+	game_name : "Hello World";
+	num_of_players : 4;
+	server_listening_port : 4133;
+}
+
 define cards[
     Attack{
         method{
@@ -11,5 +17,29 @@ define cards[
         }   
     }
 ]
+
+define characters[
+	King{
+		hp: 5;
+		name : "my king";
+		skill : [
+			mercy{
+				method(Player dealer){
+					#dfdfdfdf#
+				}
+			}
+		]
+	}
+
+	No_Val{
+		skill : [
+			mercy{
+				method(Player dealer){
+					#dfdfd#
+				}
+			}
+		]
+	}
+	]
 
 

@@ -31,13 +31,12 @@
 %token <ival> INTEGER
 %token <sval> STRING
 
-
 %left '-' '+'
 %left '*' '/'
 %right '^'         /* exponentiation        */
       
 %%
-input: card_df {}
+input: game_df card_df character_df {}
      ;
 game_df : GAME_DF '{' game_df_content '}'  {}
 	;
@@ -62,18 +61,20 @@ characters_df_content : characters_df_content character_df_content {}
 character_df_content : ID '{'
 			variable_list
 			skill_df
-			'}'                  {}
+			'}'             {Util.writeCharacterJava($1,$3.sval,$4);}
 		; 
-variable_list : ID ':' INTEGER ';'	{}
-		| ID ':' STRING	';'	{}
-		|		    {}
+variable_list : ID ':' INTEGER ';' variable_list	
+			{String s = "public "+$1+"="+$3+";\n"+$5; $$=new ParserVal(s);}
+		| ID ':' STRING	';' variable_list	
+			{String s = "public "+$1+"="+$3+";\n"+$5; $$=new ParserVal(s);}
+		|		    {String s = ""; $$=new ParserVal(s);}
 		;
 
 skill_df : SKILL ':' '['
 		ID '{'
 		METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}'
 		'}'
-	   ']'                 {}
+	   ']'                 {$$ = $11}
 	;
 %%
 

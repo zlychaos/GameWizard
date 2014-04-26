@@ -2,7 +2,7 @@
 # byacc/j from http://troi.lincom-asg.com/~rjamison/byacc/
 
 JFLEX  = bin/jflex 
-BYACCJ = ./yacc.macosx -J
+BYACCJ = ./yacc.linux -J
 JAVAC  = javac
 
 # targets:
