@@ -22,15 +22,22 @@
 %}
 
 GAME_DF = "define game"
-GAME_NM = "game name"
+GAME_NM = "game_name"
 CARD_DF = "define card"
-
 PLAYER_C = "num_of_players"
+METHOD = "method"
+PLAYER = "Player"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
 STRING = \"[^\"]*\" 
+
+/*identifier*/
+ID = [a-zA-Z][_a-zA-Z0-9]*
 delim = [ \t\n]
 ws = {delim}+
+
+/*used as debug*/
+STATEMENT_LIST = [#].*[#]
 
 %%
 
@@ -46,7 +53,7 @@ ws = {delim}+
 "{" |
 "}" |
 ";" |
-":"  { return (int) yycharat(0); }
+":" { return (int) yycharat(0); }
 
 {ws}  {/*do nothing*/}
 
@@ -62,7 +69,12 @@ ws = {delim}+
 {GAME_NM}  {return Parser.GAME_NM;}
 {PLAYER_C}  {return Parser.PLAYER_C;}
 {GAME_PORT}  {return Parser.GAME_PORT;}
+{METHOD} {return Parser.METHOD}
+{PLAYER} {return Parser.PLAYER}
+{ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
 
+/*debug*/
+{STATEMENT_LIST} {return Parser.STATEMENT_LIST;} 
 
 /* whitespace */
 [ \t]+ { }

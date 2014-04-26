@@ -3,11 +3,11 @@ public class Util {
 	public static void writeGameJava(String name, int player_count, int port){
 		try {
 			 
-			String content = "public class Game{"
-							+"	public static String name="+name+";"
-							+"	public static int player_count="+player_count+";"
-							+"	public static int port="+port+";"
-							+"}";
+			String content = "public class Game{\n"
+							+"	public static String name="+name+";\n"
+							+"	public static int player_count="+player_count+";\n"
+							+"	public static int port="+port+";\n"
+							+"}\n";
  
 			File file = new File("Game.java");
  
