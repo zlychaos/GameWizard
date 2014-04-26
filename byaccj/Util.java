@@ -1,5 +1,4 @@
 import java.io.*;
-
 public class Util {
 	public static void writeGameJava(String name, int player_count, int port){
 		try {

@@ -28,12 +28,14 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: game_df;    {}
+input: game_df card_df;    {}
 game_df : GAME_DF '{' game_df_content '}';  {}
 game_df_content : GAME_NM ':' STRING ';'
                   PLAYER_C ':' INTEGER ';'
                   GAME_PORT ':' INTEGER ';';  {Util.writeGameJava($3,$7,$11);}
-
+card_df : CARD_DF '[' cards_df_content ']'; {}
+cards_df_content : cards_df_content 
+               | 
 %%
 
   private Yylex lexer;

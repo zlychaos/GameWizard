@@ -15,7 +15,7 @@ run: Parser.class
 build: clean Parser.class
 
 clean:
-	rm -f *~ *.class Parser.java Yylex.java
+	rm -f *~ *.class Parser.java Yylex.java Game.java
 
 Parser.class: Yylex.java Parser.java
 	$(JAVAC) Parser.java
