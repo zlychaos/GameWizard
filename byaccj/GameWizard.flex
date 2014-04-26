@@ -30,7 +30,8 @@ METHOD = "method"
 PLAYER = "Player"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
-STRING = \"[^\"]*\" 
+STRING = \"[^\"]*\"
+SKILL = "skill" 
 
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
@@ -72,8 +73,9 @@ STATEMENT_LIST = [#].*[#]
 {GAME_NM}  {return Parser.GAME_NM;}
 {PLAYER_C}  {return Parser.PLAYER_C;}
 {GAME_PORT}  {return Parser.GAME_PORT;}
-{METHOD} {return Parser.METHOD}
-{PLAYER} {return Parser.PLAYER}
+{METHOD} {return Parser.METHOD;}
+{PLAYER} {return Parser.PLAYER;}
+{SKILL} {return Parser.SKILL;}
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
 
 /*debug*/

@@ -21,6 +21,7 @@
 %token GAME_NM
 %token PLAYER_C
 %token PLAYER
+%token SKILL
 %token STATEMENT_LIST
 
 %token <sval> ID
@@ -58,8 +59,22 @@ character_df :  CHARACTER_DF '[' characters_df_content ']' {}
 characters_df_content : characters_df_content character_df_content {}
 			| character_df_content {}
 			;
-character_df_content : 
+character_df_content : ID '{'
+			variable_list
+			skill_df
+			'}'                  {}
+		; 
+variable_list : ID ':' INTEGER ';'	{}
+		| ID ':' STRING	';'	{}
+		|		    {}
+		;
 
+skill_df : SKILL ':' '['
+		ID '{'
+		METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}'
+		'}'
+	   ']'                 {}
+	;
 %%
 
   private Yylex lexer;
