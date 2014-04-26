@@ -22,7 +22,9 @@
 %}
 
 GAME_DF = "define game"
-GAME_NM = "name"
+GAME_NM = "game name"
+CARD_DF = "define card"
+
 PLAYER_C = "num_of_players"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
