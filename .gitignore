@@ -2,4 +2,4 @@
 bin/
 __MACOSX/
 *.class
-*.swp
+.*.swp
