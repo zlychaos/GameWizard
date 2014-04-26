@@ -16,6 +16,8 @@
 %}
       
 %token GAME_DF
+%token CARD_DF
+%token CHARACTER_DF
 %token GAME_NM
 %token PLAYER_C
 %token PLAYER
@@ -47,10 +49,16 @@ card_df : CARD_DF '[' cards_df_content ']' {}
 cards_df_content : cards_df_content card_df_content  {}
                | card_df_content {}
 		;
-card_df_content: METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}'
+card_df_content: ID '{' METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}' '}' 
+			{}
 		;
 
-character_df : 
+character_df :  CHARACTER_DF '[' characters_df_content ']' {}
+             ;
+characters_df_content : characters_df_content character_df_content {}
+			| character_df_content {}
+			;
+character_df_content : 
 
 %%
 
