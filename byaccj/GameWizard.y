@@ -50,6 +50,8 @@ cards_df_content : cards_df_content card_df_content  {}
 card_df_content: METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}'
 		;
 
+character_df : 
+
 %%
 
   private Yylex lexer;
