@@ -2,4 +2,5 @@
 bin/
 __MACOSX/
 *.class
-.*.swp
+*.swp
+.DS_Store
