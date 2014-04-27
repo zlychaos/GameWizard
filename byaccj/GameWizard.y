@@ -24,14 +24,16 @@
 %token SKILL
 %token <sval> STATEMENT_LIST
 %token <sval> ID
-%token <sval> S
 %token METHOD
 
 %token GAME_PORT
 %token <ival> INTEGER
 %token <sval> STRING
 
+%type <sval> variable_list
+%type <sval> skill_df
 %left '-' '+'
+
 %left '*' '/'
 %right '^'         /* exponentiation        */
       
@@ -61,20 +63,20 @@ characters_df_content : characters_df_content character_df_content {}
 character_df_content : ID '{'
 			variable_list
 			skill_df
-			'}'             {Util.writeCharacterJava($1,$3.sval,$4);}
+			'}'             {Util.writeCharacterJava($1,$3,$4);}
 		; 
 variable_list : ID ':' INTEGER ';' variable_list	
-			{String s = "public "+$1+"="+$3+";\n"+$5; $$=new ParserVal(s);}
+			{String s = "public Integer "+$1+"="+$3+";\n"+$5; $$=s;}
 		| ID ':' STRING	';' variable_list	
-			{String s = "public "+$1+"="+$3+";\n"+$5; $$=new ParserVal(s);}
-		|		    {String s = ""; $$=new ParserVal(s);}
+			{String s = "public String "+$1+"="+$3+";\n"+$5; $$=s;}
+		|		    {String s = ""; $$= s;}
 		;
 
 skill_df : SKILL ':' '['
 		ID '{'
-		METHOD '(' PLAYER ID ')' '{' STEATEMENT_LIST '}'
+		METHOD '(' PLAYER ID ')' '{' STATEMENT_LIST '}'
 		'}'
-	   ']'                 {$$ = $11}
+	   ']'                 {$$ = $12;}
 	;
 %%
 

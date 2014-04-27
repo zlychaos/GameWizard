@@ -29,7 +29,7 @@ public class Util {
 	}
 
     public static void writeCardsJava(String card_name, String method_content){
-         File outputFile = new File(card_name+".java");
+         File outputFile = new File("gen_"+card_name+".java");
          try{
             if(outputFile.exists()) {
                 outputFile.delete();
@@ -48,14 +48,14 @@ public class Util {
     }
     
     public static void writeCharacterJava(String character_name, String variable_list, String method_content){
-        File outputFile = new File(character_name+".java");
+        File outputFile = new File("gen_"+character_name+".java");
         try{
            if(outputFile.exists()) {
                outputFile.delete();
            }
            outputFile.createNewFile();          
            BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-           out.write("public class "+character_name+" implements Character{\n");
+           out.write("public class gen_"+character_name+" implements Character{\n");
            out.write(variable_list);
            out.write("\npublic void method(Player dealer){\n");
            out.write(method_content);
