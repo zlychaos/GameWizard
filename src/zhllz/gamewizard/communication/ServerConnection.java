@@ -17,7 +17,7 @@ public class ServerConnection implements Runnable {
 	Socket conn;
 	BufferedReader inFromClient;
 	DataOutputStream outToClient;
-	ICommunicatable game;
+	ICommunicatable player;
 	
 	Random rand = new Random();
 	public boolean waiting_for_response;
@@ -26,10 +26,10 @@ public class ServerConnection implements Runnable {
 	
 	public boolean should_listen;
 	
-	public ServerConnection(Socket conn, ICommunicatable game) throws IOException {
+	public ServerConnection(Socket conn, ICommunicatable player) throws IOException {
 		super();
 		this.conn = conn;
-		this.game = game;
+		this.player = player;
 		inFromClient = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		outToClient = new DataOutputStream(conn.getOutputStream());
 		
@@ -56,6 +56,7 @@ public class ServerConnection implements Runnable {
 					Thread.sleep(100);
 				else{
 					response = this.response;
+					this.response = null;
 					break;
 				}
 			}
@@ -88,14 +89,25 @@ public class ServerConnection implements Runnable {
 		
 	}
 	
+	public void closeConnection(){
+		should_listen = false;
+		try {
+			conn.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void run() {
 		
-		while(true){
+		while(should_listen){
 			try {
 				
 				String jsonMsg = inFromClient.readLine();
 				if(jsonMsg == null){
+					should_listen = false;
 					conn.close();
 					break;
 				}
@@ -106,7 +118,7 @@ public class ServerConnection implements Runnable {
 				if(type.equals(StrController.REQUEST)){
 					String Req_ID = jo.getString(StrController.Req_ID);
 					String request = jo.getString(StrController.REQUEST);
-					String res = game.getResponse(request);
+					String res = player.getResponse(request);
 					JSONObject resp = new JSONObject();
 					resp.put(StrController.TYPE, StrController.RESPONSE);
 					resp.put(StrController.Resp_ID, Req_ID);
@@ -129,6 +141,7 @@ public class ServerConnection implements Runnable {
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				should_listen = false;
 				e.printStackTrace();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

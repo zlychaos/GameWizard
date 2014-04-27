@@ -29,7 +29,6 @@ public class Client {
 	public String request_id;
 	public String response;
 	
-	public boolean userInputRespToReq;
 	public String userInput;
 	
 	
@@ -115,7 +114,7 @@ public class Client {
 		
 		System.out.println(promt);
 		while(this.userInput == null){
-			Thread.sleep(1000);
+			Thread.sleep(100);
 		}
 		//System.out.println(userInput);
 		JSONObject resp = new JSONObject();
@@ -179,7 +178,7 @@ public class Client {
 	}
 
 	public void game_start() {
-		// TODO Auto-generated method stub
+		
 		try {
 			String ip = "localhost";
 			int port = 4119;
@@ -199,7 +198,7 @@ public class Client {
 			
 			while(this.should_listen){
 				String input = sc.nextLine();
-				System.out.println(input);
+				//System.out.println(input);
 				if(isRequested()){
 					if(this.userInput == null)
 						this.userInput = input;
@@ -212,8 +211,8 @@ public class Client {
 				}
 				
 			}
-			this.should_listen = false;
-			Thread.sleep(200);
+			
+			Thread.sleep(1000);
 			s.close();
 			
 		} catch (UnknownHostException e) {
