@@ -23,19 +23,25 @@ public class Player extends PlayerBase{
 		}
 		return null;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Player ");
 		sb.append(id);
+		if(!isOnline){
+			sb.append("( off-line )");
+		}
 		sb.append(":{\n\tHP=");
 		sb.append(HP);
-		sb.append("handCards=[");
-		for(ICard c : handCards){
-			sb.append(c.toString());
-		}
-		sb.append("\t]\n}");
+		sb.append("\n\tNumber of handCards=");
+		sb.append(handCards.size());
+		sb.append("\n}");
 		return sb.toString();
+	}
+
+	@Override
+	public void getOffLine() {
+		isOnline = false;
 	}
 	
 	

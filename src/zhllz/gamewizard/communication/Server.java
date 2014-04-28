@@ -65,6 +65,13 @@ public class Server {
 			public String getResponse(String request) {
 				return "player1 " + request;
 			}
+
+			@Override
+			public void getOffLine() {
+				// TODO Auto-generated method stub
+				
+			}
+			
 			
 		};
 		ICommunicatable player2 = new ICommunicatable(){
@@ -72,6 +79,12 @@ public class Server {
 			@Override
 			public String getResponse(String request) {
 				return "player2 " + request;
+			}
+
+			@Override
+			public void getOffLine() {
+				// TODO Auto-generated method stub
+				
 			}
 			
 		};

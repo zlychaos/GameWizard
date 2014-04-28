@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Date;
 import java.util.Random;
 
@@ -138,7 +139,8 @@ public class ServerConnection implements Runnable {
 				else{
 					System.out.println("An unknown msg received..");
 				}
-				
+			} catch (SocketException e) {
+				player.getOffLine();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				should_listen = false;

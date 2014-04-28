@@ -206,8 +206,11 @@ public class Client {
 						System.out.println("Hold on, still responding to last request..");
 				}
 				else{
-					String res = sendRequest(input);
-					System.out.println(res);
+					if(should_listen){
+						String res = sendRequest(input);
+						System.out.println(res);
+					}
+					
 				}
 				
 			}

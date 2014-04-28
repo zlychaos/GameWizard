@@ -13,13 +13,16 @@ public class Game {
 	
 	private Server GameServer;
 	private int port = 4119;
+	
+	private String name = "Whose number is bigger";
 	private int num_of_players = 2;
 	
 	private ArrayList<Player> playerList;
 	private HashMap<Integer, Player> map;
 	private LinkedList<ICard> cardStack;
+	private LinkedList<ICard> droppedCardStack;
 	
-	private int activePlayer;
+	private int currentPlayerIndex;
 	
 	private int round; 
 	private int roundCount=0;
@@ -28,8 +31,58 @@ public class Game {
 	
 	private HashMap<Integer, ICard> retEachRound;
 	
-	public void init(){
+	public ICard putCard(Player p) throws IOException {
+		String input = p.conn.waitForInput("Please deal a card");
+		int card_index = Integer.parseInt(input);
+		ICard c = p.handCards.remove(card_index-1);
+		return c;
+	}
+	
+	public void drawCard(Player p, int num) throws IOException{
 		
+		for(int i=0;i<num;i++){
+
+			if(cardStack.isEmpty()){
+				if(droppedCardStack.isEmpty()){
+					gameover = true;
+					GameServer.broadcast("Sorry, the card stack is empty.. The game can not carry on");
+				}
+				else{
+					LinkedList<ICard> tmp = cardStack;
+					cardStack = droppedCardStack;
+					droppedCardStack = tmp;
+					Collections.shuffle(cardStack);
+				}		
+			}
+			p.handCards.add(cardStack.poll());
+			
+		}
+	}
+	
+	public void init(){
+		for(int i=0; i<10; i++){
+			cardStack.add(new Card(1));
+			cardStack.add(new Card(2));
+			cardStack.add(new Card(3));
+		}
+		Collections.shuffle(cardStack);
+	}
+	
+	public void round_begin(){
+		retEachRound.clear();
+	}
+	
+	public void round_end() throws Exception{
+		winCond();
+	}
+	
+	public void playerTurn(Player player) throws IOException{
+		player.handCards.add(cardStack.poll());
+		player.conn.sendBroadcast(HandCardInfo(player));
+		
+		ICard c = putCard(player);
+		retEachRound.put(player.id, c);
+		droppedCardStack.add(c);
 	}
 	
 	public void close() throws IOException{
@@ -46,6 +99,7 @@ public class Game {
 		playerList = new ArrayList<Player>();
 		map = new HashMap<Integer, Player>();
 		cardStack = new LinkedList<ICard>();
+		droppedCardStack = new LinkedList<ICard>();
 		
 		GameServer = new Server(port);
 		
@@ -67,10 +121,12 @@ public class Game {
 		System.out.println("Game Start!");
 		GameServer.broadcast("Game Start!");
 		
-		initCardStack();
+		init();
 		
-		activePlayer=0;
+		currentPlayerIndex=0;
 		retEachRound = new HashMap<Integer, ICard>();
+		
+		round_begin();
 		gameover = false;
 		while(!gameover)
 			nextOnlinePlayer();
@@ -79,85 +135,7 @@ public class Game {
 		
 	}
 	
-	public  void nextOnlinePlayer() throws Exception{
-		if(activePlayer == num_of_players){
-			//do round end here
-			winCond();
-			retEachRound.clear();
-			if(++roundCount == round){
-				gameover = true;
-				return ;
-			}
-			
-		}
-		
-		activePlayer = (activePlayer+1)%num_of_players;
-		activePlayer = activePlayer==0?num_of_players:activePlayer;
-		
-		for(int i=0; i<=num_of_players; i++){
-			if(!map.get(activePlayer).isOnline){
-				activePlayer = (activePlayer+1)%num_of_players;
-				activePlayer = activePlayer==0?num_of_players:activePlayer;
-			}else{
-				break;
-			}
-		}
-		
-		
-		GameServer.broadcast("Now Turn: Player"+activePlayer);
-		
-		Player playerInTurn = map.get(activePlayer);
-		//do card distribution here
-		playerInTurn.handCards.add(cardStack.poll());
-		sendHandCardsInfo(playerInTurn);
-		String input = playerInTurn.conn.waitForInput("Please deal a card");
-		
-		int card_index = Integer.parseInt(input);
-		putCard(playerInTurn, card_index);
-		
-	}
-	
-	
-	
-	public  String sendHandCardsInfo(Player p) throws IOException{
-		//if(!p.isOnline) return "";
-		String others = "Other Players handCard num:\n";
-		for(Player player : playerList){
-			if(player.id != p.id){
-				others+="Player "+player.id+": "+player.handCards.size()+"\n";
-			}
-		}
-		String ret = "Your handCards: ";
-		for(int i=0; i<p.handCards.size(); i++){
-			Card c = (Card) p.handCards.get(i);
-			if(c==null){
-				System.out.println("i: "+i);
-				System.out.println(p.handCards.size());
-				System.out.println("-----------------");
-			}
-				
-			int pos = i+1;
-			ret += c.value+"("+pos+"), ";
-		}
-		p.conn.sendBroadcast(others+ret);
-		return ret;
-	}
-	
-	public  void initCardStack(){
-		for(int i=0; i<10; i++){
-			cardStack.add(new Card(1));
-			cardStack.add(new Card(2));
-			cardStack.add(new Card(3));
-		}
-		Collections.shuffle(cardStack);
-	}
-	
-	public void putCard(Player p, int num) throws Exception{
-		ICard c = p.handCards.remove(num-1);
-		//broadCastEveryOne("Move: Player"+p.id+" puts "+c.value);
-		retEachRound.put(p.id, c);
-	}
-	
+
 	public void winCond() throws Exception{
 		int max=0;
 		int maxID = 1;
@@ -189,6 +167,69 @@ public class Game {
 			GameServer.broadcast("Player"+maxID+" win!");
 		
 	}
+	
+	public  void nextOnlinePlayer() throws Exception{
+		if(currentPlayerIndex == num_of_players){
+			round_end();
+			
+			if(++roundCount == round){
+				gameover = true;
+				return ;
+			}
+			round_begin();
+		}
+		
+		currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
+		currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
+		
+		for(int i=0; i<=num_of_players; i++){
+			if(!map.get(currentPlayerIndex).isOnline){
+				currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
+				currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
+			}else{
+				break;
+			}
+		}
+		
+		
+		GameServer.broadcast("Now Turn: Player"+currentPlayerIndex);
+		
+		Player playerInTurn = map.get(currentPlayerIndex);
+		//do card distribution here
+		playerTurn(playerInTurn);
+		
+	}
+	
+	// This info is for the target
+	// Hand cards of other players will not be included
+	public String PlayersInfo(Player target){
+		StringBuilder sb = new StringBuilder("\n--------------");
+		for(Player p : playerList){
+			sb.append(p.toString());
+			sb.append("\n--------------");
+		}
+		return sb.toString();
+	}
+	
+	public String HandCardInfo(Player player){
+		StringBuilder sb = new StringBuilder("\n--------------\n");
+		int i = 1;
+		for(ICard card : player.handCards){
+			sb.append("("+i+")");
+			sb.append(card.toString());
+			sb.append("\n--------------");
+			i++;
+		}
+		return sb.toString();
+	}
+	
+	public String GameGeneralInfo(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		sb.append("\nThe player in turn: Player " + currentPlayerIndex);
+		return sb.toString();
+	}
+	
 	
 	
 	

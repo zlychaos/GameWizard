@@ -1,7 +1,6 @@
-.DS_Store
 bin/
+.DS_Store
 __MACOSX/
 byaccj/*.class
 *.class
 *.swp
-.DS_Store
