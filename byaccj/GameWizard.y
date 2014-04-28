@@ -116,30 +116,35 @@ skill_df : SKILL ':' '['
 	   ']'                 {$$ = $12;}
 	;
 
-STATEMENT_LIST: SelectionStatement
-                {System.out.println("7");$$=$1;}
-                |IterationStatement
-                {System.out.println("8");$$=$1;}
-                ;
+STATEMENT_LIST
+:   SelectionStatement  {System.out.println("7");$$=$1;}
+|   IterationStatement  {System.out.println("8");$$=$1;}
+;
 
 
-IterationStatement: WHILE '(' Expression ')' Statement
-                {System.out.println("8");String s = "while("+$3+")"+$5; $$=s;}
+IterationStatement
+:   WHILE '(' Expression ')' Statement
+    {System.out.println("8");String s = "while("+$3+")"+$5; $$=s;}
+;
 
-SelectionStatement:
-                IF '(' Expression ')' Statement
-                {System.out.println("6");String s = "if("+$3+")"+$5; $$=s;}
-                |IF '(' Expression ')' Statement ELSE Statement
-                {System.out.println("7");String s = "if("+$3+")\n"+$5+";\nelse\n"+$7+";"; $$=s;}
-                ;
 
-TFExpression:   TRUE    {System.out.println("6");String s ="true"; $$=s;}
-                ;
+SelectionStatement
+:   IF '(' Expression ')' Statement
+    {System.out.println("6");String s = "if("+$3+")"+$5; $$=s;}
+    |IF '(' Expression ')' Statement ELSE Statement
+    {System.out.println("7");String s = "if("+$3+")\n"+$5+";\nelse\n"+$7+";"; $$=s;}
+;
 
-Statement:      FALSE  {String s ="false"; $$=s;}
-                ;
+TFExpression
+:   TRUE    {System.out.println("6");String s ="true"; $$=s;}
+;
 
-AssignmentExpression:      FALSE  {String s ="false"; $$=s;}
+Statement
+:   FALSE  {String s ="false"; $$=s;}
+;
+
+AssignmentExpression
+:   FALSE  {String s ="false"; $$=s;}
 ;
 
 
