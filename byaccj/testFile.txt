@@ -7,12 +7,12 @@ define game{
 define cards[
     Attack{
         method{
-        #shabi ajdkf#
+                while(true) false
         }   
     }
     Defense{
         method{
-        #shabiajkds#
+                if(x[1].y==(~false&&!!!false||false * false /false % false -false + false <false > false <= false >=false!=false==false&&false||false)) false else false
         }   
     }
 ]
@@ -24,7 +24,7 @@ define characters[
 		skill : [
 			mercy{
 				method(Player dealer){
-					#dfdfdfdf#
+					  if(true) false
 				}
 			}
 		]
@@ -34,11 +34,9 @@ define characters[
 		skill : [
 			mercy{
 				method(Player dealer){
-					#dfdfd#
+					    if(true) false
 				}
 			}
 		]
 	}
 	]
-
-
