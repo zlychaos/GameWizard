@@ -31,7 +31,8 @@ PLAYER = "Player"
 GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
 STRING = \"[^\"]*\"
-SKILL = "skill" 
+SKILL = "skill"
+
 
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
@@ -39,7 +40,7 @@ delim = [ \t\n]
 ws = {delim}+
 
 /*used as debug*/
-STATEMENT_LIST = #.*#
+
 %%
 
 
@@ -48,15 +49,29 @@ STATEMENT_LIST = #.*#
 "-" | 
 "*" | 
 "/" | 
+"%" |
 "^" | 
-"(" | 
+"(" |
 ")" |
 "{" |
 "}" |
 ";" |
 "[" |
 "]" |
+"=" |
+">" |
+"<" |
+"~" |
+"!" |
+"." |
 ":" { return (int) yycharat(0); }
+
+"=="		{return Parser.OP_EQ;}
+"<="		{return Parser.OP_LE;}
+">="		{return Parser.OP_GE;}
+"!="		{return Parser.OP_NE;}
+"||"		{return Parser.OP_LOR;}
+"&&"		{return Parser.OP_LAND;}
 
 {ws}  {/*do nothing*/}
 
@@ -77,11 +92,19 @@ STATEMENT_LIST = #.*#
 {METHOD} {return Parser.METHOD;}
 {PLAYER} {return Parser.PLAYER;}
 {SKILL} {return Parser.SKILL;}
+"false" {return Parser.FALSE;}
+"true" {return Parser.TRUE;}
+"if" {return Parser.IF;}
+"else" {return Parser.ELSE;}
+"while"		{return Parser.WHILE;}
+
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
+
+
+
 
 /*debug*/
 
-{STATEMENT_LIST} {yyparser.yylval = new ParserVal(yytext()); return Parser.STATEMENT_LIST;} 
 
 /* whitespace */
 [ \t]+ { }
