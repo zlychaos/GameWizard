@@ -1,4 +1,4 @@
 
-public interface Character {
+public interface Character{
 	public void method(Player dealer);
 }

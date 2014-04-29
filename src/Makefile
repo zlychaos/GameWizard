@@ -24,7 +24,8 @@ JC = javac
 #
 
 CLASSES = \
-	zhllz/gamewizard/communication/MsgType.java \
+	zhllz/gamewizard/communication/StrController.java \
+	zhllz/gamewizard/communication/ICommunicatable.java \
 	zhllz/gamewizard/communication/ServerConnection.java \
 	zhllz/gamewizard/communication/Server.java\
 	zhllz/gamewizard/communication/Client.java
@@ -57,7 +58,14 @@ classes: $(CLASSES:.java=.class)
 #
 
 .java.class:
-	$(JC) $(JFLAGS) $*.java
+	$(JC) $(JFLAGS) -classpath ../java-json.jar:zhllz/gamewizard/communication/:. $*.java
+
+server: classes
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
+
+client: classes
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
+
 
 #
 # RM is a predefined macro in make (RM = rm -f)

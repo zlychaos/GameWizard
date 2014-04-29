@@ -1,4 +1,3 @@
-
-public interface Card {
-	public void method(Player dealer);
+public interface Card{
+    public void method(Palyer dealer);
 }

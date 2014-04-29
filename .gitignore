@@ -1,4 +1,6 @@
-.DS_Store
 bin/
+.DS_Store
 __MACOSX/
-byaccj/Makefile
+byaccj/*.class
+*.class
+*.swp

@@ -1,0 +1,49 @@
+define game{
+	game_name : "Hello World";
+	num_of_players : 4;
+	server_listening_port : 4133;
+}
+
+define cards[
+    Attack{
+        method{
+                while(true) {a=1;}
+        }   
+    }
+    Defense{
+        method{
+		int x[10]={12,3};
+		String x = "123";
+		bool y = true;
+		int z = 123;
+                if(123==321) 
+		{int abc=3;abc=abc+5;} 
+		else {false}
+		z=123+a[20];
+        }   
+    }
+]
+
+define characters[
+	King{
+		hp: 5;
+		name : "my king";
+		skill : [
+			mercy{
+				method(Player dealer){
+					  if(true) {false;}
+				}
+			}
+		]
+	}
+
+	No_Val{
+		skill : [
+			mercy{
+				method(Player dealer){
+					    if(true) {false;}
+				}
+			}
+		]
+	}
+	]
