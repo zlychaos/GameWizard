@@ -77,6 +77,9 @@ public class ServerConnection implements Runnable {
 	
 	public void sendBroadcast(String msg) throws IOException{
 		
+		if(!player.isOnline())
+			return;
+		
 		try {
 			JSONObject jo = new JSONObject();
 			jo.put(StrController.TYPE, StrController.BROADCAST);

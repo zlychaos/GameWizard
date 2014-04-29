@@ -184,21 +184,21 @@ public class Game {
 		currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
 		currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
 		
-		for(int i=0; i<=num_of_players; i++){
-			if(!map.get(currentPlayerIndex).isOnline()){
-				currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
-				currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
-			}else{
-				break;
-			}
-		}
-		
+//		for(int i=0; i<=num_of_players; i++){
+//			if(!map.get(currentPlayerIndex).isOnline()){
+//				currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
+//				currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
+//			}else{
+//				break;
+//			}
+//		}
 		
 		GameServer.broadcast("Now Turn: Player"+currentPlayerIndex);
 		
 		Player playerInTurn = map.get(currentPlayerIndex);
 		//do card distribution here
-		playerTurn(playerInTurn);
+		if(playerInTurn.isOnline())
+			playerTurn(playerInTurn);
 		
 	}
 	
