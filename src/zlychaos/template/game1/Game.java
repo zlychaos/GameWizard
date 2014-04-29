@@ -66,6 +66,8 @@ public class Game {
 			cardStack.add(new Card(3));
 		}
 		Collections.shuffle(cardStack);
+		
+		retEachRound = new HashMap<Integer, ICard>();
 	}
 	
 	public void round_begin(){
@@ -77,7 +79,8 @@ public class Game {
 	}
 	
 	public void playerTurn(Player player) throws IOException{
-		player.handCards.add(cardStack.poll());
+		drawCard(player,1);
+		player.conn.sendBroadcast(PlayersInfo());
 		player.conn.sendBroadcast(HandCardInfo(player));
 		
 		ICard c = putCard(player);
@@ -119,12 +122,11 @@ public class Game {
 		}
 		
 		System.out.println("Game Start!");
-		GameServer.broadcast("Game Start!");
+		GameServer.broadcast(name + ": Game Start!");
 		
 		init();
 		
-		currentPlayerIndex=0;
-		retEachRound = new HashMap<Integer, ICard>();
+		currentPlayerIndex=0;	
 		
 		round_begin();
 		gameover = false;
@@ -183,7 +185,7 @@ public class Game {
 		currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
 		
 		for(int i=0; i<=num_of_players; i++){
-			if(!map.get(currentPlayerIndex).isOnline){
+			if(!map.get(currentPlayerIndex).isOnline()){
 				currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
 				currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
 			}else{
@@ -200,10 +202,9 @@ public class Game {
 		
 	}
 	
-	// This info is for the target
-	// Hand cards of other players will not be included
-	public String PlayersInfo(Player target){
-		StringBuilder sb = new StringBuilder("\n--------------");
+	// This info is for the everyone
+	public String PlayersInfo(){
+		StringBuilder sb = new StringBuilder("\n--------------\n");
 		for(Player p : playerList){
 			sb.append(p.toString());
 			sb.append("\n--------------");

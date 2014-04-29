@@ -72,6 +72,11 @@ public class Server {
 				
 			}
 			
+			@Override
+			public boolean isOnline() {
+				// TODO Auto-generated method stub
+				return true;
+			}
 			
 		};
 		ICommunicatable player2 = new ICommunicatable(){
@@ -85,6 +90,12 @@ public class Server {
 			public void getOffLine() {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public boolean isOnline() {
+				// TODO Auto-generated method stub
+				return true;
 			}
 			
 		};

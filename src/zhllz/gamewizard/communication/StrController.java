@@ -2,15 +2,15 @@ package zhllz.gamewizard.communication;
 
 public class StrController {
 	
-	public static String CARD = "Card";
-	public static String SKILL = "Skill";
-	public static String END = "End";
-	public static String INFO = "Info";
+//	public static String CARD = "Card";
+//	public static String SKILL = "Skill";
+//	public static String END = "End";
+//	public static String INFO = "Info";
+//	
+//	public static String separator = "#--->#";
 	
-	public static String separator = "#--->#";
 	
-	
-	public static String RESPONSE_AND_REQUEST = "Resp&Req";
+	//public static String RESPONSE_AND_REQUEST = "Resp&Req";
 	public static String BROADCAST = "Broadcast";
 	
 	public static String REQUEST = "Request";

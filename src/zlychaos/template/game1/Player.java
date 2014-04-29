@@ -1,6 +1,5 @@
 package zlychaos.template.game1;
 
-import zhllz.gamewizard.basic.ICard;
 import zhllz.gamewizard.basic.PlayerBase;
 import zhllz.gamewizard.communication.Server;
 
@@ -15,7 +14,7 @@ public class Player extends PlayerBase{
 	@Override
 	public String getResponse(String request) {
 		if(MsgType.QUIT.equals(request)){
-			isOnline = false;
+			online = false;
 			conn.closeConnection();
 		}
 		else{
@@ -28,7 +27,7 @@ public class Player extends PlayerBase{
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Player ");
 		sb.append(id);
-		if(!isOnline){
+		if(!isOnline()){
 			sb.append("( off-line )");
 		}
 		sb.append(":{\n\tHP=");
@@ -41,7 +40,7 @@ public class Player extends PlayerBase{
 
 	@Override
 	public void getOffLine() {
-		isOnline = false;
+		online = false;
 	}
 	
 	

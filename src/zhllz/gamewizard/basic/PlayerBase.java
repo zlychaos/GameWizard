@@ -12,14 +12,19 @@ public abstract class PlayerBase implements ICommunicatable {
 	public ArrayList<ICard> handCards;
 	
 	public ServerConnection conn;
-	public boolean isOnline;
+	public boolean online;
 	
 	public PlayerBase(int id, Server server){
 		
 		this.id = id;
 		this.handCards = new ArrayList<ICard>();
 		this.conn = server.waitForPlayer(this);;
-		this.isOnline = true;
+		this.online = true;
+	}
+	
+	@Override
+	public boolean isOnline(){
+		return online;
 	}
 
 }
