@@ -111,6 +111,7 @@ public class ServerConnection implements Runnable {
 				
 				String jsonMsg = inFromClient.readLine();
 				if(jsonMsg == null){
+					player.getOffLine();
 					should_listen = false;
 					conn.close();
 					break;
