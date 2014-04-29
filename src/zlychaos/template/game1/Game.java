@@ -204,19 +204,19 @@ public class Game {
 	
 	// This info is for the everyone
 	public String PlayersInfo(){
-		StringBuilder sb = new StringBuilder("\n--------------\n");
+		StringBuilder sb = new StringBuilder("\n--------------");
 		for(Player p : playerList){
-			sb.append(p.toString());
+			sb.append("\n"+p.toString());
 			sb.append("\n--------------");
 		}
 		return sb.toString();
 	}
 	
 	public String HandCardInfo(Player player){
-		StringBuilder sb = new StringBuilder("\n--------------\n");
+		StringBuilder sb = new StringBuilder("\n--------------");
 		int i = 1;
 		for(ICard card : player.handCards){
-			sb.append("("+i+")");
+			sb.append("\n("+i+")");
 			sb.append(card.toString());
 			sb.append("\n--------------");
 			i++;
