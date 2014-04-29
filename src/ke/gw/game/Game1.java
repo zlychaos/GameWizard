@@ -9,7 +9,10 @@ import java.util.LinkedList;
 import zhllz.gamewizard.communication.*;
 import zhllz.gamewizard.basic.*;
 
-public class Game {
+public class Game1 {
+	private static int port;
+	private static int init_HP;
+	
 	private static ArrayList<Player> list_players;
 	private static HashMap<Integer, Player> map;
 	
@@ -23,9 +26,9 @@ public class Game {
 	private static HashMap<Integer, Card> retEachRound;
 	
 	public static void main(String[] args) throws Exception{
-		int port = 4119;
+		port = 4119;
 		num_player = 2;
-		int init_HP = 1;
+		init_HP = 1;
 		round = 1;
 		
 		list_players = new ArrayList<Player>();
@@ -52,8 +55,8 @@ public class Game {
 			map.put(p.id, p);
 		}
 		
-		System.out.println("Game Start!");
-		broadCastEveryOne("Game Start!");
+		System.out.println("Game1 Start!");
+		broadCastEveryOne("Game1 Start!");
 		
 		for(Player p : list_players){
 			new Thread(new WorkForOnePlayer(p)).start();
@@ -89,6 +92,7 @@ public class Game {
 		GameServer.closeServer();
 	}
 	
+	//check for online users
 	public static void checkForCloseGame() throws IOException{
 		System.out.println("current # of players: "+list_players.size());
 		boolean shouldEnd = true;
@@ -154,18 +158,20 @@ public class Game {
 	
 	public static String sendHandCardsInfo(Player p) throws IOException{
 		if(!p.isOnline) return "";
-		String others = "Other Players handCard num:\n";
+		String others = "Other Players Info\n"+"";
 		for(Player player : list_players){
 			if(player.id != p.id){
-				others+="Player"+player.id+": "+player.handCards.size()+"\n";
+				others+="    Player"+player.id+" HandCard#: "+player.handCards.size()+"\n";
+				others+="    Player"+player.id+" HP: "+player.handCards.size()+"\n";
 			}
 		}
-		String ret = "Your handCards: ";
+		String ret = "Your HandCard: ";
 		for(int i=0; i<p.handCards.size(); i++){
 			Card c = p.handCards.get(i);
 			int pos = i+1;
 			ret += c.value+"("+pos+"), ";
 		}
+		ret += "\n"+"Your HP: "+p.HP;
 		p.conn.sendBroadcast(others+ret);
 		return ret;
 	}
@@ -189,11 +195,44 @@ public class Game {
 	        return false; 
 	    }
 
+	    //check for valid handcards
 	    int cardnum = Integer.parseInt(input);
 	    if(cardnum>0 && cardnum<=p.handCards.size()){
 	    	return true;
 	    }
 	    return false;
+	}
+	
+	public static String getOnlinePlayerInfo(){
+		String ret = "";
+		for(Player p : list_players){
+			if(p.isOnline){
+				ret += p.id+",";
+			}
+		}
+		if("".equals(ret)) return ret;
+		return ret.substring(0, ret.length()-1);
+	}
+	
+	public static boolean isInteger(String s){
+		try{
+			int i = Integer.parseInt(s);
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
+	
+	public static Player chooseTarget(Player dealer) throws Exception{
+		String onlineList = getOnlinePlayerInfo();
+		String response = dealer.conn.waitForInput("Please select a target: ("+onlineList+")\n");
+		
+		//if it is int and that player is online
+		while(!isInteger(response) && onlineList.indexOf(Integer.parseInt(response))!=-1){
+			response = dealer.conn.waitForInput("Please select a target: ("+onlineList+")\n");
+		}
+		int tid = Integer.parseInt(response);
+		return map.get(tid);
 	}
 	
 	static class WorkForOnePlayer implements Runnable{
