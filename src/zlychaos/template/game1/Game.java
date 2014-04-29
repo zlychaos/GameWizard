@@ -67,6 +67,9 @@ public class Game {
 		}
 		Collections.shuffle(cardStack);
 		
+		for(Player p : playerList)
+			p.setCharacter(new RegularGuyCharacter());
+		
 		retEachRound = new HashMap<Integer, ICard>();
 	}
 	
@@ -83,9 +86,15 @@ public class Game {
 		player.conn.sendBroadcast(PlayersInfo());
 		player.conn.sendBroadcast(HandCardInfo(player));
 		
-		ICard c = putCard(player);
-		retEachRound.put(player.id, c);
-		droppedCardStack.add(c);
+		String input = player.conn.waitForInput("Use a skill( choose from "+player.character.getSkillList() + ", or put a card( Type: 'card' )");
+		if("card".equals(input)){
+			ICard c = putCard(player);
+			retEachRound.put(player.id, c);
+			droppedCardStack.add(c);
+		}
+		else{
+			player.character.skill(player, input);
+		}
 	}
 	
 	public void close() throws IOException{
@@ -96,7 +105,7 @@ public class Game {
 	
 	public void gamestart() throws Exception{
 		
-		int init_HP = 1;
+		//int init_HP = 1;
 		round = 2;
 		
 		playerList = new ArrayList<Player>();
@@ -110,7 +119,7 @@ public class Game {
 		//activePlayer = 1;
 		while(count++ < num_of_players){
 			
-			Player p = new Player(count, init_HP, GameServer);
+			Player p = new Player(count, GameServer);
 			
 			playerList.add(p);
 			p.conn.sendBroadcast("You are Player"+count);
