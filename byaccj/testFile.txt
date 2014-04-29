@@ -7,12 +7,19 @@ define game{
 define cards[
     Attack{
         method{
-                while(true) false
+                while(true) {a=1;}
         }   
     }
     Defense{
         method{
-                if(x[1].y==(~false&&!!!false||false * false /false % false -false + false <false > false <= false >=false!=false==false&&false||false)) false else false
+		int x[10]={12,3};
+		String x = "123";
+		bool y = true;
+		int z = 123;
+                if(123==321) 
+		{int abc=3;abc=abc+5;} 
+		else {false}
+		z=123+a[20];
         }   
     }
 ]
@@ -24,7 +31,7 @@ define characters[
 		skill : [
 			mercy{
 				method(Player dealer){
-					  if(true) false
+					  if(true) {false;}
 				}
 			}
 		]
@@ -34,7 +41,7 @@ define characters[
 		skill : [
 			mercy{
 				method(Player dealer){
-					    if(true) false
+					    if(true) {false;}
 				}
 			}
 		]

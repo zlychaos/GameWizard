@@ -37,7 +37,9 @@
 %token OP_LOR
 %token OP_LAND
 
-
+%token DECLR_INT
+%token DECLR_STR
+%token DECLR_BOOL
 
 
 %token <ival> INTEGER
@@ -46,13 +48,10 @@
 %type <sval> variable_list
 %type <sval> skill_df
 %type <sval> STATEMENT_LIST
-%type <sval> TFExpression
 %type <sval> Expression
-%type <sval> Statement
 %type <sval> SelectionStatement
 %type <sval> IterationStatement
 %type <sval> UnaryExpression
-%type <sval> AssignmentExpression
 %type <sval> ConditionalOrExpression
 %type <sval> ConditionalAndExpression
 %type <sval> EqualityExpression
@@ -68,7 +67,22 @@
 %type <sval> ComplexPrimaryNoParenthesis
 %type <sval> ArrayAccess
 %type <sval> FieldAccess
-
+%type <sval> PrimitiveType
+%type <sval> FieldDeclarations
+%type <sval> FieldDeclaration
+%type <sval> FieldDeclarationOptSemi
+%type <sval> FieldVariableDeclaration
+%type <sval> NonStaticInitializer
+%type <sval> TypeSpecifier
+%type <sval> TypeName
+%type <sval> Block
+%type <sval> NonStaticInitializer
+%type <sval> ArrayInitializers
+%type <sval> VariableInitializer
+%type <sval> DeclaratorName
+%type <sval> VariableDeclarator
+%type <sval> VariableDeclarators
+%type <sval> EmptyStatement
 %left '-' '+'
 
 %left '*' '/'
@@ -117,35 +131,117 @@ skill_df : SKILL ':' '['
 	;
 
 STATEMENT_LIST
-:   SelectionStatement  {System.out.println("7");$$=$1;}
-|   IterationStatement  {System.out.println("8");$$=$1;}
+:   SelectionStatement  {System.out.println("selection");$$=$1;}
+|   STATEMENT_LIST SelectionStatement  {System.out.println("selection");$$=$1+$2;}
+|   FieldDeclarations   {System.out.println("declare");$$=$1;}
+|   STATEMENT_LIST FieldDeclarations   {System.out.println("declare");$$=$1+$2;}
+|   IterationStatement  {System.out.println("iteration");$$=$1;}
+|   STATEMENT_LIST IterationStatement  {System.out.println("iteration");$$=$1+$2;}
+|   EmptyStatement  {System.out.println("empty");$$=$1;}
+|   STATEMENT_LIST EmptyStatement   {System.out.println("empty");$$=$1+$2;}
+|   Expression  {System.out.println("expression");$$=$1;}
+|   STATEMENT_LIST Expression  {System.out.println("expression");$$=$1+$2;}
 ;
 
+EmptyStatement
+:   ';' {$$=";";}
+;
 
 IterationStatement
-:   WHILE '(' Expression ')' Statement
-    {System.out.println("8");String s = "while("+$3+")"+$5; $$=s;}
+:   WHILE '(' Expression ')' Block
+    {System.out.println("8");String s = "while("+$3+")\n"+$5; $$=s;}
 ;
 
 
 SelectionStatement
-:   IF '(' Expression ')' Statement
-    {System.out.println("6");String s = "if("+$3+")"+$5; $$=s;}
-    |IF '(' Expression ')' Statement ELSE Statement
+:   IF '(' Expression ')' Block
+    {System.out.println("6");String s = "if("+$3+")\n"+$5; $$=s;}
+    |IF '(' Expression ')' Block ELSE Block
     {System.out.println("7");String s = "if("+$3+")\n"+$5+";\nelse\n"+$7+";"; $$=s;}
 ;
 
-TFExpression
-:   TRUE    {System.out.println("6");String s ="true"; $$=s;}
+
+FieldDeclarations
+: FieldDeclarationOptSemi   {$$=$1;}
 ;
 
-Statement
-:   FALSE  {String s ="false"; $$=s;}
+FieldDeclarationOptSemi
+: FieldDeclaration ';'   {System.out.println("3");$$=$1+";\n";}
 ;
 
-AssignmentExpression
-:   FALSE  {String s ="false"; $$=s;}
+
+FieldDeclaration
+: FieldVariableDeclaration  {System.out.println($1);$$=$1;}
+| NonStaticInitializer  {$$=$1;}
 ;
+
+FieldVariableDeclaration
+: TypeSpecifier VariableDeclarators {$$=$1+$2;System.out.println($$);}
+;
+
+VariableDeclarators
+: VariableDeclarator    {System.out.println("1");$$=$1;}
+| VariableDeclarators ',' VariableDeclarator    {$$=$1+','+$3;}
+;
+
+VariableDeclarator
+: DeclaratorName    {System.out.println("1");$$=$1;}
+| DeclaratorName '=' VariableInitializer    {$$=$1+'='+$3;}
+;
+
+DeclaratorName
+: ID    {System.out.println("1");$$=$1;}
+| DeclaratorName '[' INTEGER ']'    {$$=$1+'['+$3+']';}
+;
+
+VariableInitializer
+: Expression    {$$=$1;}
+| '{' ArrayInitializers '}' {$$='{'+$2+'}';}
+;
+
+ArrayInitializers
+: VariableInitializer   {$$=$1;}
+| ArrayInitializers ',' VariableInitializer {$$=$1+','+$3;}
+;
+
+NonStaticInitializer
+: Block {$$=$1;}
+;
+
+Block
+: '{' STATEMENT_LIST '}' {$$="{"+$2+"}";}
+| '{' '}'   {$$="{}";}
+;
+
+
+
+
+
+
+
+
+
+
+TypeSpecifier
+: TypeName  {System.out.println("0");$$=$1;}
+| TypeName '[' INTEGER ']'  {$$=$1+'['+$3+']';}
+;
+
+
+TypeName
+: PrimitiveType {System.out.println("0");$$=$1;}
+;
+
+
+
+PrimitiveType
+: DECLR_BOOL    {$$="boolean ";}
+| DECLR_INT     {$$="int ";}
+| DECLR_STR     {$$="String ";}
+;
+
+
+
 
 
 
@@ -245,8 +341,7 @@ ConditionalOrExpression
 
 Expression
 :ConditionalOrExpression {$$=$1;}
-|UnaryExpression '=' AssignmentExpression {$$= $1+"="+$3;}
-|TFExpression   {$$=$1;}
+|UnaryExpression '=' Expression {$$= $1+"="+$3;}
 ;
 
 

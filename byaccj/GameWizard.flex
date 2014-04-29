@@ -64,6 +64,7 @@ ws = {delim}+
 "~" |
 "!" |
 "." |
+"," |
 ":" { return (int) yycharat(0); }
 
 "=="		{return Parser.OP_EQ;}
@@ -97,6 +98,12 @@ ws = {delim}+
 "if" {return Parser.IF;}
 "else" {return Parser.ELSE;}
 "while"		{return Parser.WHILE;}
+"int"   {return Parser.DECLR_INT;}
+"String"    {return Parser.DECLR_STR;}
+"bool"  {return Parser.DECLR_BOOL;}
+
+
+
 
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
 
