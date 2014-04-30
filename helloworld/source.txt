@@ -1,0 +1,82 @@
+define game{
+	game_name: "Hello World";
+	num_of_players: 2;
+	server_listening_port: 4115;
+}
+
+define cards[
+	CardOne{
+		value: 1;
+		method{
+			
+		}
+	}
+
+	CardTwo{
+		value: 2;
+		method{} 
+	}
+
+	CardThree{
+		value: 3;
+		method{}
+	}
+]
+
+define characters[
+	Normal{
+		hp: 1;
+		name: "People";
+		skill :[]
+	}
+]
+
+init{
+	for(int i=0; i<playerList.size(); i++){
+		Player p = playerList.get(i);
+		p.setCharacter(Normal);
+	}
+	for(int i=0; i<10; i++){
+		AddToCardStack(CardOne);
+		AddToCardStack(CardTwo);
+		AddToCardStack(CardThree);
+	}
+	Shuffle();
+}
+
+round{
+	roundbegin{}
+	
+	turn{
+		drawCard(1);
+		sendPlayerInfo;
+		sendHandCardInfo;
+		
+		card = putCard();
+		retEachRound.put(playerId, card);
+	}
+
+	roundend{
+		winCond();
+	}
+}
+
+winCond{
+	int max=0;
+	int maxID=1;
+	String ret = "";
+	
+	foreachInRet(playerID){
+		int cardValue = ((Card) retEachRound.get(playerID)).value;
+		ret += "Player"+playerID+":"+value+", ";
+		if(cardValue>max){
+			max = cardValue;
+			maxID = id;
+		}
+	}
+	
+	Broadcast("Result:\n"+ret);
+	Broadcast("Player"+maxID+" win!");
+	
+	
+}

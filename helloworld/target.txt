@@ -1,0 +1,87 @@
+//game:  just edit the variable in Game.java
+========================================================
+public class CardOne implements ICard {
+	
+	public int value = 1;   //CardTwo: value=2 ...
+
+	@Override
+	public String getName() {
+		return Integer.toString(value);
+	}
+
+	@Override
+	public void method(PlayerBase dealer) {
+
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("Card ");
+		sb.append(getName());
+		sb.append(":{\n\tvalue=");
+		sb.append(value);
+		sb.append("\n}");
+		return sb.toString();
+	}
+}
+===============================================================
+public class Normal implements ICharacter{
+	public int hp=1;
+	public String name="people";
+
+	public void skill(Player dealer){}
+}
+
+=================================================================
+public void init(){
+		for(int i=0; i<10; i++){
+			cardStack.add(new Card(1));
+			cardStack.add(new Card(2));
+			cardStack.add(new Card(3));
+		}
+		Collections.shuffle(cardStack);
+		
+		retEachRound = new HashMap<Integer, ICard>(); //add this line auto
+}
+=================================================================
+public void round_begin(){
+}
+=================================================================
+public void playerTurn(Player player) throws IOException{
+		drawCard(player,1);
+		player.conn.sendBroadcast(PlayersInfo());
+		player.conn.sendBroadcast(HandCardInfo(player));
+		
+		ICard card = putCard(player);
+		retEachRound.put(player.id, card);
+
+		//add this line auto
+		droppedCardStack.add(card);
+}
+=====================================================================
+public void round_end() throws Exception{
+		winCond();
+}
+======================================================================
+public void winCond() throws Exception{
+		int max=0;
+		int maxID = 1;
+		String ret = "";
+		
+	
+		for(int id : retEachRound.keySet()){
+			
+			int value = ((Card) retEachRound.get(id)).value;
+			
+			ret += "Player"+id+":"+value+", ";
+			if(value>max){
+				max = value;
+				maxID = id;
+			}
+		}
+
+		GameServer.broadcast("Result:\n "+ret);
+
+		GameServer.broadcast("Player"+maxID+" win!");
+		
+}
