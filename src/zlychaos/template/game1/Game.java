@@ -142,6 +142,8 @@ public class Game {
 		int max=0;
 		int maxID = 1;
 		String ret = "";
+		
+	
 		for(int id : retEachRound.keySet()){
 			
 			int value = ((Card) retEachRound.get(id)).value;
@@ -152,20 +154,20 @@ public class Game {
 				maxID = id;
 			}
 		}
-		boolean should_even = true;
-		for(int id:retEachRound.keySet()){
-			
-			int value = ((Card) retEachRound.get(id)).value;
-			
-			if(value!=max){
-				should_even = false;
-				break;
-			}
-		}
+//		boolean isTie = true;
+//		for(int id:retEachRound.keySet()){
+//			
+//			int value = ((Card) retEachRound.get(id)).value;
+//			
+//			if(value!=max){
+//				isTie = false;
+//				break;
+//			}
+//		}
 		GameServer.broadcast("Result:\n "+ret);
-		if(should_even){
-			GameServer.broadcast("This Round is even");
-		}else 
+//		if(isTie){
+//			GameServer.broadcast("This Round is tie");
+//		}else 
 			GameServer.broadcast("Player"+maxID+" win!");
 		
 	}

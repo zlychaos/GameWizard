@@ -32,6 +32,4 @@ public class Card implements ICard {
 		return sb.toString();
 	}
 	
-	
-
 }
