@@ -31,11 +31,25 @@ public class Game {
 	
 	private HashMap<Integer, ICard> retEachRound;
 	
-	public ICard putCard(Player p) throws IOException {
-		String input = p.conn.waitForInput("Please deal a card");
-		int card_index = Integer.parseInt(input);
-		ICard c = p.handCards.remove(card_index-1);
-		return c;
+	public ICard putCard(Player player) throws IOException {
+		player.conn.sendBroadcast("Your hand cards: " + HandCardInfo(player));
+		
+		String input = null;
+		ICard c = null;
+		while(player.handCards.size() > 0 && player.isOnline()){
+			try{
+				input = player.conn.waitForInput("Please deal a card( type the index of card [" + 1 + "~" + player.handCards.size() + "])");
+				int card_index = Integer.parseInt(input);
+				if(card_index <= player.handCards.size() && card_index > 0){
+					c = player.handCards.remove(card_index-1);
+					return c;
+				}
+			} catch ( NumberFormatException e ){
+				player.conn.sendBroadcast("Please type the index of card [" + 1 + "~" + player.handCards.size() + "]");
+			}
+		}
+		return null;
+		
 	}
 	
 	public void drawCard(Player p, int num) throws IOException{
@@ -67,6 +81,9 @@ public class Game {
 		}
 		Collections.shuffle(cardStack);
 		
+		for(Player p : playerList)
+			p.setCharacter(new RegularGuyCharacter());
+		
 		retEachRound = new HashMap<Integer, ICard>();
 	}
 	
@@ -78,14 +95,23 @@ public class Game {
 		winCond();
 	}
 	
-	public void playerTurn(Player player) throws IOException{
+	public void playerTurnPrepare(Player player) throws IOException{
 		drawCard(player,1);
-		player.conn.sendBroadcast(PlayersInfo());
-		player.conn.sendBroadcast(HandCardInfo(player));
+	}
+	
+	public void playerTurn(Player player) throws IOException{
+		playerTurnPrepare(player);
+		player.conn.sendBroadcast(GameGeneralInfo());
 		
-		ICard c = putCard(player);
-		retEachRound.put(player.id, c);
-		droppedCardStack.add(c);
+		String input = player.conn.waitForInput("Use a skill( choose from "+player.character.getSkillList() + ", or put a card( Type: 'card' )");
+		if("card".equals(input)){
+			ICard c = putCard(player);
+			retEachRound.put(player.id, c);
+			droppedCardStack.add(c);
+		}
+		else{
+			player.character.skill(player, input);
+		}
 	}
 	
 	public void close() throws IOException{
@@ -96,7 +122,7 @@ public class Game {
 	
 	public void gamestart() throws Exception{
 		
-		int init_HP = 1;
+		//int init_HP = 1;
 		round = 2;
 		
 		playerList = new ArrayList<Player>();
@@ -110,7 +136,7 @@ public class Game {
 		//activePlayer = 1;
 		while(count++ < num_of_players){
 			
-			Player p = new Player(count, init_HP, GameServer);
+			Player p = new Player(count, GameServer);
 			
 			playerList.add(p);
 			p.conn.sendBroadcast("You are Player"+count);
@@ -186,25 +212,14 @@ public class Game {
 		currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
 		currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
 		
-		for(int i=0; i<=num_of_players; i++){
-			if(!map.get(currentPlayerIndex).isOnline()){
-				currentPlayerIndex = (currentPlayerIndex+1)%num_of_players;
-				currentPlayerIndex = currentPlayerIndex==0?num_of_players:currentPlayerIndex;
-			}else{
-				break;
-			}
-		}
-		
-		
 		GameServer.broadcast("Now Turn: Player"+currentPlayerIndex);
 		
 		Player playerInTurn = map.get(currentPlayerIndex);
-		//do card distribution here
-		playerTurn(playerInTurn);
+		if(playerInTurn.isOnline())
+			playerTurn(playerInTurn);
 		
 	}
 	
-	// This info is for the everyone
 	public String PlayersInfo(){
 		StringBuilder sb = new StringBuilder("\n--------------");
 		for(Player p : playerList){
@@ -228,8 +243,19 @@ public class Game {
 	
 	public String GameGeneralInfo(){
 		StringBuilder sb = new StringBuilder();
+		int length = name.length();
+		sb.append('+');
+		for(int i=0;i<length;i++)
+			sb.append('-');
+		sb.append("+\n|");
 		sb.append(name);
+		sb.append("|\n+");
+		for(int i=0;i<length;i++)
+			sb.append('-');
+		sb.append("+");
 		sb.append("\nThe player in turn: Player " + currentPlayerIndex);
+		sb.append("\nList of players: ");
+		sb.append(PlayersInfo());
 		return sb.toString();
 	}
 	

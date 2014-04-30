@@ -14,6 +14,8 @@ public abstract class PlayerBase implements ICommunicatable {
 	public ServerConnection conn;
 	public boolean online;
 	
+	public CharacterBase character;
+	
 	public PlayerBase(int id, Server server){
 		
 		this.id = id;
@@ -22,6 +24,10 @@ public abstract class PlayerBase implements ICommunicatable {
 		this.online = true;
 	}
 	
+	public void setCharacter(CharacterBase character) {
+		this.character = character;
+	}
+
 	@Override
 	public boolean isOnline(){
 		return online;
