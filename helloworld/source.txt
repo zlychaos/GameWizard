@@ -55,10 +55,10 @@ round{
 	
 	turn{
 		drawCard(1);
-		sendPlayerInfo;
-		sendHandCardInfo;
+		send(GameGeneralInfo());
 		
 		Card card = putCard();
+		droppedCardStack.add(cardStack);
 	}
 
 	roundend{
@@ -70,20 +70,23 @@ round{
 
 void winCond(){
 	int max=0;
-	int maxPlayer;
+	int maxPlayer=-1;
 	String ret = "";
 	
 	foreach player_id in roundSummary{
-		int cardValue = roundSummary[player_id].value;
-		ret += "Player " + player_id + " : " + cardValue;
-		if(cardValue>max){
-			max = cardValue;
+		int value = roundSummary[player_id].value;
+		ret += "Player " + player_id + " : " + value + ", ";
+		if(value>max){
+			max = value;
 			maxPlayer = player_id;
 		}
 	}
 	
 	Broadcast("Result:\n"+ret);
-	Broadcast("Player " + player_id +" win!");
+	if( maxPlayer==-1)
+		Broadcast("No winner this turn");
+	else
+		Broadcast("Player " + maxPlayer +" win!");
 	
 	
 }

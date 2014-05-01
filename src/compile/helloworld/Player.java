@@ -1,15 +1,13 @@
-package zlychaos.template.game1;
+package compile.helloworld;
 
 import zhllz.gamewizard.basic.PlayerBase;
 import zhllz.gamewizard.communication.Server;
 import zhllz.gamewizard.communication.StrController;
 
 public class Player extends PlayerBase{
-	//public int HP;
 	
 	public Player(int id, Server server){
 		super(id, server);
-		//this.HP = HP;
 	}
 	
 	@Override

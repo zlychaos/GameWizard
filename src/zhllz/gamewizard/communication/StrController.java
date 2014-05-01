@@ -21,4 +21,6 @@ public class StrController {
 	public static String Resp_ID = "Resp_ID";
 	public static String MSG = "Msg";
 	
+	public static String QUIT = "quit";
+	
 }
