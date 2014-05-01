@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import compile.helloworld.cards.*;
 import compile.helloworld.characters.*;
-
 import zhllz.gamewizard.basic.ICard;
 import zhllz.gamewizard.communication.Server;
 
@@ -84,24 +84,36 @@ public class Game {
 				maxPlayer = player_id;
 			}
 		}
-		GameServer.broadcast("Result:\n "+ret);
+		broadcast("Result:\n "+ret);
 		if( maxPlayer==-1){
-			GameServer.broadcast("No winner this turn");
+			broadcast("No winner this turn");
 		}
 		else{
-			GameServer.broadcast("Player " + maxPlayer +" win!");
+			broadcast("Player " + maxPlayer +" win!");
 		}
 	}
 	
-	public static void playerTurn(Player player) throws IOException{
+	public static void turn(Player player) throws IOException{
 		
 		drawCard(player,1);
-		player.conn.sendBroadcast(GameGeneralInfo());
+		sendToOnePlayer(player, GameGeneralInfo());
 		ICard c = putCard(player);
 		droppedCardStack.add(c);
 		
-		roundSummary.put(player.id, c);
+		//roundSummary.put(player.id, c);
 		
+	}
+	
+	public static void shuffle(List<?> list){
+		Collections.shuffle(list);
+	}
+	
+	public static void sendToOnePlayer(Player player, String msg) throws IOException{
+		player.conn.sendBroadcast(msg);
+	}
+	
+	public static void broadcast(String msg) throws IOException{
+		GameServer.broadcast(msg);
 	}
 	
 	public static void close() throws IOException{
@@ -163,6 +175,9 @@ public class Game {
 				int card_index = Integer.parseInt(input);
 				if(card_index <= player.handCards.size() && card_index > 0){
 					c = player.handCards.remove(card_index-1);
+					
+					roundSummary.put(player.id, c);
+					
 					return c;
 				}
 			} catch ( NumberFormatException e ){
@@ -213,7 +228,7 @@ public class Game {
 		
 		Player playerInTurn = map.get(currentPlayerIndex);
 		if(playerInTurn.isOnline())
-			playerTurn(playerInTurn);
+			turn(playerInTurn);
 		
 	}
 	

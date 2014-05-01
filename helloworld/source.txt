@@ -40,7 +40,7 @@ init{
 		cardStack.add(CardThree);
 		i = i+1;
 	}
-	Shuffle(cardStack);
+	shuffle(cardStack);
 	
 	foreach player in playerList{
 		player.setCharacter(RegularGuy);
@@ -55,7 +55,7 @@ round{
 	
 	turn{
 		drawCard(player, 1);
-		SendToPlayer(player, GameGeneralInfo());
+		endToOnePlayer(player, GameGeneralInfo());
 		
 		Card card = putCard(player);
 		droppedCardStack.add(cardStack);
@@ -75,12 +75,12 @@ round{
 			}
 		}
 	
-		Broadcast("Result:\n"+ret);
+		broadcast("Result:\n"+ret);
 		if( maxPlayer==-1){
-			Broadcast("No winner this turn");
+			broadcast("No winner this turn");
 		}
 		else{
-			Broadcast("Player " + maxPlayer +" win!");
+			broadcast("Player " + maxPlayer +" win!");
 		}
 	}
 }
