@@ -1,14 +1,16 @@
 define game{
 	game_name: "Hello World";
 	num_of_players: 2;
-	server_listening_port: 4115;
+	maximum_round: 2;
+	//server_listening_port: 4115;
+	//In this version, let make the port pre-defined as 4119, 
+	//so that compiler would not touch Client.java in communication package
 }
 
 define cards[
 	CardOne{
 		value: 1;
-		method{
-			
+		method{	
 		}
 	}
 
@@ -24,36 +26,39 @@ define cards[
 ]
 
 define characters[
-	Normal{
-		hp: 1;
-		name: "People";
+	RegularGuy{
+		HP: 1;
+		//name: "People"; Let's use RegulayGuy as name here
 		skill :[]
 	}
 ]
 
 init{
-	for(int i=0; i<playerList.size(); i++){
-		Player p = playerList.get(i);
-		p.setCharacter(Normal);
-	}
+	
 	for(int i=0; i<10; i++){
-		AddToCardStack(CardOne);
-		AddToCardStack(CardTwo);
-		AddToCardStack(CardThree);
+		cardStack.add(CardOne);
+		cardStack.add(CardTwo);
+		cardStack.add(CardThree);
 	}
-	Shuffle();
+	
+	foreach player in playerList{
+		player.setCharacter(Normal);
+	}
+	
+	Shuffle(cardStack);
 }
 
 round{
-	roundbegin{}
+	roundbegin{
+		
+	}
 	
 	turn{
 		drawCard(1);
 		sendPlayerInfo;
 		sendHandCardInfo;
 		
-		card = putCard();
-		retEachRound.put(playerId, card);
+		Card card = putCard();
 	}
 
 	roundend{
@@ -61,22 +66,24 @@ round{
 	}
 }
 
-winCond{
+
+
+void winCond(){
 	int max=0;
-	int maxID=1;
+	int maxPlayer;
 	String ret = "";
 	
-	foreachInRet(playerID){
-		int cardValue = ((Card) retEachRound.get(playerID)).value;
-		ret += "Player"+playerID+":"+value+", ";
+	foreach player_id in roundSummary{
+		int cardValue = roundSummary[player_id].value;
+		ret += "Player " + player_id + " : " + cardValue;
 		if(cardValue>max){
 			max = cardValue;
-			maxID = id;
+			maxPlayer = player_id;
 		}
 	}
 	
 	Broadcast("Result:\n"+ret);
-	Broadcast("Player"+maxID+" win!");
+	Broadcast("Player " + player_id +" win!");
 	
 	
 }
