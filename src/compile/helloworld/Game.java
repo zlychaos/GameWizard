@@ -16,16 +16,17 @@ public class Game {
 	
 	public static Server GameServer;
 	public static int port = 4119;
-	public static int maximum_round = 2; 
 	
 	/*
 	define Game{
 		name: "Hello World";
 		num_of_players: 2;
+		maximum_round: 2;
 	}
 	*/
 	public static String name = "Hello World";
 	public static int num_of_players = 2;
+	public static int maximum_round = 2; 
 	
 	public static ArrayList<Player> playerList;
 	public static HashMap<Integer, Player> map;
@@ -59,7 +60,37 @@ public class Game {
 	}
 	
 	public static void round_end() throws Exception{
-		winCond();
+		int max=0;
+		int maxPlayer = -1;
+		String ret = "";
+	
+		for(int player_id : roundSummary.keySet()){
+			int tmp = 0;
+			ICard c = roundSummary.get(player_id);
+			if(c instanceof CardOne){
+				tmp = ((CardOne) c).value;
+			}
+			else if(c instanceof CardTwo){
+				tmp = ((CardTwo) c).value;
+			}
+			else{
+				tmp = ((CardThree) c).value;
+			}
+			int value = tmp;
+			
+			ret += "Player "+player_id+" : "+value+", ";
+			if(value>max){
+				max = value;
+				maxPlayer = player_id;
+			}
+		}
+		GameServer.broadcast("Result:\n "+ret);
+		if( maxPlayer==-1){
+			GameServer.broadcast("No winner this turn");
+		}
+		else{
+			GameServer.broadcast("Player " + maxPlayer +" win!");
+		}
 	}
 	
 	public static void playerTurn(Player player) throws IOException{
@@ -118,40 +149,6 @@ public class Game {
 			nextOnlinePlayer();
 		
 		close();	
-		
-	}
-	
-
-	public static void winCond() throws Exception{
-		int max=0;
-		int maxPlayer = -1;
-		String ret = "";
-	
-		for(int player_id : roundSummary.keySet()){
-			int tmp = 0;
-			ICard c = roundSummary.get(player_id);
-			if(c instanceof CardOne){
-				tmp = ((CardOne) c).value;
-			}
-			else if(c instanceof CardTwo){
-				tmp = ((CardTwo) c).value;
-			}
-			else{
-				tmp = ((CardThree) c).value;
-			}
-			int value = tmp;
-			
-			ret += "Player "+player_id+" : "+value+", ";
-			if(value>max){
-				max = value;
-				maxPlayer = player_id;
-			}
-		}
-		GameServer.broadcast("Result:\n "+ret);
-		if( maxPlayer==-1)
-			GameServer.broadcast("No winner this turn");
-		else
-			GameServer.broadcast("Player " + maxPlayer +" win!");
 		
 	}
 	

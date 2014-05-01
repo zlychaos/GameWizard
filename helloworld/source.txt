@@ -10,8 +10,7 @@ define game{
 define cards[
 	CardOne{
 		value: 1;
-		method{	
-		}
+		method{}
 	}
 
 	CardTwo{
@@ -34,18 +33,19 @@ define characters[
 ]
 
 init{
-	
-	for(int i=0; i<10; i++){
+	int i = 0;
+	while(i<10){
 		cardStack.add(CardOne);
 		cardStack.add(CardTwo);
 		cardStack.add(CardThree);
+		i = i+1;
 	}
+	Shuffle(cardStack);
 	
 	foreach player in playerList{
-		player.setCharacter(Normal);
+		player.setCharacter(RegularGuy);
 	}
 	
-	Shuffle(cardStack);
 }
 
 round{
@@ -54,39 +54,34 @@ round{
 	}
 	
 	turn{
-		drawCard(1);
-		send(GameGeneralInfo());
+		drawCard(player, 1);
+		SendToPlayer(player, GameGeneralInfo());
 		
-		Card card = putCard();
+		Card card = putCard(player);
 		droppedCardStack.add(cardStack);
 	}
 
 	roundend{
-		winCond();
-	}
-}
-
-
-
-void winCond(){
-	int max=0;
-	int maxPlayer=-1;
-	String ret = "";
+		int max=0;
+		int maxPlayer=-1;
+		String ret = "";
 	
-	foreach player_id in roundSummary{
-		int value = roundSummary[player_id].value;
-		ret += "Player " + player_id + " : " + value + ", ";
-		if(value>max){
-			max = value;
-			maxPlayer = player_id;
+		foreach player_id in roundSummary{
+			int value = roundSummary[player_id].value;
+			ret += "Player " + player_id + " : " + value + ", ";
+			if(value>max){
+				max = value;
+				maxPlayer = player_id;
+			}
+		}
+	
+		Broadcast("Result:\n"+ret);
+		if( maxPlayer==-1){
+			Broadcast("No winner this turn");
+		}
+		else{
+			Broadcast("Player " + maxPlayer +" win!");
 		}
 	}
-	
-	Broadcast("Result:\n"+ret);
-	if( maxPlayer==-1)
-		Broadcast("No winner this turn");
-	else
-		Broadcast("Player " + maxPlayer +" win!");
-	
-	
 }
+
