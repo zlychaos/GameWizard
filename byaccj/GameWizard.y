@@ -55,6 +55,7 @@
 %token <ival> INTEGER
 %token <sval> STRING
 %token <sval> ID
+%token CARD
 
 %type <sval> game_df
 %type <sval> game_df_content
@@ -104,6 +105,7 @@
 %type <sval> round_end_block
 %type <sval> turn_block
 %type <sval> dying_block
+%type <sval> AUGED_STATEMENT_LIST
 
 
 %left '-' '+'
@@ -112,9 +114,9 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: {/*the global block*/SymbolTable.pushNewBlock(); SymbolTable.addKeywordsAndBuildIn();} game_df card_df character_df init_block round_block dying_block
+input: {/*the global block*/SymbolTable.pushNewBlock(); SymbolTable.addKeywordsAndBuildIn();} game_df card_df character_df {curScope=null;} init_block round_block dying_block
 	{
-		String methods = $5+$6+$7;
+		String methods = $6+$7+$8;
 		Util.writeGameJava($2,methods);
 		
 	}
@@ -138,30 +140,34 @@ card_df : CARD_DF '[' cards_df_content ']' {System.out.println("2");}
 cards_df_content : card_df_content cards_df_content  {System.out.println("1");}
                | card_df_content {System.out.println("3");}
 		;
-card_df_content: ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' {System.out.println("Before expand statement list"); SymbolTable.pushNewBlock();} STATEMENT_LIST  '}' '}'
-			{System.out.println("======================================================finished card_df_content"); SymbolTable.popBlock(); Util.writeCardsJava($1.toString(),$3,$11); }
-	| ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' VOID  '}' '}'
-	         {System.out.println("5");Util.writeCardsJava($1.toString(),$3,""); }       ;
-
+card_df_content: CARD ID '{' {curScope=$2; checkDulDeclare($2); SymbolTable.addRecordToCurrentBlock($2, SymbolType.CARD);} variable_list METHOD '(' PLAYER DEALER ')' '{' { SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST  '}' '}'
+			{System.out.println("======================================================finished card_df_content"); SymbolTable.popBlock(); Util.writeCardsJava($2.toString(),$5,$13); }
+	;
 character_df :  CHARACTER_DF '[' characters_df_content ']' {System.out.println("character_df");}
              ;
 characters_df_content : characters_df_content character_df_content {System.out.println("characters_df_content");}
 			| character_df_content {System.out.println("characters_df_content");}
 			;
-character_df_content : ID '{'
+character_df_content : ID '{' {curScope=$1; checkDulDeclare($1); SymbolTable.addRecordToCurrentBlock($1, SymbolType.CHARACTER);} 
 			variable_list
 			skill_df
-			'}'             {Util.writeCharacterJava($1,$3,$4); System.out.println("character_df_content");}
+			'}'             {Util.writeCharacterJava($1,$4,$5); System.out.println("character_df_content");}
 		; 
 variable_list : ID ':' INTEGER ';' variable_list	
-        {ArrayList<String> result= new ArrayList<String>();
+        {
+	    checkDulDeclare($1);
+	    SymbolTable.addRecordToCardCharacterBlock(curScope, $1, SymbolType.CARD_VARIABLE);	    
+	    ArrayList<String> result= new ArrayList<String>();
             result.add("Integer"); result.add($1);result.add(String.valueOf($3));
             ArrayList<String> x1 = (ArrayList<String>)($5);
             
             result.addAll(x1); $$=result;  System.out.println("variable_list");
                 }
 		| ID ':' STRING	';' variable_list
-        {ArrayList<String> result= new ArrayList<String>();
+        {
+   	    checkDulDeclare($1);
+	    SymbolTable.addRecordToCardCharacterBlock(curScope, $1, SymbolType.CARD_VARIABLE);	    
+	    ArrayList<String> result= new ArrayList<String>();
             result.add("String"); result.add($1);result.add($3);
             ArrayList<String> x1 = (ArrayList<String>)($5);
             result.addAll(x1); $$=result;   System.out.println("variable_list");
@@ -187,7 +193,8 @@ skill_lists: skill_list skill_lists {ArrayList<String> result= new ArrayList<Str
 
 
 skill_list:
-        ID '{' METHOD '(' PLAYER DEALER ')' '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' '}'
+        ID '{' METHOD '(' PLAYER DEALER ')' '{' {checkDulDeclare($1);SymbolTable
+.addRecordToCardCharacterBlock(curScope, $1, SymbolType.CHARACTER_SKILL);SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' '}'
         {
 	    SymbolTable.popBlock();
 	    ArrayList<String> result= new ArrayList<String>();
@@ -195,28 +202,15 @@ skill_list:
             result.add($10);
             $$=result;
         }
-	|
-        ID '{' METHOD '(' PLAYER DEALER ')' '{' VOID '}' '}'
-        {ArrayList<String> result= new ArrayList<String>();
-            result.add($1);
-            result.add("");
-            $$=result;
-        }
 	;
 
 init_block:
-	INIT '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' 
+	INIT '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' 
 	{
 		SymbolTable.popBlock();
 		String ret = "public static void init(){\n"+$4+"\n}\n";
 		$$=ret;
 		System.out.println("init_block statement");
-	}
-	|
-	INIT '{' VOID '}' 
-	{
-		String ret = "public static void init(){}\n";
-		System.out.println("init_block void");
 	}
 	;
 
@@ -235,38 +229,30 @@ round_block:
 	;
 
 round_begin_block:
-	ROUND_BEGIN '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' { SymbolTable.popBlock();$$=$4; System.out.println("round_begin");}
-	|
-	ROUND_BEGIN '{' VOID '}' {$$=""; System.out.println("round_begin void");}
+	ROUND_BEGIN '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' { SymbolTable.popBlock();$$=$4; System.out.println("round_begin");}
 	;
 
 turn_block:
-	TURN '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' {SymbolTable.popBlock();$$=$4;}
-	|
-	TURN '{' VOID '}' {$$=""; System.out.println("turn void");}
+	TURN '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' {SymbolTable.popBlock();$$=$4;}
 	;
 
 round_end_block:
-	ROUND_END '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' {SymbolTable.popBlock(); $$=$4;}
-	|
-	ROUND_END '{' VOID '}' {$$="";}
+	ROUND_END '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' {SymbolTable.popBlock(); $$=$4;}
 	;
 
 dying_block:
-	DYING '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' 
+	DYING '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' 
 	{
 		SymbolTable.popBlock();
 		String ret = "public static void dying(){\n"+$4+"\n}\n";
 		$$=ret;
 	}
-	|
-	DYING '{' VOID '}'
-	{
-		String ret = "public static void dying(){}\n";
-		$$=ret;
-	}
 	;
 
+AUGED_STATEMENT_LIST:
+STATEMENT_LIST {$$=$1;}
+| VOID {$$="";}
+;
 
 STATEMENT_LIST
 :   SelectionStatement  {System.out.println("selection");$$=$1;}
@@ -323,8 +309,8 @@ VariableDeclarators
 ;
 
 VariableDeclarator
-: DeclaratorName    {System.out.println("1");$$=$1;}
-| DeclaratorName '=' VariableInitializer    {$$=$1+'='+$3;}
+: DeclaratorName    {checkDulDeclare($1);System.out.println("1");$$=$1;}
+| DeclaratorName '=' VariableInitializer    {checkDulDeclare($1);SymbolTable.addRecordToCurrentBlock($1,SymbolType.LOCAL_VARIABLE);$$=$1+'='+$3;}
 ;
 
 DeclaratorName
@@ -488,6 +474,10 @@ Expression
 
 %%
 
+  /*This variable represent which scope the parser is in, so the STATEMENT_LIST in some card or character can be translated*/
+  /*If in some card or character, the scope is the card or character name, otherwise, the scope is null*/
+  public static String curScope = null;
+
   private Yylex lexer;
 
   private int yylex () {
@@ -500,6 +490,19 @@ Expression
       System.err.println("IO error :"+e);
     }
     return yyl_return;
+  }
+
+  public void checkDulDeclare (String name){
+    SymbolType type = SymbolTable.lookUpSymbolType(name);
+    if(type != SymbolType.UNDEFINED){
+        yyerror("Variable "+name+" has been defined before! System exits!");
+    }
+    if(curScope !=null){
+	boolean result = SymbolTable.checkCardCharacterVar(curScope, name);
+	if(result){
+		yyerror("Variable "+name+" has been defined before! System exits!");
+	}
+    }
   }
 
 

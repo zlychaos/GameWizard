@@ -6,7 +6,7 @@ public class SymbolTable {
 	
 	public static void addKeywordsAndBuildIn(){
 		/*add all keywords and build-in method to symbol table first*/
-		ScopeBlock globalBlock = table.get(0);
+		ScopeBlock globalBlock = table.getFirst();
 		globalBlock.addRecord("define",SymbolType.KEYWORD);
 		globalBlock.addRecord("game",SymbolType.KEYWORD);
 		globalBlock.addRecord("cards",SymbolType.KEYWORD);
@@ -81,14 +81,14 @@ public class SymbolTable {
 	
 	public static void addRecordToCardCharacterBlock(String cardCharacterName,
 			String varName, SymbolType type){
-		ScopeBlock globalBlock = table.get(0);
+		ScopeBlock globalBlock = table.getFirst();
 		ScopeBlock cardCharacterDefineBlock = globalBlock
 				.findMatchCardCharacter(cardCharacterName);
 		cardCharacterDefineBlock.addRecord(varName, type);
 		
 	}
 
-	public static SymbolType loopUpSymbolType(String name) {
+	public static SymbolType lookUpSymbolType(String name) {
 		Iterator<ScopeBlock> iter = table.descendingIterator();
 
 		while (iter.hasNext()) {

@@ -24,6 +24,7 @@
 GAME_DF = "define game"
 GAME_NM = "game_name"
 CARD_DF = "define cards"
+CARD = "Card"
 CHARACTER_DF = "define characters"
 PLAYER_C = "num_of_players"
 METHOD = "method"
@@ -93,6 +94,7 @@ ws = {delim}+
 		return Parser.INTEGER;}
 {STRING}   { yyparser.yylval = new ParserVal(yytext()); return Parser.STRING;}
 
+{CARD} {return Parser.CARD;}
 {GAME_DF}  {return Parser.GAME_DF;}
 {CARD_DF} {return Parser.CARD_DF;}
 {CHARACTER_DF} {return Parser.CHARACTER_DF;}

@@ -27,7 +27,7 @@ public class Game {
 	public static boolean gameover;
 	
 	public static HashMap<Integer, ICard> roundSummary = new HashMap<Integer, ICard>();
-public static String name = "Hello World";
+public static String game_name = "Hello World";
 public static int num_of_players = 2;
 public static int maximum_round = 2;
 public static void init(){
@@ -44,7 +44,9 @@ int maxPlayer=1;
 String ret="";
 
 }
-public static void dying(){}
+public static void dying(){
+
+}
 public static void shuffle(List<?> list){
 		Collections.shuffle(list);
 	}
