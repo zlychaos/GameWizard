@@ -1,7 +1,7 @@
 package compile.helloworld.cards;
 
 import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class CardThree implements ICard {
 
@@ -13,7 +13,7 @@ public class CardThree implements ICard {
 	}
 
 	@Override
-	public void method(PlayerBase dealer) {
+	public void method(Player dealer) {
 		// TODO Auto-generated method stub
 
 	}

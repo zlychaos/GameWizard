@@ -1,7 +1,7 @@
 package zlychaos.template.game1;
 
 import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class Card implements ICard {
 	
@@ -17,7 +17,7 @@ public class Card implements ICard {
 	}
 
 	@Override
-	public void method(PlayerBase dealer) {
+	public void method(Player dealer) {
 		// TODO Auto-generated method stub
 
 	}

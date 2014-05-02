@@ -22,6 +22,6 @@ public abstract class CharacterBase {
 	
 	public abstract String getName();
 	public abstract String getDiscription();
-	public abstract boolean skill(PlayerBase p, String skillName);
+	public abstract boolean skill(Player p, String skillName);
 	
 }
