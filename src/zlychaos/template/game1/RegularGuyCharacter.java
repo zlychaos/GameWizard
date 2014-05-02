@@ -1,7 +1,7 @@
 package zlychaos.template.game1;
 
 import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class RegularGuyCharacter extends CharacterBase {
 
@@ -24,7 +24,7 @@ public class RegularGuyCharacter extends CharacterBase {
 	}
 
 	@Override
-	public boolean skill(PlayerBase p, String skillName) {
+	public boolean skill(Player p, String skillName) {
 		if("Skill1".equals(skillName)){
 			this.HP = this.HP + 1 - 1;
 			return true;

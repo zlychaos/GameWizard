@@ -1,6 +1,5 @@
 package compile.helloworld;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +9,7 @@ import java.util.List;
 import compile.helloworld.cards.*;
 import compile.helloworld.characters.*;
 import zhllz.gamewizard.basic.ICard;
+import zhllz.gamewizard.basic.Player;
 import zhllz.gamewizard.communication.Server;
 
 public class Game {
@@ -24,7 +24,7 @@ public class Game {
 		maximum_round: 2;
 	}
 	*/
-	public static String name = "Hello World";
+	public static String game_name = "Hello World";
 	public static int num_of_players = 2;
 	public static int maximum_round = 2; 
 	
@@ -149,7 +149,7 @@ public class Game {
 		}
 		
 		System.out.println("Game Start!");
-		GameServer.broadcast(name + ": Game Start!");
+		GameServer.broadcast(game_name + ": Game Start!");
 		
 		init();
 		
@@ -255,12 +255,12 @@ public class Game {
 	
 	public static String GameGeneralInfo(){
 		StringBuilder sb = new StringBuilder();
-		int length = name.length();
+		int length = game_name.length();
 		sb.append('+');
 		for(int i=0;i<length;i++)
 			sb.append('-');
 		sb.append("+\n|");
-		sb.append(name);
+		sb.append(game_name);
 		sb.append("|\n+");
 		for(int i=0;i<length;i++)
 			sb.append('-');

@@ -1,13 +1,32 @@
-package compile.helloworld;
+package zhllz.gamewizard.basic;
 
-import zhllz.gamewizard.basic.PlayerBase;
+import java.util.ArrayList;
+
+import zhllz.gamewizard.communication.ICommunicatable;
 import zhllz.gamewizard.communication.Server;
+import zhllz.gamewizard.communication.ServerConnection;
 import zhllz.gamewizard.communication.StrController;
 
-public class Player extends PlayerBase{
+public class Player implements ICommunicatable {
+	
+	public int id;
+	public ArrayList<ICard> handCards;
+	
+	public ServerConnection conn;
+	public boolean online;
+	
+	public CharacterBase character;
 	
 	public Player(int id, Server server){
-		super(id, server);
+		
+		this.id = id;
+		this.handCards = new ArrayList<ICard>();
+		this.conn = server.waitForPlayer(this);;
+		this.online = true;
+	}
+	
+	public void setCharacter(CharacterBase character) {
+		this.character = character;
 	}
 	
 	@Override
@@ -43,6 +62,10 @@ public class Player extends PlayerBase{
 		online = false;
 	}
 	
-	
+
+	@Override
+	public boolean isOnline(){
+		return online;
+	}
 
 }

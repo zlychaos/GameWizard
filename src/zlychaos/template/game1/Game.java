@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import zhllz.gamewizard.basic.ICard;
+import zhllz.gamewizard.basic.Player;
 import zhllz.gamewizard.communication.Server;
 
 public class Game {
