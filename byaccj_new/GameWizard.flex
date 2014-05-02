@@ -29,15 +29,19 @@ CHARACTER_DF = "define characters"
 /* built-in function names */
 METHOD = "method"
 INIT = "init"
-ROUNDBEGIN = "round_begin"
-ROUNDEND = "round_end"
-
+ROUND_BEGIN = "round_begin"
+ROUND_END = "round_end"
+TURN = "turn"
 
 PLAYER = "Player"
+CARD = "Card"
+VOID = "void"
+
 INTEGER = [0-9]+
 STRING = \"[^\"]*\"
 SKILL = "skill"
 
+STATLIST = "dosomethinghere"
 
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
@@ -95,6 +99,11 @@ ws = {delim}+
 {METHOD} {return Parser.METHOD;}
 {PLAYER} {return Parser.PLAYER;}
 {SKILL} {return Parser.SKILL;}
+{INIT} {return Parser.INIT;}
+{ROUND_END} {return Parser.ROUND_END;}
+{ROUND_BEGIN} {return Parser.ROUND_BEGIN;}
+{TURN} {return Parser.TURN;}
+
 "false" {return Parser.FALSE;}
 "true" {return Parser.TRUE;}
 "if" {return Parser.IF;}
@@ -103,8 +112,8 @@ ws = {delim}+
 "int"   {return Parser.DECLR_INT;}
 "String"    {return Parser.DECLR_STR;}
 "bool"  {return Parser.DECLR_BOOL;}
-
-
+{VOID} {return Parser.VOID;}
+{STATLIST} {yyparser.yylval = new ParserVal(yytext()); ;return Parser.STATLIST;}
 
 
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}

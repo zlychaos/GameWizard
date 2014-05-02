@@ -33,11 +33,7 @@ CLASSES = \
 	zhllz/gamewizard/basic/Group.java \
 	zhllz/gamewizard/basic/ICard.java \
 	zhllz/gamewizard/basic/PlayerBase.java \
-	mygame/Game.java  \
-	mygame/cards/Attack.java \
-	mygame/cards/Defense.java \
-	mygame/characters/King.java \
-	mygame/characters/No_Val.java
+	mygame/Game.java ###
 
 #
 # the default make target entry

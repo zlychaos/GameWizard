@@ -1,16 +1,17 @@
-package compile.helloworld.characters;
+package mygame.characters;
 
 import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class No_Val extends CharacterBase {
 
-	public int hp=3
+	public int  hp=3
 
 	
 	public RegularGuy(){
-		skillList = new String[0];
-		
+		skillList = new String[1];
+				skillList[0] = "mercy";
+
 	}
 	
 	@Override
@@ -24,8 +25,11 @@ public class No_Val extends CharacterBase {
 	}
 
 	@Override
-	public boolean skill(PlayerBase p, String skillName) {
-		
+	public boolean skill(Player p, String skillName) {
+				if("mercy".equals(skillName){
+dosomethingherereturn true;
+		}
+
 		return false;
 	}
 	

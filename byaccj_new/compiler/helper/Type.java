@@ -2,6 +2,6 @@ package compiler.helper;
 
 public enum Type {
 	
-	INTEGER, DOUBLE, STRING, BOOLEAN, PLAYER, CHARACTER, CARD 
+	INTEGER, DOUBLE, STRING, BOOLEAN, PLAYER, CHARACTER, CARD, VOID 
 
 }

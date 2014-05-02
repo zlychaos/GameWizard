@@ -1,14 +1,17 @@
 package compiler.helper;
 
+import java.util.ArrayList;
+
 public class JsonItem {
 	
-	public boolean isAttribute;// true for attribute, false for function
+	public JsonItemType type;
 	public AttributeObj attr;
 	public FunctionObj func;
+	public ArrayList<Skill> skills;
 	
-	public JsonItem(boolean isAttribute) {
+	public JsonItem(JsonItemType type) {
 		super();
-		this.isAttribute = isAttribute;
+		this.type = type;
 	}
 
 }
