@@ -32,7 +32,7 @@ GAME_PORT = "server_listening_port"
 INTEGER = [0-9]+
 STRING = \"[^\"]*\"
 SKILL = "skill"
-
+DEALER = "dealer"
 
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
@@ -93,6 +93,7 @@ ws = {delim}+
 {METHOD} {return Parser.METHOD;}
 {PLAYER} {return Parser.PLAYER;}
 {SKILL} {return Parser.SKILL;}
+{DEALER} {return Parser.DEALER;}
 "false" {return Parser.FALSE;}
 "true" {return Parser.TRUE;}
 "if" {return Parser.IF;}
