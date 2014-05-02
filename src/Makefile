@@ -27,8 +27,18 @@ CLASSES = \
 	zhllz/gamewizard/communication/StrController.java \
 	zhllz/gamewizard/communication/ICommunicatable.java \
 	zhllz/gamewizard/communication/ServerConnection.java \
-	zhllz/gamewizard/communication/Server.java\
-	zhllz/gamewizard/communication/Client.java
+	zhllz/gamewizard/communication/Server.java \
+	zhllz/gamewizard/communication/Client.java \
+	zhllz/gamewizard/basic/CharacterBase.java \
+	zhllz/gamewizard/basic/Group.java \
+	zhllz/gamewizard/basic/ICard.java \
+	zhllz/gamewizard/basic/PlayerBase.java \
+	compile/helloworld/cards/CardOne.java \
+	compile/helloworld/cards/CardTwo.java \
+	compile/helloworld/cards/CardThree.java \
+	compile/helloworld/characters/RegularGuy.java \
+	compile/helloworld/Player.java \
+	compile/helloworld/Game.java
 
 #
 # the default make target entry
@@ -62,6 +72,9 @@ classes: $(CLASSES:.java=.class)
 
 server: classes
 	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
+
+helloworld: classes
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:zhllz/gamewizard/basic/:compile/helloworld/:compile/helloworld/cards:compile/helloworld/characters:. compile.helloworld.Game
 
 client: classes
 	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
