@@ -112,10 +112,11 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: game_df card_df character_df init_block round_block dying_block
+input: {/*the global block*/SymbolTable.pushNewBlock();} game_df card_df character_df init_block round_block dying_block
 	{
-		String methods = $4+$5+$6;
-		Util.writeGameJava($1,methods);
+		String methods = $5+$6+$7;
+		Util.writeGameJava($2,methods);
+		
 	}
      ;
 game_df : GAME_DF '{' game_df_content '}'  {$$=$3; System.out.println("game_df");}
@@ -129,8 +130,8 @@ card_df : CARD_DF '[' cards_df_content ']' {System.out.println("2");}
 cards_df_content : card_df_content cards_df_content  {System.out.println("1");}
                | card_df_content {System.out.println("3");}
 		;
-card_df_content: ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' STATEMENT_LIST  '}' '}'
-			{System.out.println("5");Util.writeCardsJava($1.toString(),$3,$10); }
+card_df_content: ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' {System.out.println("Before expand statement list"); SymbolTable.pushNewBlock();} STATEMENT_LIST  '}' '}'
+			{System.out.println("======================================================finished card_df_content"); SymbolTable.popBlock(); Util.writeCardsJava($1.toString(),$3,$11); }
 	| ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' VOID  '}' '}'
 	         {System.out.println("5");Util.writeCardsJava($1.toString(),$3,""); }       ;
 
@@ -178,10 +179,12 @@ skill_lists: skill_list skill_lists {ArrayList<String> result= new ArrayList<Str
 
 
 skill_list:
-        ID '{' METHOD '(' PLAYER DEALER ')' '{' STATEMENT_LIST '}' '}'
-        {ArrayList<String> result= new ArrayList<String>();
+        ID '{' METHOD '(' PLAYER DEALER ')' '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' '}'
+        {
+	    SymbolTable.popBlock();
+	    ArrayList<String> result= new ArrayList<String>();
             result.add($1);
-            result.add($9);
+            result.add($10);
             $$=result;
         }
 	|
@@ -194,15 +197,18 @@ skill_list:
 	;
 
 init_block:
-	INIT '{' STATEMENT_LIST '}' 
+	INIT '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' 
 	{
-		String ret = "public static void init(){\n"+$3+"\n}\n";
+		SymbolTable.popBlock();
+		String ret = "public static void init(){\n"+$4+"\n}\n";
 		$$=ret;
+		System.out.println("init_block statement");
 	}
 	|
 	INIT '{' VOID '}' 
 	{
 		String ret = "public static void init(){}\n";
+		System.out.println("init_block void");
 	}
 	;
 
@@ -216,31 +222,33 @@ round_block:
 			"public static void round_end() throws Exception{"+
 			$5+"\n}\n";
 		$$ = ret;
+		System.out.println("round block");
 	}
 	;
 
 round_begin_block:
-	ROUND_BEGIN '{' STATEMENT_LIST '}' {$$=$3;}
+	ROUND_BEGIN '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' { SymbolTable.popBlock();$$=$4; System.out.println("round_begin");}
 	|
-	ROUND_BEGIN '{' VOID '}' {$$="";}
+	ROUND_BEGIN '{' VOID '}' {$$=""; System.out.println("round_begin void");}
 	;
 
 turn_block:
-	TURN '{' STATEMENT_LIST '}' {$$=$3;}
+	TURN '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' {SymbolTable.popBlock();$$=$4;}
 	|
-	TURN '{' VOID '}' {$$="";}
+	TURN '{' VOID '}' {$$=""; System.out.println("turn void");}
 	;
 
 round_end_block:
-	ROUND_end '{' STATEMENT_LIST '}' {$$=$3;}
+	ROUND_END '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' {SymbolTable.popBlock(); $$=$4;}
 	|
-	ROUND_end '{' VOID '}' {$$="";}
+	ROUND_END '{' VOID '}' {$$="";}
 	;
 
 dying_block:
-	DYING '{' STATEMENT_LIST '}' 
+	DYING '{' {SymbolTable.pushNewBlock();} STATEMENT_LIST '}' 
 	{
-		String ret = "public static void dying(){\n"+$3+"\n}\n";
+		SymbolTable.popBlock();
+		String ret = "public static void dying(){\n"+$4+"\n}\n";
 		$$=ret;
 	}
 	|
@@ -489,6 +497,7 @@ Expression
 
   public void yyerror (String error) {
     System.err.println ("Error: " + error);
+    System.exit(1);
   }
 
 
@@ -521,6 +530,7 @@ Expression
       interactive = true;
 	    yyparser = new Parser(new InputStreamReader(System.in));
     }
+
 
     yyparser.yyparse();
     

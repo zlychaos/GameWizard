@@ -15,6 +15,7 @@ sb.append("\n\tvalue=");
 		return "CardOne";
 	}
 @Overridepublic void method(PlayerBase dealer){
+int i=0;
 
 } 
 }
