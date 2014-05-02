@@ -30,6 +30,21 @@ public class Game {
 public static String name = "Hello World";
 public static int num_of_players = 2;
 public static int maximum_round = 2;
+public static void init(){
+int i=0;
+
+}
+public static void round_begin(){
+
+}
+public static void turn(Player player) throws IOException{
+}
+public static void round_end() throws Exception{int max=0;
+int maxPlayer=1;
+String ret="";
+
+}
+public static void dying(){}
 public static void shuffle(List<?> list){
 		Collections.shuffle(list);
 	}

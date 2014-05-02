@@ -7,7 +7,9 @@ define game{
 define cards[
 	CardOne{
 		value: 1;
-		method(Player dealer){void}
+		method(Player dealer){
+			int i = 0;
+		}
 	}
 
 	CardTwo{
@@ -45,52 +47,22 @@ define characters[
 
 init{
         int i = 0;
-        while(i<10){
-                cardStack.add(CardOne);
-                cardStack.add(CardTwo);
-                cardStack.add(CardThree);
-                i = i+1;
-        }
-        shuffle(cardStack);
 
-        foreach player in playerList{
-                player.setCharacter(RegularGuy);
-        }
 
 }
 round{
-        roundbegin{
-
+        round_begin{
+		void
         }
 
         turn{
-                drawCard(player, 1);
-                endToOnePlayer(player, GameGeneralInfo());
-
-                Card card = putCard(player);
-                droppedCardStack.add(cardStack);
+		void
         }
-        roundend{
+        round_end{
                 int max=0;
-                int maxPlayer=-1;
+                int maxPlayer=1;
                 String ret = "";
 
-                foreach player_id in roundSummary{
-                        int value = roundSummary[player_id].value;
-                        ret += "Player " + player_id + " : " + value + ", ";
-                        if(value>max){
-                                max = value;
-                                maxPlayer = player_id;
-                        }
-                }
-
-                broadcast("Result:\n"+ret);
-                if( maxPlayer==-1){
-                        broadcast("No winner this turn");
-                }
-                else{
-                        broadcast("Player " + maxPlayer +" win!");
-                }
         }
 }
 dying{
