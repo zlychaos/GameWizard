@@ -1,0 +1,83 @@
+define game{
+	game_name: "Hello World";
+	num_of_players: 2;
+	maximum_round: 2;
+}
+
+define cards[
+	Card CardOne{
+		value: 1;
+		method(Player dealer){void}
+	}
+
+	Card CardTwo{
+		value: 2;
+		method(Player dealer){void} 
+	}
+
+	Card CardThree{
+		value: 3;
+		method(Player dealer){void}
+	}
+]
+
+define characters[
+	RegularGuy{
+		HP: 1;
+		skill :[void]
+	}
+]
+
+init{
+	int i = 0;
+	while(i<10){
+		cardStack.add(CardOne);
+		cardStack.add(CardTwo);
+		cardStack.add(CardThree);
+		i = i+1;
+	}
+	shuffle(cardStack);
+	
+	foreach(Player player in playerList){
+		player.setCharacter(RegularGuy);
+	}
+	
+}
+
+round{
+	roundbegin{
+		
+	}
+	
+	turn{
+		drawCard(player, 1);
+		sendToOnePlayer(player, GameGeneralInfo());
+		
+		Card card = putCard(player);
+		droppedCardStack.add(cardStack);
+	}
+
+	roundend{
+		int max=0;
+		int maxPlayer=-1;
+		String ret = "";
+	
+		foreach (int player_id in roundSummary){
+			int value = roundSummary[player_id].value;
+			ret = ret+ "Player " + player_id + " : " + value + ", ";
+			if(value>max){
+				max = value;
+				maxPlayer = player_id;
+			}
+		}
+	
+		broadcast("Result:\n"+ret);
+		if( maxPlayer==-1){
+			broadcast("No winner this turn");
+		}
+		else{
+			broadcast("Player " + maxPlayer +" win!");
+		}
+	}
+}
+

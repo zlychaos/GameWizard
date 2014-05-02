@@ -56,6 +56,10 @@
 %token <sval> STRING
 %token <sval> ID
 %token CARD
+%token FOREACH
+%token ROUNDSUMMARY
+%token IN
+
 
 %type <sval> game_df
 %type <sval> game_df_content
@@ -106,7 +110,7 @@
 %type <sval> turn_block
 %type <sval> dying_block
 %type <sval> AUGED_STATEMENT_LIST
-
+%type <sval> ForeachStatement
 
 %left '-' '+'
 
@@ -265,6 +269,22 @@ STATEMENT_LIST
 |   STATEMENT_LIST EmptyStatement   {System.out.println("empty");$$=$1+$2;}
 |   Expression  {System.out.println("expression");$$=$1;}
 |   STATEMENT_LIST Expression  {System.out.println("expression");$$=$1+$2;}
+|   ForeachStatement {$$=$1;}
+|   STATEMENT_LIST ForeachStatement {$$=$1+$2;}
+;
+
+ForeachStatement:
+	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
+        {
+		String s = "for("+$3+" "+$4+":roundSummary.keySet())\n"+$8;
+		$$=s;
+	}
+|
+	FOREACH '(' TypeSpecifier ID IN ID ')' Block 
+        {
+		String s = "for("+$3+" "+$4+":"+$6+")\n"+$8;
+		$$=s;
+	}	
 ;
 
 EmptyStatement
@@ -354,6 +374,8 @@ TypeSpecifier
 
 TypeName
 : PrimitiveType {System.out.println("0");$$=$1;}
+| CARD {$$="Card";}
+| PLAYER {$$="Player";}
 ;
 
 

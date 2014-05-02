@@ -29,6 +29,8 @@ public class SymbolTable {
 		globalBlock.addRecord("dying",SymbolType.KEYWORD);
 		globalBlock.addRecord("true",SymbolType.KEYWORD);
 		globalBlock.addRecord("false",SymbolType.KEYWORD);
+		globalBlock.addRecord("Card",SymbolType.KEYWORD);
+		globalBlock.addRecord("in",SymbolType.KEYWORD);
 		
 		/*below are the build-in methods and variables*/
 		

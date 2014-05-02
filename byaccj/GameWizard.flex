@@ -30,11 +30,12 @@ PLAYER_C = "num_of_players"
 METHOD = "method"
 PLAYER = "Player"
 MAX_ROUND = "maximum_round"
-INTEGER = [0-9]+
+INTEGER = -?[0-9]+
 STRING = \"[^\"]*\"
 SKILL = "skill"
 DEALER = "dealer"
 VOID = "void"
+ROUNDSUMMARY = "roundSummary"
 
 INIT = "init"
 ROUND_END = "round_end"
@@ -123,6 +124,9 @@ ws = {delim}+
 "String"    {return Parser.DECLR_STR;}
 "bool"  {return Parser.DECLR_BOOL;}
 
+"foreach" {return Parser.FOREACH;}
+{ROUNDSUMMARY} {return Parser.ROUNDSUMMARY;}
+"in" {return Parser.IN;} 
 
 
 
