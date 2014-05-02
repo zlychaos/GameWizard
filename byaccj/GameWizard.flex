@@ -33,6 +33,7 @@ INTEGER = [0-9]+
 STRING = \"[^\"]*\"
 SKILL = "skill"
 DEALER = "dealer"
+VOID = "void"
 
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
@@ -94,6 +95,7 @@ ws = {delim}+
 {PLAYER} {return Parser.PLAYER;}
 {SKILL} {return Parser.SKILL;}
 {DEALER} {return Parser.DEALER;}
+{VOID} {return Parser.VOID;}
 "false" {return Parser.FALSE;}
 "true" {return Parser.TRUE;}
 "if" {return Parser.IF;}

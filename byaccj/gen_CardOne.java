@@ -6,7 +6,7 @@ public Integer value=1;
 		sb.append(getName());
 		sb.append(":{");
 sb.append("\n\tvalue=");
-		sb.append(1);
+		sb.append(value);
 		sb.append("\n}");
 		return sb.toString();
 	}
@@ -15,5 +15,6 @@ sb.append("\n\tvalue=");
 		return "CardOne";
 	}
 @Overridepublic void method(PlayerBase dealer){
-;
+
+} 
 }

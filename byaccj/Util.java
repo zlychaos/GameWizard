@@ -44,7 +44,7 @@ public class Util {
 					+ "	\n"
 					+ "	public static boolean gameover;\n"
 					+ "	\n"
-					+ "	public static HashMap<Integer, ICard> roundSummary = new HashMap<Integer, ICard>();";
+					+ "	public static HashMap<Integer, ICard> roundSummary = new HashMap<Integer, ICard>();\n";
 
 			String post_methods_string = "public static void shuffle(List<?> list){\n"
 					+ "		Collections.shuffle(list);\n"
@@ -210,7 +210,7 @@ public class Util {
 					+ "		sb.append(\"\\nThe player in turn: Player \" + currentPlayerIndex);\n"
 					+ "		sb.append(\"\\nList of players: \");\n"
 					+ "		sb.append(PlayersInfo());\n"
-					+ "		return sb.toString();\n" + "	}\n" + "	\n" + "}";
+					+ "		return sb.toString();\n" + "	}\n" + "	\n" + "}\n";
 
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
@@ -260,7 +260,7 @@ public class Util {
 			StringBuffer toStr_mid = new StringBuffer();
 			for (int i = 0; i < var_list.size(); i = i + 3) {
 				toStr_mid.append("sb.append(\"\\n\\t"+var_list.get(i+1)+"=\");\n" + 
-						"		sb.append("+var_list.get(i+2)+");\n");
+						"		sb.append("+var_list.get(i+1)+");\n");
 			}
 			
 			out.write(toStr_part1+toStr_mid.toString()+toStr_part2);
@@ -273,7 +273,7 @@ public class Util {
 			out.write("\n@Override");
 			out.write("public void method(PlayerBase dealer){\n");
 			out.write(method_content);
-			out.write("\n}");
+			out.write("\n} \n}");
 
 
 			out.flush();
@@ -305,8 +305,8 @@ public class Util {
 						+ ";\n");
 			}
 			
-			out.write("public RegularGuyCharacter(){\n" + 
-					"		skillList = new String["+(sk_list.size()/2)+"];");
+			out.write("public gen_"+character_name+"(){\n" + 
+					"		skillList = new String["+(sk_list.size()/2)+"];\n");
 			for (int i = 0; i < sk_list.size(); i = i + 2) {
 				out.write("skillList["+(i/2)+"] = \""+sk_list.get(i)+"\";\n");
 			}
@@ -323,7 +323,7 @@ public class Util {
 			StringBuffer toStr_mid = new StringBuffer();
 			for (int i = 0; i < var_list.size(); i = i + 3) {
 				toStr_mid.append("sb.append(\"\\t"+var_list.get(i+1)+"=\");\n" + 
-						"		sb.append("+var_list.get(i+2)+");\n");
+						"		sb.append("+var_list.get(i+1)+");\n");
 			}
 			
 			out.write(toStr_part1+toStr_mid.toString()+toStr_part2);
@@ -339,7 +339,7 @@ public class Util {
 			for (int i = 0; i < sk_list.size(); i = i + 2) {
 				skillMethod_mid.append("if(\""+sk_list.get(i)+"\".equals(skillName)){\n" + 
 						  sk_list.get(i+1) + 
-						"			return true;\n" + 
+						"\n			return true;\n" + 
 						"		}\n");
 			}
 			out.write(skillMethod_part1+skillMethod_mid.toString()+skillMethod_part2);

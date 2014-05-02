@@ -39,9 +39,12 @@
 %token OP_LOR
 %token OP_LAND
 
+
 %token DECLR_INT
 %token DECLR_STR
 %token DECLR_BOOL
+
+%token VOID
 
 
 %token <ival> INTEGER
@@ -51,7 +54,6 @@
 %type <sval> game_df
 %type <sval> game_df_content
 %type <obj> variable_list
-%type <sval> skill_df
 %type <sval> STATEMENT_LIST
 %type <sval> Expression
 %type <sval> SelectionStatement
@@ -88,6 +90,7 @@
 %type <sval> VariableDeclarator
 %type <sval> VariableDeclarators
 %type <sval> EmptyStatement
+%type <obj> skill_df
 %type <obj> skill_lists
 %type <obj> skill_list
 %left '-' '+'
@@ -111,7 +114,8 @@ cards_df_content : card_df_content cards_df_content  {System.out.println("1");}
 		;
 card_df_content: ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' STATEMENT_LIST  '}' '}'
 			{System.out.println("5");Util.writeCardsJava($1.toString(),$3,$10); }
-		;
+	| ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' VOID  '}' '}'
+	         {System.out.println("5");Util.writeCardsJava($1.toString(),$3,""); }       ;
 
 character_df :  CHARACTER_DF '[' characters_df_content ']' {System.out.println("character_df");}
              ;
@@ -128,20 +132,24 @@ variable_list : ID ':' INTEGER ';' variable_list
             result.add("Integer"); result.add($1);result.add(String.valueOf($3));
             ArrayList<String> x1 = (ArrayList<String>)($5);
             
-            result.addAll(x1); $$=result;
+            result.addAll(x1); $$=result;  System.out.println("variable_list");
                 }
 		| ID ':' STRING	';' variable_list
         {ArrayList<String> result= new ArrayList<String>();
             result.add("String"); result.add($1);result.add($3);
             ArrayList<String> x1 = (ArrayList<String>)($5);
-            result.addAll(x1); $$=result;
+            result.addAll(x1); $$=result;   System.out.println("variable_list");
                 }
-		|		    {ArrayList<String> result= new ArrayList<String>(); $$= result;}
+		|		    {ArrayList<String> result= new ArrayList<String>(); $$= result;   System.out.println("variable_list");}
 		;
 
 skill_df : SKILL ':' '['
         skill_lists
-	   ']'                 {$$ = $4.toString();}
+	   ']'                 {$$ = $4;}
+	|
+	  SKILL ':' '['
+	  VOID
+	   ']'		{ArrayList<String> ret = new ArrayList<String>(); $$=ret;}
 	;
 
 skill_lists: skill_list skill_lists {ArrayList<String> result= new ArrayList<String>();
@@ -149,7 +157,6 @@ skill_lists: skill_list skill_lists {ArrayList<String> result= new ArrayList<Str
                                     ArrayList<String> x2 = (ArrayList<String>)($2);
                                     result.addAll(x1); result.addAll(x2); $$= result;}
         |skill_list {$$=$1;}
-	| ';' {ArrayList<String> result = new ArrayList<String>(); $$=result;}
 	;
 
 
@@ -158,6 +165,13 @@ skill_list:
         {ArrayList<String> result= new ArrayList<String>();
             result.add($1);
             result.add($9);
+            $$=result;
+        }
+	|
+        ID '{' METHOD '(' PLAYER DEALER ')' '{' VOID '}' '}'
+        {ArrayList<String> result= new ArrayList<String>();
+            result.add($1);
+            result.add("");
             $$=result;
         }
 	;

@@ -6,7 +6,7 @@ public Integer value=3;
 		sb.append(getName());
 		sb.append(":{");
 sb.append("\n\tvalue=");
-		sb.append(3);
+		sb.append(value);
 		sb.append("\n}");
 		return sb.toString();
 	}
@@ -15,5 +15,6 @@ sb.append("\n\tvalue=");
 		return "CardThree";
 	}
 @Overridepublic void method(PlayerBase dealer){
-;
+
+} 
 }

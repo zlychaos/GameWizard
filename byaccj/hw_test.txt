@@ -7,24 +7,24 @@ define game{
 define cards[
 	CardOne{
 		value: 1;
-		method(Player dealer){;}
+		method(Player dealer){void}
 	}
 
 	CardTwo{
 		value: 2;
-		method(Player dealer){;} 
+		method(Player dealer){void} 
 	}
 
 	CardThree{
 		value: 3;
-		method(Player dealer){;}
+		method(Player dealer){void}
 	}
 ]
 
 define characters[
 	RegularGuy{
 		HP: 1;
-		skill :[;]
+		skill :[void]
 	}
 	TestTwoSkill{
 		HP:3;
