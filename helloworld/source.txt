@@ -10,17 +10,17 @@ define game{
 define cards[
 	CardOne{
 		value: 1;
-		method{}
+		method(Player dealer){}
 	}
 
 	CardTwo{
 		value: 2;
-		method{} 
+		method(Player dealer){} 
 	}
 
 	CardThree{
 		value: 3;
-		method{}
+		method(Player dealer){}
 	}
 ]
 
