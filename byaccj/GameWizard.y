@@ -38,7 +38,12 @@
 %token OP_NE
 %token OP_LOR
 %token OP_LAND
-
+%token INIT
+%token ROUND_END
+%token ROUND_BEGIN
+%token ROUND
+%token TURN
+%token DYING
 
 %token DECLR_INT
 %token DECLR_STR
@@ -93,13 +98,25 @@
 %type <obj> skill_df
 %type <obj> skill_lists
 %type <obj> skill_list
+%type <sval> init_block
+%type <sval> round_block
+%type <sval> round_begin_block
+%type <sval> round_end_block
+%type <sval> turn_block
+%type <sval> dying_block
+
+
 %left '-' '+'
 
 %left '*' '/'
 %right '^'         /* exponentiation        */
       
 %%
-input: game_df card_df character_df {Util.writeGameJava($1,"");}
+input: game_df card_df character_df init_block round_block dying_block
+	{
+		String methods = $4+$5+$6;
+		Util.writeGameJava($1,methods);
+	}
      ;
 game_df : GAME_DF '{' game_df_content '}'  {$$=$3; System.out.println("game_df");}
 	;
@@ -174,6 +191,64 @@ skill_list:
             result.add("");
             $$=result;
         }
+	;
+
+init_block:
+	INIT '{' STATEMENT_LIST '}' 
+	{
+		String ret = "public static void init(){\n"+$3+"\n}\n";
+		$$=ret;
+	}
+	|
+	INIT '{' VOID '}' 
+	{
+		String ret = "public static void init(){}\n";
+	}
+	;
+
+round_block:
+	ROUND '{' round_begin_block turn_block round_end_block '}' 
+	{
+		String ret = "public static void round_begin(){\n"+
+			$3+"\n}\n"+
+			"public static void turn(Player player) throws IOException{"+
+			$4+"\n}\n"+
+			"public static void round_end() throws Exception{"+
+			$5+"\n}\n";
+		$$ = ret;
+	}
+	;
+
+round_begin_block:
+	ROUND_BEGIN '{' STATEMENT_LIST '}' {$$=$3;}
+	|
+	ROUND_BEGIN '{' VOID '}' {$$="";}
+	;
+
+turn_block:
+	TURN '{' STATEMENT_LIST '}' {$$=$3;}
+	|
+	TURN '{' VOID '}' {$$="";}
+	;
+
+round_end_block:
+	ROUND_end '{' STATEMENT_LIST '}' {$$=$3;}
+	|
+	ROUND_end '{' VOID '}' {$$="";}
+	;
+
+dying_block:
+	DYING '{' STATEMENT_LIST '}' 
+	{
+		String ret = "public static void dying(){\n"+$3+"\n}\n";
+		$$=ret;
+	}
+	|
+	DYING '{' VOID '}'
+	{
+		String ret = "public static void dying(){}\n";
+		$$=ret;
+	}
 	;
 
 

@@ -35,6 +35,14 @@ SKILL = "skill"
 DEALER = "dealer"
 VOID = "void"
 
+INIT = "init"
+ROUND_END = "round_end"
+ROUND_BEGIN = "round_begin"
+ROUND = "round"
+TURN = "turn"
+DYING = "dying"
+
+
 /*identifier*/
 ID = [a-zA-Z][_a-zA-Z0-9]*
 delim = [ \t\n]
@@ -96,6 +104,14 @@ ws = {delim}+
 {SKILL} {return Parser.SKILL;}
 {DEALER} {return Parser.DEALER;}
 {VOID} {return Parser.VOID;}
+
+{INIT} {return Parser.INIT;}
+{ROUND_END} {return Parser.ROUND_END;}
+{ROUND_BEGIN} {return Parser.ROUND_BEGIN;}
+{ROUND} {return Parser.ROUND;}
+{TURN} {return Parser.TURN;}
+{DYING} {return Parser.DYING;}
+
 "false" {return Parser.FALSE;}
 "true" {return Parser.TRUE;}
 "if" {return Parser.IF;}
