@@ -59,7 +59,7 @@ public class Game {
 		roundSummary.clear();
 	}
 	
-	public static void round_end() throws Exception{
+	public static void round_end() {
 		int max=0;
 		int maxPlayer = -1;
 		String ret = "";
@@ -93,7 +93,7 @@ public class Game {
 		}
 	}
 	
-	public static void turn(Player player) throws IOException{
+	public static void turn(Player player){
 		
 		drawCard(player,1);
 		sendToOnePlayer(player, GameGeneralInfo());
@@ -108,21 +108,21 @@ public class Game {
 		Collections.shuffle(list);
 	}
 	
-	public static void sendToOnePlayer(Player player, String msg) throws IOException{
+	public static void sendToOnePlayer(Player player, String msg){
 		player.conn.sendBroadcast(msg);
 	}
 	
-	public static void broadcast(String msg) throws IOException{
+	public static void broadcast(String msg){
 		GameServer.broadcast(msg);
 	}
 	
-	public static void close() throws IOException{
+	public static void close() {
 		GameServer.broadcast("Game Over!");
 		GameServer.closeServer();
 	}
 	
 	
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args){
 		
 		//int init_HP = 1;
 		
@@ -164,7 +164,7 @@ public class Game {
 		
 	}
 	
-	public static ICard putCard(Player player) throws IOException {
+	public static ICard putCard(Player player) {
 		player.conn.sendBroadcast("Your hand cards: " + HandCardInfo(player));
 		
 		String input = null;
@@ -188,7 +188,7 @@ public class Game {
 		
 	}
 	
-	public static void drawCard(Player p, int num) throws IOException{
+	public static void drawCard(Player p, int num) {
 		
 		for(int i=0;i<num;i++){
 
@@ -210,7 +210,7 @@ public class Game {
 	}
 
 	
-	public static void nextOnlinePlayer() throws Exception{
+	public static void nextOnlinePlayer(){
 		if(currentPlayerIndex == num_of_players){
 			round_end();
 			
