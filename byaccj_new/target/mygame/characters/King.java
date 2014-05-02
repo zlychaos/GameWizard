@@ -1,12 +1,12 @@
-package compile.helloworld.characters;
+package mygame.characters;
 
 import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class King extends CharacterBase {
 
-	public int hp=5
-public String name="my king"
+	public int  hp=5
+	public String name="my king"
 
 	
 	public RegularGuy(){
@@ -25,7 +25,7 @@ public String name="my king"
 	}
 
 	@Override
-	public boolean skill(PlayerBase p, String skillName) {
+	public boolean skill(Player p, String skillName) {
 		
 		return false;
 	}

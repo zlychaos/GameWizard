@@ -1,11 +1,11 @@
-package compile.helloworld.characters;
+package mygame.characters;
 
 import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class ### extends CharacterBase {
 
-	###
+###
 	
 	public RegularGuy(){
 		skillList = new String[###];
@@ -23,7 +23,7 @@ public class ### extends CharacterBase {
 	}
 
 	@Override
-	public boolean skill(PlayerBase p, String skillName) {
+	public boolean skill(Player p, String skillName) {
 		###
 		return false;
 	}

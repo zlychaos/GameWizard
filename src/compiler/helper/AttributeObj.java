@@ -13,4 +13,10 @@ public class AttributeObj {
 		
 	}
 
+	public AttributeObj(String id, Type type) {
+		super();
+		this.type = type;
+		this.id = id;
+	}
+
 }

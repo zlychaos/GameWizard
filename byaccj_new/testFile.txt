@@ -6,7 +6,10 @@ define game{
 
 define cards[
     Attack{
-		value : 3
+		value : 3;
+		method{
+			dosomethinghere
+		}
     };
     Defense{
     	value : 4
@@ -19,6 +22,15 @@ define characters[
 		name : "my king"
 	};
 	No_Val{
-		hp: 3
+		hp: 3;
+		skill[
+			mercy{
+				dosomethinghere
+			}
+		]
 	}
 ]
+
+init{
+dosomethinghere
+}

@@ -10,6 +10,8 @@ JFLAGS = -g
 
 CLASSES = \
     compiler/helper/Type.java \
+	compiler/helper/Skill.java \
+	compiler/helper/JsonItemType.java \
     compiler/helper/AttributeObj.java \
     compiler/helper/FunctionObj.java \
     compiler/helper/JsonItem.java \
@@ -35,6 +37,7 @@ clean:
 	rm -f *~ *.class Parser.java Yylex.java Game.java gen_*.java .*.swp
 	rm -f compiler/helper/*.class
 	rm -rf target/compile/
+	rm -f target/Makefile
 
 Parser.class: Yylex.java Parser.java classes
 	$(JAVAC) Parser.java

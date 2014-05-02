@@ -1,21 +1,17 @@
-package compile.helloworld.cards;
+package mygame.cards;
 
 import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.PlayerBase;
+import zhllz.gamewizard.basic.Player;
 
 public class Defense implements ICard {
 	
-	public int value=4
+	public int  value=4
+	@Override
+	public void method(Player dealer){ }
 
-	
 	@Override
 	public String getName() {
 		return "Defense";
-	}
-
-	@Override
-	public void method(PlayerBase dealer) {
-		###
 	}
 
 	@Override
@@ -25,8 +21,9 @@ public class Defense implements ICard {
 		sb.append(":{\n");
 		sb.append("\tvalue=");
 		sb.append(value);
-		sb.append("\n");
-		sb.append("}");
+		sb.append("\n")
+;
+		sb.append("\n}");
 		return sb.toString();
 	}
 	
