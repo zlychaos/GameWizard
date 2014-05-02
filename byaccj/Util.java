@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.PlayerBase;
-import zhllz.gamewizard.communication.Server;
-import compile.helloworld.Player;
 
 public class Util {
 	public static void writeGameJava(String server_define_string,
