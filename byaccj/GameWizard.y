@@ -112,7 +112,7 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: {/*the global block*/SymbolTable.pushNewBlock();} game_df card_df character_df init_block round_block dying_block
+input: {/*the global block*/SymbolTable.pushNewBlock(); SymbolTable.addKeywordsAndBuildIn();} game_df card_df character_df init_block round_block dying_block
 	{
 		String methods = $5+$6+$7;
 		Util.writeGameJava($2,methods);
@@ -123,7 +123,15 @@ game_df : GAME_DF '{' game_df_content '}'  {$$=$3; System.out.println("game_df")
 	;
 game_df_content : GAME_NM ':' STRING ';'
                   PLAYER_C ':' INTEGER ';'
-                  MAX_ROUND ':' INTEGER ';'  {String s= "public static String name = "+$3+";\npublic static int num_of_players = "+$7+";\npublic static int maximum_round = "+$11+";\n"; $$=s; System.out.println(s);}
+                  MAX_ROUND ':' INTEGER ';'  
+	{String s= "public static String game_name = "+$3
+		+";\npublic static int num_of_players = "+$7
+		+";\npublic static int maximum_round = "+$11+";\n"; 
+		$$=s; System.out.println(s);
+		SymbolTable.addRecordToCurrentBlock("game_name", SymbolType.GAME_DEFINITION);
+		SymbolTable.addRecordToCurrentBlock("num_of_players", SymbolType.GAME_DEFINITION);
+		SymbolTable.addRecordToCurrentBlock("maximum_round", SymbolType.GAME_DEFINITION);
+	}
 		;
 card_df : CARD_DF '[' cards_df_content ']' {System.out.println("2");}
 	;
