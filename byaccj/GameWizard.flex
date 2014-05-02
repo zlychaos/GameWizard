@@ -28,7 +28,7 @@ CHARACTER_DF = "define characters"
 PLAYER_C = "num_of_players"
 METHOD = "method"
 PLAYER = "Player"
-GAME_PORT = "server_listening_port"
+MAX_ROUND = "maximum_round"
 INTEGER = [0-9]+
 STRING = \"[^\"]*\"
 SKILL = "skill"
@@ -89,7 +89,7 @@ ws = {delim}+
 {CHARACTER_DF} {return Parser.CHARACTER_DF;}
 {GAME_NM}  {return Parser.GAME_NM;}
 {PLAYER_C}  {return Parser.PLAYER_C;}
-{GAME_PORT}  {return Parser.GAME_PORT;}
+{MAX_ROUND}  {return Parser.MAX_ROUND;}
 {METHOD} {return Parser.METHOD;}
 {PLAYER} {return Parser.PLAYER;}
 {SKILL} {return Parser.SKILL;}

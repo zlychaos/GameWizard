@@ -26,7 +26,7 @@
 %token SKILL
 %token DEALER
 %token METHOD
-%token GAME_PORT
+%token MAX_ROUND
 %token IF
 %token ELSE
 %token WHILE
@@ -47,6 +47,9 @@
 %token <ival> INTEGER
 %token <sval> STRING
 %token <sval> ID
+
+%type <sval> game_df
+%type <sval> game_df_content
 %type <obj> variable_list
 %type <sval> skill_df
 %type <sval> STATEMENT_LIST
@@ -93,13 +96,13 @@
 %right '^'         /* exponentiation        */
       
 %%
-input: game_df card_df character_df {}
+input: game_df card_df character_df {Util.writeGameJava($1,"");}
      ;
-game_df : GAME_DF '{' game_df_content '}'  {}
+game_df : GAME_DF '{' game_df_content '}'  {$$=$3; System.out.println("game_df");}
 	;
 game_df_content : GAME_NM ':' STRING ';'
                   PLAYER_C ':' INTEGER ';'
-                  GAME_PORT ':' INTEGER ';'  {Util.writeGameJava($3,$7,$11);System.out.println("4");}
+                  MAX_ROUND ':' INTEGER ';'  {String s= "public static String name = "+$3+";\npublic static int num_of_players = "+$7+";\npublic static int maximum_round = "+$11+";\n"; $$=s; System.out.println(s);}
 		;
 card_df : CARD_DF '[' cards_df_content ']' {System.out.println("2");}
 	;
@@ -107,18 +110,18 @@ cards_df_content : card_df_content cards_df_content  {System.out.println("1");}
                | card_df_content {System.out.println("3");}
 		;
 card_df_content: ID '{' variable_list METHOD '(' PLAYER DEALER ')' '{' STATEMENT_LIST  '}' '}'
-			{System.out.println("5");Util.writeCardsJava($1.toString(),$10); }
+			{System.out.println("5");Util.writeCardsJava($1.toString(),$3,$10); }
 		;
 
-character_df :  CHARACTER_DF '[' characters_df_content ']' {}
+character_df :  CHARACTER_DF '[' characters_df_content ']' {System.out.println("character_df");}
              ;
-characters_df_content : characters_df_content character_df_content {}
-			| character_df_content {}
+characters_df_content : characters_df_content character_df_content {System.out.println("characters_df_content");}
+			| character_df_content {System.out.println("characters_df_content");}
 			;
 character_df_content : ID '{'
 			variable_list
 			skill_df
-			'}'             {Util.writeCharacterJava($1,$3.toString(),$4);}
+			'}'             {Util.writeCharacterJava($1,$3,$4); System.out.println("character_df_content");}
 		; 
 variable_list : ID ':' INTEGER ';' variable_list	
         {ArrayList<String> result= new ArrayList<String>();
@@ -146,6 +149,8 @@ skill_lists: skill_list skill_lists {ArrayList<String> result= new ArrayList<Str
                                     ArrayList<String> x2 = (ArrayList<String>)($2);
                                     result.addAll(x1); result.addAll(x2); $$= result;}
         |skill_list {$$=$1;}
+	| ';' {ArrayList<String> result = new ArrayList<String>(); $$=result;}
+	;
 
 
 skill_list:
@@ -155,6 +160,7 @@ skill_list:
             result.add($9);
             $$=result;
         }
+	;
 
 
 STATEMENT_LIST
