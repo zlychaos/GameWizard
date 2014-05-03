@@ -111,6 +111,9 @@
 %type <sval> dying_block
 %type <sval> AUGED_STATEMENT_LIST
 %type <sval> ForeachStatement
+%type <sval> MethodCall
+%type <sval> MethodAccess
+%type <sval> ArgumentList
 
 %left '-' '+'
 
@@ -387,6 +390,20 @@ PrimitiveType
 ;
 
 
+MethodCall
+	: MethodAccess '(' ArgumentList ')' {$$=$1+"("+$3+")";}
+	| MethodAccess '(' ')'   {$$=$1+"()";}
+	;
+
+MethodAccess
+	: ComplexPrimaryNoParenthesis {$$=$1;}
+	| QualifiedName		{$$=$1;}
+	;
+ArgumentList
+	: Expression     {$$=$1;}
+	| ArgumentList ',' Expression {$$=$1+","+$3;}
+	;
+
 
 
 
@@ -416,6 +433,7 @@ ComplexPrimaryNoParenthesis
 | FALSE     {$$="false";}
 | ArrayAccess   {$$=$1;}
 | FieldAccess   {$$=$1;}
+| MethodCall   {$$=$1;}
 ;
 
 FieldAccess
