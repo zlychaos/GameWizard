@@ -236,7 +236,7 @@ round_block:
 	;
 
 round_begin_block:
-	ROUND_BEGIN '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' { SymbolTable.popBlock();$$=$4; System.out.println("round_begin");}
+	ROUND_BEGIN '{' {SymbolTable.pushNewBlock(); System.out.println("before round begin");} AUGED_STATEMENT_LIST '}' { SymbolTable.popBlock();$$=$4; System.out.println("round_begin");}
 	;
 
 turn_block:
@@ -396,21 +396,18 @@ MethodCall
 	;
 
 MethodAccess:
-	 QualifiedName		{$$=$1;}
+	 QualifiedName		{$$="123";}
 	;
+
 ArgumentList
 	: Expression     {$$=$1;}
 	| ArgumentList ',' Expression {$$=$1+","+$3;}
 	;
 
 
-
-
-
-
 QualifiedName
-: ID    {$$=$1;}
-| QualifiedName '.' ID  {$$=$1+"."+$3;}
+: QualifiedName '.' ID  {$$=$1+"."+$3;}
+| ID    {$$=$1;}
 ;
 
 PrimaryExpression
@@ -420,8 +417,8 @@ PrimaryExpression
 
 
 ComplexPrimary
-: '(' Expression ')'    {$$="("+$2+")";}
-| ComplexPrimaryNoParenthesis{$$=$1;}
+/*: '(' Expression ')'    {$$="("+$2+")";}*/
+: ComplexPrimaryNoParenthesis{$$=$1;}
 ;
 
 
@@ -430,11 +427,14 @@ ComplexPrimaryNoParenthesis
 | STRING    {$$=$1;}
 | TRUE      {$$="true";}
 | FALSE     {$$="false";}
-| ArrayAccess   {$$=$1;}
+| ArrayAccess  {$$=$1;}
 | MethodCall   {$$=$1;}
 ;
 
  
+FieldAccess :
+	ComplexPrimary '.' ID {$$= $1+"."+$3;}
+;
 
 ArrayAccess
 : QualifiedName '[' Expression ']'  {$$=$1+'['+$3+']';}

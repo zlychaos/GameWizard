@@ -45,8 +45,8 @@ init{
 }
 
 round{
-	roundbegin{
-		
+	round_begin{
+		void		
 	}
 	
 	turn{
@@ -57,7 +57,7 @@ round{
 		droppedCardStack.add(cardStack);
 	}
 
-	roundend{
+	round_end{
 		int max=0;
 		int maxPlayer=-1;
 		String ret = "";

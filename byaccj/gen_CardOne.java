@@ -15,7 +15,6 @@ sb.append("\n\tvalue=");
 		return "CardOne";
 	}
 @Overridepublic void method(PlayerBase dealer){
-while(i=5+4)
-{a=5+6;}
+
 } 
 }
