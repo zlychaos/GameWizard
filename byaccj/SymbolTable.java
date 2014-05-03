@@ -31,6 +31,7 @@ public class SymbolTable {
 		globalBlock.addRecord("false",SymbolType.KEYWORD);
 		globalBlock.addRecord("Card",SymbolType.KEYWORD);
 		globalBlock.addRecord("in",SymbolType.KEYWORD);
+		globalBlock.addRecord("roundSummary",SymbolType.KEYWORD);
 		
 		/*below are the build-in methods and variables*/
 		
@@ -50,7 +51,6 @@ public class SymbolTable {
 		globalBlock.addRecord("currentPlayerIndex",SymbolType.BUILD_IN);
 		globalBlock.addRecord("roundCount",SymbolType.BUILD_IN);
 		globalBlock.addRecord("gameover",SymbolType.BUILD_IN);
-		globalBlock.addRecord("roundSummary",SymbolType.BUILD_IN);
 		globalBlock.addRecord("shuffle",SymbolType.BUILD_IN);
 		globalBlock.addRecord("Collections",SymbolType.BUILD_IN);
 		globalBlock.addRecord("Array",SymbolType.BUILD_IN);

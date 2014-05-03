@@ -395,9 +395,8 @@ MethodCall
 	| MethodAccess '(' ')'   {$$=$1+"()";}
 	;
 
-MethodAccess
-	: ComplexPrimaryNoParenthesis {$$=$1;}
-	| QualifiedName		{$$=$1;}
+MethodAccess:
+	 QualifiedName		{$$=$1;}
 	;
 ArgumentList
 	: Expression     {$$=$1;}
@@ -432,13 +431,10 @@ ComplexPrimaryNoParenthesis
 | TRUE      {$$="true";}
 | FALSE     {$$="false";}
 | ArrayAccess   {$$=$1;}
-| FieldAccess   {$$=$1;}
 | MethodCall   {$$=$1;}
 ;
 
-FieldAccess
-: ComplexPrimary '.' ID {$$=$1+'.'+$3;}
-;
+ 
 
 ArrayAccess
 : QualifiedName '[' Expression ']'  {$$=$1+'['+$3+']';}
@@ -502,6 +498,7 @@ ConditionalOrExpression
 :ConditionalAndExpression  {$$=$1;}
 | ConditionalOrExpression OP_LOR ConditionalAndExpression {$$=$1+"||"+$3;}
 ;
+
 
 Expression
 :ConditionalOrExpression {$$=$1;}
