@@ -1,4 +1,3 @@
-package zhllz.gamewizard.communication;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

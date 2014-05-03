@@ -54,7 +54,7 @@ round{
 		sendToOnePlayer(player, GameGeneralInfo());
 		
 		Card card = putCard(player);
-		droppedCardStack.add(cardStack);
+		droppedCardStack.add(card);
 	}
 
 	round_end{
@@ -63,7 +63,8 @@ round{
 		String ret = "";
 	
 		foreach (int player_id in roundSummary){
-			int value = roundSummary.get(play_id);
+			Card card = roundSummary.get(play_id);
+			int value = card.value;
 			ret = ret+ "Player " + player_id + " : " + value + ", ";
 			if(value>max){
 				max = value;

@@ -1,4 +1,3 @@
-package zhllz.gamewizard.communication;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -24,7 +23,7 @@ public class Server {
 		
 	}
 
-	public void broadcast(String msg) throws IOException{
+	public void broadcast(String msg) {
 		for(ServerConnection sc : connections){
 			sc.sendBroadcast(msg); 
 		}
@@ -104,31 +103,26 @@ public class Server {
 		ServerConnection sc2 = s.waitForPlayer(player2);
 		
 		
-		try {
-			s.broadcast("This is a broadcast!");
-			for(int i=0;i<15;i++){
-				int choice = rand.nextInt(2)+1;
-				String input = null;
-				if(choice == 1){
-					input = sc1.waitForInput("This is a promt!");
-				}
-				else if(choice == 2){
-					input = sc2.waitForInput("This is a promt!");
-				}
-				else{
-					input = "Something wrong";
-				}
-				if(input == null){
-					break;
-				}
-				System.out.println("i: "+Integer.toString(i)+"choice: "+Integer.toString(choice)+" | "+input);
+		s.broadcast("This is a broadcast!");
+		for(int i=0;i<15;i++){
+			int choice = rand.nextInt(2)+1;
+			String input = null;
+			if(choice == 1){
+				input = sc1.waitForInput("This is a promt!");
 			}
-			
-			s.closeServer();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			else if(choice == 2){
+				input = sc2.waitForInput("This is a promt!");
+			}
+			else{
+				input = "Something wrong";
+			}
+			if(input == null){
+				break;
+			}
+			System.out.println("i: "+Integer.toString(i)+"choice: "+Integer.toString(choice)+" | "+input);
 		}
+		
+		s.closeServer();
 		
 		
 		

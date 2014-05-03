@@ -1,4 +1,3 @@
-package zhllz.gamewizard.communication;
 
 public class StrController {
 	

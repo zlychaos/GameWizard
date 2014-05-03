@@ -1,4 +1,3 @@
-package zhllz.gamewizard.communication;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -39,7 +38,7 @@ public class ServerConnection implements Runnable {
 		this.should_listen = true;
 	}
 	
-	public String waitForInput(String promt) throws IOException{
+	public String waitForInput(String promt){
 		
 		String response = null;
 		
@@ -75,7 +74,7 @@ public class ServerConnection implements Runnable {
 		return response;
 	}
 	
-	public void sendBroadcast(String msg) throws IOException{
+	public void sendBroadcast(String msg) {
 		
 		if(!player.isOnline())
 			return;
@@ -87,6 +86,9 @@ public class ServerConnection implements Runnable {
 			outToClient.writeBytes(jo.toString()+"\n");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e){
+			player.getOffLine();
 			e.printStackTrace();
 		}
 		

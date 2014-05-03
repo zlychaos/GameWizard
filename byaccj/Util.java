@@ -230,14 +230,14 @@ public class Util {
 
 	public static void writeCardsJava(String card_name, Object variable_list,
 			String method_content) {
-		File outputFile = new File("gen_" + card_name + ".java");
+		File outputFile = new File( card_name + ".java");
 		try {
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-			out.write("public class " + "gen_" + card_name
+			out.write("public class "  + card_name
 					+ " implements ICard{\n");
 
 			List<String> var_list = (List<String>) variable_list;
@@ -285,14 +285,14 @@ public class Util {
 
 	public static void writeCharacterJava(String character_name,
 			Object variable_list, Object skill_list) {
-		File outputFile = new File("gen_" + character_name + ".java");
+		File outputFile = new File( character_name + ".java");
 		try {
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-			out.write("public class gen_" + character_name
+			out.write("public class " + character_name
 					+ " extends CharacterBase{\n");
 			
 			
@@ -305,7 +305,7 @@ public class Util {
 						+ ";\n");
 			}
 			
-			out.write("public gen_"+character_name+"(){\n" + 
+			out.write("public "+character_name+"(){\n" + 
 					"		skillList = new String["+(sk_list.size()/2)+"];\n");
 			for (int i = 0; i < sk_list.size(); i = i + 2) {
 				out.write("skillList["+(i/2)+"] = \""+sk_list.get(i)+"\";\n");

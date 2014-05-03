@@ -323,7 +323,15 @@ FieldDeclaration
 ;
 
 FieldVariableDeclaration
-: TypeSpecifier VariableDeclarators {$$=$1+$2;System.out.println($$);}
+: TypeSpecifier VariableDeclarators 
+  {
+	if($1.equals("ICard ")){
+		String var = $2.split("=")[0];
+		$$=$1+$2+";\n"+var+"=("+var+".getName())"+var;
+	}else{
+		$$=$1+$2;
+	}
+  }
 ;
 
 VariableDeclarators
@@ -377,7 +385,7 @@ TypeSpecifier
 
 TypeName
 : PrimitiveType {System.out.println("0");$$=$1;}
-| CARD {$$="Card ";}
+| CARD {$$="ICard ";}
 | PLAYER {$$="Player ";}
 ;
 
@@ -408,6 +416,7 @@ ArgumentList
 QualifiedName
 : QualifiedName '.' ID  {$$=$1+"."+$3;}
 | ID    {$$=$1;}
+| ROUNDSUMMARY {$$="roundSummary";}
 ;
 
 PrimaryExpression

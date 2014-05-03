@@ -33,20 +33,24 @@ public static int maximum_round = 2;
 public static void init(){
 int i=0;
 while(i<10)
-{cardStack.add(CardOne);cardStack.add(CardTwo);cardStack.add(CardThree);i=i+1;}shuffle(cardStack);for(Player player:playerList)
+{cardStack.add(CardOne);cardStack.add(CardTwo);cardStack.add(CardThree);i=i+1;}shuffle(cardStack);for(Player  player:playerList)
 {player.setCharacter(RegularGuy);}
 }
 public static void round_begin(){
 
 }
-public static void turn(Player player) throws IOException{drawCard(player,1);sendToOnePlayer(player,GameGeneralInfo());Cardcard=putCard(player);
-droppedCardStack.add(cardStack);
+public static void turn(Player player) throws IOException{drawCard(player,1);sendToOnePlayer(player,GameGeneralInfo());ICard card=putCard(player);
+card=(card.getName())card;
+droppedCardStack.add(card);
 }
 public static void round_end() throws Exception{int max=0;
 int maxPlayer=-1;
 String ret="";
 for(int  player_id:roundSummary.keySet())
-{ret=ret+"Player "+player_id+" : "+value+", ";if(value>max)
+{ICard card=roundSummary.get(play_id);
+card=(card.getName())card;
+int value=card.value;
+ret=ret+"Player "+player_id+" : "+value+", ";if(value>max)
 {max=value;maxPlayer=player_id;}}broadcast("Result:\n"+ret);if(maxPlayer==-1)
 {broadcast("No winner this turn");};
 else
