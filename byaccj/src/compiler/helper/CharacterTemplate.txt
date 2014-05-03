@@ -1,0 +1,38 @@
+package mygame.characters;
+
+import zhllz.gamewizard.basic.CharacterBase;
+import zhllz.gamewizard.basic.Player;
+
+public class ### extends CharacterBase {
+
+###
+	
+	public RegularGuy(){
+		skillList = new String[###];
+		###
+	}
+	
+	@Override
+	public String getName() {
+		return "###";
+	}
+	
+	@Override
+	public String getDiscription() {
+		return "";
+	}
+
+	@Override
+	public boolean skill(Player p, String skillName) {
+		###
+		return false;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		###
+		return sb.toString();
+	}
+
+}

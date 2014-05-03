@@ -9,14 +9,16 @@ import java.util.List;
 public class Util {
 	public static void writeGameJava(String server_define_string,
 			String init_round_body_String) {
-		File outputFile = new File("Game.java");
+		File outputFile = new File("./src/compile/helloworld/Game.java");
 		try {
 
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 
-			String prev_server_def = "import java.io.IOException;\n"
+			String prev_server_def = 
+					"package compile.helloworld;\n\n"
+					+"import java.io.IOException;\n"
 					+ "import java.util.ArrayList;\n"
 					+ "import java.util.Collections;\n"
 					+ "import java.util.HashMap;\n"
@@ -25,8 +27,10 @@ public class Util {
 					+ "\n"
 					+ "import compile.helloworld.cards.*;\n"
 					+ "import compile.helloworld.characters.*;\n"
-					+ "import zhllz.gamewizard.basic.ICard;\n"
-					+ "import zhllz.gamewizard.communication.Server;\n"
+					+"\n" 
+					+"import zhllz.gamewizard.basic.ICard;"
+					+"import zhllz.gamewizard.basic.Player;\n" 
+					+"import zhllz.gamewizard.communication.Server;\n"
 					+ "\n"
 					+ "public class Game {\n"
 					+ "	\n"
@@ -91,7 +95,7 @@ public class Util {
 					+ "		}\n"
 					+ "		\n"
 					+ "		System.out.println(\"Game Start!\");\n"
-					+ "		GameServer.broadcast(name + \": Game Start!\");\n"
+					+ "		GameServer.broadcast(game_name + \": Game Start!\");\n"
 					+ "		\n"
 					+ "		init();\n"
 					+ "		\n"
@@ -197,12 +201,12 @@ public class Util {
 					+ "	\n"
 					+ "	public static String GameGeneralInfo(){\n"
 					+ "		StringBuilder sb = new StringBuilder();\n"
-					+ "		int length = name.length();\n"
+					+ "		int length = game_name.length();\n"
 					+ "		sb.append('+');\n"
 					+ "		for(int i=0;i<length;i++)\n"
 					+ "			sb.append('-');\n"
 					+ "		sb.append(\"+\\n|\");\n"
-					+ "		sb.append(name);\n"
+					+ "		sb.append(game_name);\n"
 					+ "		sb.append(\"|\\n+\");\n"
 					+ "		for(int i=0;i<length;i++)\n"
 					+ "			sb.append('-');\n"
@@ -230,13 +234,19 @@ public class Util {
 
 	public static void writeCardsJava(String card_name, Object variable_list,
 			String method_content) {
-		File outputFile = new File( card_name + ".java");
+		File outputFile = new File( "./src/compile/helloworld/cards/"+card_name + ".java");
 		try {
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+			
+			out.write("package compile.helloworld.cards;\n" + 
+					"\n" + 
+					"import zhllz.gamewizard.basic.ICard;\n" + 
+					"import zhllz.gamewizard.basic.Player;\n");
+			
 			out.write("public class "  + card_name
 					+ " implements ICard{\n");
 
@@ -270,8 +280,8 @@ public class Util {
 					+ "		return \"" + card_name + "\";\n" + "	}";
 			out.write(getNameMethod);
 
-			out.write("\n@Override");
-			out.write("public void method(PlayerBase dealer){\n");
+			out.write("\n@Override\n");
+			out.write("public void method(Player dealer){\n");
 			out.write(method_content);
 			out.write("\n} \n}");
 
@@ -285,13 +295,19 @@ public class Util {
 
 	public static void writeCharacterJava(String character_name,
 			Object variable_list, Object skill_list) {
-		File outputFile = new File( character_name + ".java");
+		File outputFile = new File( "./src/compile/helloworld/characters/"+character_name + ".java");
 		try {
 			if (outputFile.exists()) {
 				outputFile.delete();
 			}
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+			
+			out.write("package compile.helloworld.characters;\n" + 
+					"\n" + 
+					"import zhllz.gamewizard.basic.CharacterBase;\n" + 
+					"import zhllz.gamewizard.basic.Player;\n");
+			
 			out.write("public class " + character_name
 					+ " extends CharacterBase{\n");
 			
@@ -312,6 +328,12 @@ public class Util {
 			}
 			out.write("}\n");
 			
+			out.write("\n" + 
+					"	@Override\n" + 
+					"	public String getDiscription() {\n" + 
+					"		return \"\";\n" + 
+					"	}\n");
+			
 			
 			String toStr_part1 = "@Override\n" + 
 					"	public String toString(){\n" + 
@@ -330,7 +352,7 @@ public class Util {
 			
 			
 			String skillMethod_part1= "@Override\n" + 
-					"	public boolean skill(PlayerBase p, String skillName) {\n";
+					"	public boolean skill(Player p, String skillName) {\n";
 			
 			String skillMethod_part2= "return false;\n" + 
 					"	}\n";

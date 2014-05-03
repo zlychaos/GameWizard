@@ -1,3 +1,4 @@
+package zhllz.gamewizard.basic;
 
 import java.util.ArrayList;
 

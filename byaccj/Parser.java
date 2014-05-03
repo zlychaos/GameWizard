@@ -793,7 +793,7 @@ final static String yyrule[] = {
 "Expression : UnaryExpression '=' Expression",
 };
 
-//#line 522 "GameWizard.y"
+//#line 551 "GameWizard.y"
 
   /*This variable represent which scope the parser is in, so the STATEMENT_LIST in some card or character can be translated*/
   /*If in some card or character, the scope is the card or character name, otherwise, the scope is null*/
@@ -833,6 +833,18 @@ final static String yyrule[] = {
   }
 
 
+	public String genCardDownCast(String typeName, String varName, String postfix){
+		List<String> nameList = SymbolTable.
+			giveMeNameOfSomesTypeFromGloBlock(SymbolType.CARD);
+		StringBuffer ret = new StringBuffer();
+		ret.append(typeName+" tmp = null;\n");
+		for(String name : nameList){
+			ret.append("if( "+varName+" instanceof "+name+")\n\t");
+			ret.append("tmp = (("+name+")"+varName+")."+postfix+";\n");
+		}
+		return ret.toString();
+	}
+
   public Parser(Reader r) {
     lexer = new Yylex(r, this);
   }
@@ -871,7 +883,7 @@ final static String yyrule[] = {
       System.out.println("Have a nice day");
     }
   }
-//#line 803 "Parser.java"
+//#line 815 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1295,7 +1307,7 @@ case 52:
 break;
 case 53:
 //#line 294 "GameWizard.y"
-{yyval.sval=";";}
+{yyval.sval=";\n";}
 break;
 case 54:
 //#line 299 "GameWizard.y"
@@ -1307,7 +1319,7 @@ case 55:
 break;
 case 56:
 //#line 307 "GameWizard.y"
-{System.out.println("7");String s = "if("+val_peek(4).sval+")\n"+val_peek(2).sval+";\nelse\n"+val_peek(0).sval+";"; yyval.sval=s;}
+{System.out.println("7");String s = "if("+val_peek(4).sval+")\n"+val_peek(2).sval+"\nelse\n"+val_peek(0).sval+""; yyval.sval=s;}
 break;
 case 57:
 //#line 312 "GameWizard.y"
@@ -1328,283 +1340,311 @@ break;
 case 61:
 //#line 327 "GameWizard.y"
 {
+	String[] arr = val_peek(0).sval.split("=");
+	String var = arr[0];
+	String val = arr[1];
+
+	checkDulDeclare(var);
 	if(val_peek(1).sval.equals("ICard ")){
-		String var = val_peek(0).sval.split("=")[0];
-		yyval.sval=val_peek(1).sval+val_peek(0).sval+";\n"+var+"=("+var+".getName())"+var;
+		yyval.sval=val_peek(1).sval+var+" = "+val;
+		SymbolTable.addRecordToCurrentBlock(var,SymbolType.LOCAL_CARD_DECLARE);
 	}else{
-		yyval.sval=val_peek(1).sval+val_peek(0).sval;
+		SymbolTable.addRecordToCurrentBlock(var,SymbolType.LOCAL_VARIABLE);
+		if(val.indexOf('.')!=-1){
+			if(val.matches("[^a-zA-Z0-9.]")){
+				yyerror("Syntax Error, ID.ID must be the only element on the right side of =");
+			}
+			int i = val.indexOf(".");
+			String indicator = val.substring(0,i);
+			String postfix = val.substring(i+1,val.length());
+			SymbolType type;
+			type = SymbolTable.lookUpSymbolType(indicator);
+			if(type==SymbolType.LOCAL_CARD_DECLARE){
+				yyval.sval=genCardDownCast(val_peek(1).sval,indicator,postfix)+val_peek(1).sval+var+" = tmp";
+			}else
+				yyval.sval=val_peek(1).sval+val_peek(0).sval;
+		}
+		else
+			yyval.sval=val_peek(1).sval+val_peek(0).sval;
 	}
   }
 break;
 case 62:
-//#line 338 "GameWizard.y"
+//#line 359 "GameWizard.y"
 {System.out.println("1");yyval.sval=val_peek(0).sval;}
 break;
 case 63:
-//#line 339 "GameWizard.y"
+//#line 360 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+','+val_peek(0).sval;}
 break;
 case 64:
-//#line 343 "GameWizard.y"
+//#line 364 "GameWizard.y"
 {checkDulDeclare(val_peek(0).sval);System.out.println("1");yyval.sval=val_peek(0).sval;}
 break;
 case 65:
-//#line 344 "GameWizard.y"
-{checkDulDeclare(val_peek(2).sval);SymbolTable.addRecordToCurrentBlock(val_peek(2).sval,SymbolType.LOCAL_VARIABLE);yyval.sval=val_peek(2).sval+'='+val_peek(0).sval;}
+//#line 365 "GameWizard.y"
+{yyval.sval=val_peek(2).sval+'='+val_peek(0).sval;}
 break;
 case 66:
-//#line 348 "GameWizard.y"
+//#line 369 "GameWizard.y"
 {System.out.println("1");yyval.sval=val_peek(0).sval;}
 break;
 case 67:
-//#line 349 "GameWizard.y"
+//#line 370 "GameWizard.y"
 {yyval.sval=val_peek(3).sval+'['+val_peek(1).ival+']';}
 break;
 case 68:
-//#line 353 "GameWizard.y"
+//#line 374 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 69:
-//#line 354 "GameWizard.y"
+//#line 375 "GameWizard.y"
 {yyval.sval='{'+val_peek(1).sval+'}';}
 break;
 case 70:
-//#line 358 "GameWizard.y"
+//#line 379 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 71:
-//#line 359 "GameWizard.y"
+//#line 380 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+','+val_peek(0).sval;}
 break;
 case 72:
-//#line 363 "GameWizard.y"
+//#line 384 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 73:
-//#line 367 "GameWizard.y"
-{yyval.sval="{"+val_peek(1).sval+"}";}
+//#line 388 "GameWizard.y"
+{yyval.sval="{\n"+val_peek(1).sval+"}\n";}
 break;
 case 74:
-//#line 368 "GameWizard.y"
-{yyval.sval="{}";}
+//#line 389 "GameWizard.y"
+{yyval.sval="{\n}\n";}
 break;
 case 75:
-//#line 381 "GameWizard.y"
+//#line 402 "GameWizard.y"
 {System.out.println("0");yyval.sval=val_peek(0).sval;}
 break;
 case 76:
-//#line 382 "GameWizard.y"
+//#line 403 "GameWizard.y"
 {yyval.sval=val_peek(3).sval+'['+val_peek(1).ival+']';}
 break;
 case 77:
-//#line 387 "GameWizard.y"
+//#line 408 "GameWizard.y"
 {System.out.println("0");yyval.sval=val_peek(0).sval;}
 break;
 case 78:
-//#line 388 "GameWizard.y"
+//#line 409 "GameWizard.y"
 {yyval.sval="ICard ";}
 break;
 case 79:
-//#line 389 "GameWizard.y"
+//#line 410 "GameWizard.y"
 {yyval.sval="Player ";}
 break;
 case 80:
-//#line 395 "GameWizard.y"
-{yyval.sval="boolean ";}
+//#line 416 "GameWizard.y"
+{yyval.sval="Boolean ";}
 break;
 case 81:
-//#line 396 "GameWizard.y"
-{yyval.sval="int ";}
+//#line 417 "GameWizard.y"
+{yyval.sval="Integer ";}
 break;
 case 82:
-//#line 397 "GameWizard.y"
+//#line 418 "GameWizard.y"
 {yyval.sval="String ";}
 break;
 case 83:
-//#line 402 "GameWizard.y"
+//#line 423 "GameWizard.y"
 {yyval.sval=val_peek(3).sval+"("+val_peek(1).sval+")";}
 break;
 case 84:
-//#line 403 "GameWizard.y"
+//#line 424 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"()";}
 break;
 case 85:
-//#line 407 "GameWizard.y"
+//#line 428 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 86:
-//#line 411 "GameWizard.y"
-{yyval.sval=val_peek(0).sval;}
+//#line 433 "GameWizard.y"
+{
+		SymbolType type = SymbolTable.lookUpSymbolType(val_peek(0).sval);
+		if(type==SymbolType.CARD || type==SymbolType.CHARACTER){
+			yyval.sval="new "+val_peek(0).sval+"()";	
+		}else{
+			yyval.sval=val_peek(0).sval;
+		}
+	}
 break;
 case 87:
-//#line 412 "GameWizard.y"
+//#line 441 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+","+val_peek(0).sval;}
 break;
 case 88:
-//#line 417 "GameWizard.y"
+//#line 446 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"."+val_peek(0).sval;}
 break;
 case 89:
-//#line 418 "GameWizard.y"
+//#line 447 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 90:
-//#line 419 "GameWizard.y"
+//#line 448 "GameWizard.y"
 {yyval.sval="roundSummary";}
 break;
 case 91:
-//#line 423 "GameWizard.y"
+//#line 452 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 92:
-//#line 424 "GameWizard.y"
+//#line 453 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 93:
-//#line 430 "GameWizard.y"
+//#line 459 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 94:
-//#line 435 "GameWizard.y"
+//#line 464 "GameWizard.y"
 {Integer tmp = new Integer(val_peek(0).ival);yyval.sval=tmp.toString();}
 break;
 case 95:
-//#line 436 "GameWizard.y"
+//#line 465 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 96:
-//#line 437 "GameWizard.y"
+//#line 466 "GameWizard.y"
 {yyval.sval="true";}
 break;
 case 97:
-//#line 438 "GameWizard.y"
+//#line 467 "GameWizard.y"
 {yyval.sval="false";}
 break;
 case 98:
-//#line 439 "GameWizard.y"
+//#line 468 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 99:
-//#line 440 "GameWizard.y"
+//#line 469 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 100:
-//#line 445 "GameWizard.y"
+//#line 474 "GameWizard.y"
 {yyval.sval= val_peek(2).sval+"."+val_peek(0).sval;}
 break;
 case 101:
-//#line 449 "GameWizard.y"
+//#line 478 "GameWizard.y"
 {yyval.sval=val_peek(3).sval+'['+val_peek(1).sval+']';}
 break;
 case 102:
-//#line 450 "GameWizard.y"
+//#line 479 "GameWizard.y"
 {yyval.sval=val_peek(3).sval+'['+val_peek(1).sval+']';}
 break;
 case 103:
-//#line 456 "GameWizard.y"
+//#line 485 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 104:
-//#line 460 "GameWizard.y"
+//#line 489 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 105:
-//#line 461 "GameWizard.y"
+//#line 490 "GameWizard.y"
 {yyval.sval=val_peek(1).sval+val_peek(0).sval;}
 break;
 case 106:
-//#line 465 "GameWizard.y"
+//#line 494 "GameWizard.y"
 {yyval.sval="~";}
 break;
 case 107:
-//#line 466 "GameWizard.y"
+//#line 495 "GameWizard.y"
 {yyval.sval="!";}
 break;
 case 108:
-//#line 471 "GameWizard.y"
+//#line 500 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 109:
-//#line 472 "GameWizard.y"
+//#line 501 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"*"+val_peek(0).sval;}
 break;
 case 110:
-//#line 473 "GameWizard.y"
+//#line 502 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"/"+val_peek(0).sval;}
 break;
 case 111:
-//#line 474 "GameWizard.y"
+//#line 503 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"%"+val_peek(0).sval;}
 break;
 case 112:
-//#line 479 "GameWizard.y"
+//#line 508 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 113:
-//#line 480 "GameWizard.y"
+//#line 509 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"+"+val_peek(0).sval;}
 break;
 case 114:
-//#line 481 "GameWizard.y"
+//#line 510 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"-"+val_peek(0).sval;}
 break;
 case 115:
-//#line 486 "GameWizard.y"
+//#line 515 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 116:
-//#line 487 "GameWizard.y"
+//#line 516 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"<"+val_peek(0).sval;}
 break;
 case 117:
-//#line 488 "GameWizard.y"
+//#line 517 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+">"+val_peek(0).sval;}
 break;
 case 118:
-//#line 489 "GameWizard.y"
+//#line 518 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"<="+val_peek(0).sval;}
 break;
 case 119:
-//#line 490 "GameWizard.y"
+//#line 519 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+">="+val_peek(0).sval;}
 break;
 case 120:
-//#line 495 "GameWizard.y"
+//#line 524 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 121:
-//#line 496 "GameWizard.y"
+//#line 525 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"=="+val_peek(0).sval;}
 break;
 case 122:
-//#line 497 "GameWizard.y"
+//#line 526 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"!="+val_peek(0).sval;}
 break;
 case 123:
-//#line 501 "GameWizard.y"
+//#line 530 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 124:
-//#line 502 "GameWizard.y"
+//#line 531 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"&&"+val_peek(0).sval;}
 break;
 case 125:
-//#line 507 "GameWizard.y"
+//#line 536 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 126:
-//#line 508 "GameWizard.y"
+//#line 537 "GameWizard.y"
 {yyval.sval=val_peek(2).sval+"||"+val_peek(0).sval;}
 break;
 case 127:
-//#line 513 "GameWizard.y"
+//#line 542 "GameWizard.y"
 {yyval.sval=val_peek(0).sval;}
 break;
 case 128:
-//#line 514 "GameWizard.y"
+//#line 543 "GameWizard.y"
 {yyval.sval= val_peek(2).sval+"="+val_peek(0).sval;}
 break;
-//#line 1531 "Parser.java"
+//#line 1571 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

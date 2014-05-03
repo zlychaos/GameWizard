@@ -1,5 +1,9 @@
-public class gen_CardTwo implements ICard{
-public Integer value=2;
+package compile.helloworld.cards;
+
+import zhllz.gamewizard.basic.ICard;
+import zhllz.gamewizard.basic.Player;
+public class CardThree implements ICard{
+public Integer value=3;
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Card ");
@@ -12,9 +16,10 @@ sb.append("\n\tvalue=");
 	}
 @Override
 	public String getName() {
-		return "CardTwo";
+		return "CardThree";
 	}
-@Overridepublic void method(PlayerBase dealer){
+@Override
+public void method(Player dealer){
 
 } 
 }

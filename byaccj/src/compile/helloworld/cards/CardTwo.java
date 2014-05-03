@@ -1,3 +1,7 @@
+package compile.helloworld.cards;
+
+import zhllz.gamewizard.basic.ICard;
+import zhllz.gamewizard.basic.Player;
 public class CardTwo implements ICard{
 public Integer value=2;
 	@Override
@@ -14,7 +18,8 @@ sb.append("\n\tvalue=");
 	public String getName() {
 		return "CardTwo";
 	}
-@Overridepublic void method(PlayerBase dealer){
+@Override
+public void method(Player dealer){
 
 } 
 }

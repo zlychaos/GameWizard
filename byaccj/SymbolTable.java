@@ -102,6 +102,11 @@ public class SymbolTable {
 		}
 		return SymbolType.UNDEFINED;
 	}
+	
+	public static List<String> giveMeNameOfSomesTypeFromGloBlock(SymbolType type){
+		ScopeBlock global = table.getFirst();
+		return global.genNamesOfSomeType(type);
+	}
 
 	public static boolean checkCardCharacterVar(String cardCharacterName,
 			String varName) {

@@ -1,3 +1,4 @@
+package zhllz.gamewizard.communication;
 
 public interface ICommunicatable {
 	

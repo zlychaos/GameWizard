@@ -1,3 +1,5 @@
+package compile.helloworld;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +9,8 @@ import java.util.List;
 
 import compile.helloworld.cards.*;
 import compile.helloworld.characters.*;
-import zhllz.gamewizard.basic.ICard;
+
+import zhllz.gamewizard.basic.ICard;import zhllz.gamewizard.basic.Player;
 import zhllz.gamewizard.communication.Server;
 
 public class Game {
@@ -31,30 +34,62 @@ public static String game_name = "Hello World";
 public static int num_of_players = 2;
 public static int maximum_round = 2;
 public static void init(){
-int i=0;
+Integer i=0;
 while(i<10)
-{cardStack.add(CardOne);cardStack.add(CardTwo);cardStack.add(CardThree);i=i+1;}shuffle(cardStack);for(Player  player:playerList)
-{player.setCharacter(RegularGuy);}
+{
+cardStack.add(new CardOne());
+cardStack.add(new CardTwo());
+cardStack.add(new CardThree());
+i=i+1;
+}
+shuffle(cardStack);
+for(Player  player:playerList)
+{
+player.setCharacter(new RegularGuy());
+}
+
 }
 public static void round_begin(){
 
 }
-public static void turn(Player player) throws IOException{drawCard(player,1);sendToOnePlayer(player,GameGeneralInfo());ICard card=putCard(player);
-card=(card.getName())card;
+public static void turn(Player player) throws IOException{drawCard(player,1);
+sendToOnePlayer(player,GameGeneralInfo());
+ICard card = putCard(player);
 droppedCardStack.add(card);
+
 }
-public static void round_end() throws Exception{int max=0;
-int maxPlayer=-1;
+public static void round_end() throws Exception{Integer max=0;
+Integer maxPlayer=-1;
 String ret="";
-for(int  player_id:roundSummary.keySet())
-{ICard card=roundSummary.get(play_id);
-card=(card.getName())card;
-int value=card.value;
-ret=ret+"Player "+player_id+" : "+value+", ";if(value>max)
-{max=value;maxPlayer=player_id;}}broadcast("Result:\n"+ret);if(maxPlayer==-1)
-{broadcast("No winner this turn");};
+for(Integer  player_id:roundSummary.keySet())
+{
+ICard card = roundSummary.get(player_id);
+Integer  tmp = null;
+if( card instanceof CardOne)
+	tmp = ((CardOne)card).value;
+if( card instanceof CardTwo)
+	tmp = ((CardTwo)card).value;
+if( card instanceof CardThree)
+	tmp = ((CardThree)card).value;
+Integer value = tmp;
+ret=ret+"Player "+player_id+" : "+value+", ";
+if(value>max)
+{
+max=value;
+maxPlayer=player_id;
+}
+}
+broadcast("Result:\n"+ret);
+if(maxPlayer==-1)
+{
+broadcast("No winner this turn");
+}
+
 else
-{broadcast("Player "+maxPlayer+" win!");};
+{
+broadcast("Player "+maxPlayer+" win!");
+}
+
 }
 public static void dying(){
 
@@ -104,7 +139,7 @@ public static void shuffle(List<?> list){
 		}
 		
 		System.out.println("Game Start!");
-		GameServer.broadcast(name + ": Game Start!");
+		GameServer.broadcast(game_name + ": Game Start!");
 		
 		init();
 		
@@ -210,12 +245,12 @@ public static void shuffle(List<?> list){
 	
 	public static String GameGeneralInfo(){
 		StringBuilder sb = new StringBuilder();
-		int length = name.length();
+		int length = game_name.length();
 		sb.append('+');
 		for(int i=0;i<length;i++)
 			sb.append('-');
 		sb.append("+\n|");
-		sb.append(name);
+		sb.append(game_name);
 		sb.append("|\n+");
 		for(int i=0;i<length;i++)
 			sb.append('-');

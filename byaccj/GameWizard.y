@@ -291,7 +291,7 @@ ForeachStatement:
 ;
 
 EmptyStatement
-:   ';' {$$=";";}
+:   ';' {$$=";\n";}
 ;
 
 IterationStatement
@@ -304,7 +304,7 @@ SelectionStatement
 :   IF '(' Expression ')' Block
     {System.out.println("6");String s = "if("+$3+")\n"+$5; $$=s;}
     |IF '(' Expression ')' Block ELSE Block
-    {System.out.println("7");String s = "if("+$3+")\n"+$5+";\nelse\n"+$7+";"; $$=s;}
+    {System.out.println("7");String s = "if("+$3+")\n"+$5+"\nelse\n"+$7+""; $$=s;}
 ;
 
 
@@ -325,11 +325,32 @@ FieldDeclaration
 FieldVariableDeclaration
 : TypeSpecifier VariableDeclarators 
   {
+	String[] arr = $2.split("=");
+	String var = arr[0];
+	String val = arr[1];
+
+	checkDulDeclare(var);
 	if($1.equals("ICard ")){
-		String var = $2.split("=")[0];
-		$$=$1+$2+";\n"+var+"=("+var+".getName())"+var;
+		$$=$1+var+" = "+val;
+		SymbolTable.addRecordToCurrentBlock(var,SymbolType.LOCAL_CARD_DECLARE);
 	}else{
-		$$=$1+$2;
+		SymbolTable.addRecordToCurrentBlock(var,SymbolType.LOCAL_VARIABLE);
+		if(val.indexOf('.')!=-1){
+			if(val.matches("[^a-zA-Z0-9.]")){
+				yyerror("Syntax Error, ID.ID must be the only element on the right side of =");
+			}
+			int i = val.indexOf(".");
+			String indicator = val.substring(0,i);
+			String postfix = val.substring(i+1,val.length());
+			SymbolType type;
+			type = SymbolTable.lookUpSymbolType(indicator);
+			if(type==SymbolType.LOCAL_CARD_DECLARE){
+				$$=genCardDownCast($1,indicator,postfix)+$1+var+" = tmp";
+			}else
+				$$=$1+$2;
+		}
+		else
+			$$=$1+$2;
 	}
   }
 ;
@@ -341,7 +362,7 @@ VariableDeclarators
 
 VariableDeclarator
 : DeclaratorName    {checkDulDeclare($1);System.out.println("1");$$=$1;}
-| DeclaratorName '=' VariableInitializer    {checkDulDeclare($1);SymbolTable.addRecordToCurrentBlock($1,SymbolType.LOCAL_VARIABLE);$$=$1+'='+$3;}
+| DeclaratorName '=' VariableInitializer    {$$=$1+'='+$3;}
 ;
 
 DeclaratorName
@@ -364,8 +385,8 @@ NonStaticInitializer
 ;
 
 Block
-: '{' STATEMENT_LIST '}' {$$="{"+$2+"}";}
-| '{' '}'   {$$="{}";}
+: '{' STATEMENT_LIST '}' {$$="{\n"+$2+"}\n";}
+| '{' '}'   {$$="{\n}\n";}
 ;
 
 
@@ -392,8 +413,8 @@ TypeName
 
 
 PrimitiveType
-: DECLR_BOOL    {$$="boolean ";}
-| DECLR_INT     {$$="int ";}
+: DECLR_BOOL    {$$="Boolean ";}
+| DECLR_INT     {$$="Integer ";}
 | DECLR_STR     {$$="String ";}
 ;
 
@@ -408,7 +429,15 @@ MethodAccess:
 	;
 
 ArgumentList
-	: Expression     {$$=$1;}
+	: Expression     
+	{
+		SymbolType type = SymbolTable.lookUpSymbolType($1);
+		if(type==SymbolType.CARD || type==SymbolType.CHARACTER){
+			$$="new "+$1+"()";	
+		}else{
+			$$=$1;
+		}
+	}
 	| ArgumentList ',' Expression {$$=$1+","+$3;}
 	;
 
@@ -557,6 +586,18 @@ Expression
     System.exit(1);
   }
 
+
+	public String genCardDownCast(String typeName, String varName, String postfix){
+		List<String> nameList = SymbolTable.
+			giveMeNameOfSomesTypeFromGloBlock(SymbolType.CARD);
+		StringBuffer ret = new StringBuffer();
+		ret.append(typeName+" tmp = null;\n");
+		for(String name : nameList){
+			ret.append("if( "+varName+" instanceof "+name+")\n\t");
+			ret.append("tmp = (("+name+")"+varName+")."+postfix+";\n");
+		}
+		return ret.toString();
+	}
 
   public Parser(Reader r) {
     lexer = new Yylex(r, this);

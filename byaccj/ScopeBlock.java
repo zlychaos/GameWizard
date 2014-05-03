@@ -53,6 +53,16 @@ public class ScopeBlock {
 		}
 
 	}
+	
+	public List<String> genNamesOfSomeType(SymbolType type){
+		List<String> ret = new ArrayList<String>();
+		for (SymbolRecord record : symbolList) {
+			if (record.getSymbolType()==type) {
+				ret.add(record.getSymbolName());
+			}
+		}
+		return ret;
+	}
 
 	public SymbolType findRecordInThisBlock(String name) {
 		for (SymbolRecord record : symbolList) {
