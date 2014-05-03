@@ -63,7 +63,7 @@ round{
 		String ret = "";
 	
 		foreach (int player_id in roundSummary){
-			int value = roundSummary[player_id].value;
+			int value = roundSummary.get(play_id);
 			ret = ret+ "Player " + player_id + " : " + value + ", ";
 			if(value>max){
 				max = value;
@@ -80,4 +80,6 @@ round{
 		}
 	}
 }
-
+dying{
+	void
+}

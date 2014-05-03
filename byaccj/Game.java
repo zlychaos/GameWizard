@@ -32,21 +32,25 @@ public static int num_of_players = 2;
 public static int maximum_round = 2;
 public static void init(){
 int i=0;
-
+while(i<10)
+{cardStack.add(CardOne);cardStack.add(CardTwo);cardStack.add(CardThree);i=i+1;}shuffle(cardStack);for(Player player:playerList)
+{player.setCharacter(RegularGuy);}
 }
 public static void round_begin(){
 
 }
-public static void turn(Player player) throws IOException{
+public static void turn(Player player) throws IOException{drawCard(player,1);sendToOnePlayer(player,GameGeneralInfo());Cardcard=putCard(player);
+droppedCardStack.add(cardStack);
 }
-public static void round_end() throws Exception{int max=-11;
-int maxPlayer=1;
+public static void round_end() throws Exception{int max=0;
+int maxPlayer=-1;
 String ret="";
-for(int  a:roundSummary.keySet())
-{int ccc=1;
-}for(Player bbb:playerList)
-{int bbbb=454;
-}
+for(int  player_id:roundSummary.keySet())
+{ret=ret+"Player "+player_id+" : "+value+", ";if(value>max)
+{max=value;maxPlayer=player_id;}}broadcast("Result:\n"+ret);if(maxPlayer==-1)
+{broadcast("No winner this turn");};
+else
+{broadcast("Player "+maxPlayer+" win!");};
 }
 public static void dying(){
 

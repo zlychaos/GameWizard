@@ -377,8 +377,8 @@ TypeSpecifier
 
 TypeName
 : PrimitiveType {System.out.println("0");$$=$1;}
-| CARD {$$="Card";}
-| PLAYER {$$="Player";}
+| CARD {$$="Card ";}
+| PLAYER {$$="Player ";}
 ;
 
 
@@ -396,7 +396,7 @@ MethodCall
 	;
 
 MethodAccess:
-	 QualifiedName		{$$="123";}
+	 QualifiedName		{$$=$1;}
 	;
 
 ArgumentList

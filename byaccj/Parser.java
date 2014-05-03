@@ -1422,7 +1422,7 @@ case 84:
 break;
 case 85:
 //#line 399 "GameWizard.y"
-{yyval.sval="123";}
+{yyval.sval=val_peek(0).sval;}
 break;
 case 86:
 //#line 403 "GameWizard.y"
