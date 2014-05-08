@@ -1,9 +1,13 @@
 package zhllz.gamewizard.communication;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
@@ -17,6 +21,7 @@ public class Server {
 		try {
 			waiting_server = new ServerSocket(port);
 			connections = new Vector<ServerConnection>();
+			printLocalIP();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,6 +55,28 @@ public class Server {
 			sc.closeConnection();
 		}
 	}
+	
+	public void printLocalIP() throws SocketException{
+        System.out.println("IP address of this host will be given below. Choose one for clients to connect.");
+        System.out.println("If the server and clients are on the same host, \"127.0.0.1\" might be best.");
+        System.out.println("If the server and clients are on the hosts within one LAN, IP that starts with 192 might be best choice.");
+        System.out.println("The programmer is not sure about other cases. Two ways you can try if connection fails:");
+        System.out.println("\t1. Use another ip address given below.\n\t2. Look into firewalls and other stuff of your networking environment. "
+                + "Maybe the port you are using is blocked or your host only receive packets from certain addresses."
+                + "\n\t3. Maybe BigBrother is trying to control you!( hopfully not )");
+        System.out.println("The ip address of this host is as follows. (I know you have been waiting. Sorry, here they are:)");
+        Enumeration e=NetworkInterface.getNetworkInterfaces();
+        while(e.hasMoreElements())
+        {
+            NetworkInterface n=(NetworkInterface) e.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            while(ee.hasMoreElements())
+            {
+                InetAddress i= (InetAddress) ee.nextElement();
+                System.out.println(i.getHostAddress());
+            }
+        }
+    }
 	
 	//Tester
 	public static void main(String[] args) {

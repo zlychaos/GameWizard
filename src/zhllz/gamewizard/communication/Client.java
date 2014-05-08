@@ -180,11 +180,25 @@ public class Client {
 	public void game_start() {
 		
 		try {
-			String ip = "localhost";
+			String ip = null;
+			System.out.println("Please indicate the IP of Game Server:");
+			sc = new Scanner(System.in);
+			
 			int port = 4119;
 			
-			s = new Socket(ip, port);
-			sc = new Scanner(System.in);
+			boolean flag = true;
+			while(flag){
+				try{
+					ip = sc.nextLine();
+					if(ip.equals("")){
+						ip = "localhost";
+					}
+					s = new Socket(ip, port);
+					flag = false;
+				} catch (UnknownHostException e){
+					System.out.println("The host is unknown, please try another.");
+				}
+			}
 			
 			inFromServer = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			outToServer = new DataOutputStream(s.getOutputStream());
@@ -218,10 +232,6 @@ public class Client {
 			Thread.sleep(1000);
 			s.close();
 			
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			sc.nextLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

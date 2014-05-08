@@ -77,8 +77,8 @@ public class Game {
 		boolean firstSkill = true;
 		while(flag){
 			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
-			if(mode == 1 && firstSkill){
-				if(waitForSkill(player))
+			if(mode == 1){
+				if(firstSkill && waitForSkill(player))
 					firstSkill = false;
 			}else if(mode == 2){
 				CardBase c = putCard(player);
@@ -223,7 +223,7 @@ public class Game {
 	
 	public static boolean waitForSkill(Player player){
 		String promt = "Skill List( choose with the indexes ): " + player.character.getSkillList();
-		int range = playerList.size();
+		int range = player.character.skillList.length;
 		int choice = waitForChoice(player, promt, range);
 		if(choice != -1){
 			player.character.skill(player, player.character.skillList[choice-1]);
