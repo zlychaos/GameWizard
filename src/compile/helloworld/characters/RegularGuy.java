@@ -1,13 +1,11 @@
 package compile.helloworld.characters;
 
-import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.Player;
+import compile.helloworld.*;
 
 public class RegularGuy extends CharacterBase {
-
-	public int HP = 3;
 	
 	public RegularGuy(){
+		HP = 3;
 		skillList = new String[0];
 	}
 	
@@ -26,14 +24,6 @@ public class RegularGuy extends CharacterBase {
 		return false;
 	}
 	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("\tHP=");
-		sb.append(HP);
-		//sb.append("\n\tkey=");
-		//sb.append(value);
-		return sb.toString();
-	}
+	
 
 }

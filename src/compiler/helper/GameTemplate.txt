@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import compile.helloworld.cards.*;
-import compile.helloworld.characters.*;
+import mygame.cards.*;
+import mygame.characters.*;
 import zhllz.gamewizard.basic.ICard;
 import zhllz.gamewizard.basic.Player;
 import zhllz.gamewizard.communication.Server;

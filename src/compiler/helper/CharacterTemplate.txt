@@ -7,7 +7,7 @@ public class ### extends CharacterBase {
 
 ###
 	
-	public RegularGuy(){
+	public ###(){
 		skillList = new String[###];
 		###
 	}

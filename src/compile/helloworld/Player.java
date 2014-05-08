@@ -1,4 +1,4 @@
-package zhllz.gamewizard.basic;
+package compile.helloworld;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import zhllz.gamewizard.communication.StrController;
 public class Player implements ICommunicatable {
 	
 	public int id;
-	public ArrayList<ICard> handCards;
+	public ArrayList<CardBase> handCards;
 	
 	public ServerConnection conn;
 	public boolean online;
@@ -20,7 +20,7 @@ public class Player implements ICommunicatable {
 	public Player(int id, Server server){
 		
 		this.id = id;
-		this.handCards = new ArrayList<ICard>();
+		this.handCards = new ArrayList<CardBase>();
 		this.conn = server.waitForPlayer(this);;
 		this.online = true;
 	}

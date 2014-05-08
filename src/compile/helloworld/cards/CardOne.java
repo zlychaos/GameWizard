@@ -1,12 +1,13 @@
 package compile.helloworld.cards;
 
-import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.Player;
+import compile.helloworld.*;
 
-public class CardOne implements ICard {
+public class CardOne extends CardBase {
 	
-	public int value = 1;
-
+	public CardOne(){
+		value = 1;
+	}
+	
 	@Override
 	public String getName() {
 		return "CardOne";
@@ -18,16 +19,5 @@ public class CardOne implements ICard {
 
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder("Card ");
-		sb.append(getName());
-		sb.append(":{\n\tvalue=");
-		sb.append(value);
-		//sb.append("\n\tkey=");
-		//sb.append(value);
-		sb.append("\n}");
-		return sb.toString();
-	}
 	
 }

@@ -1,22 +1,30 @@
-package zhllz.gamewizard.basic;
+package compile.tinywar;
 
 public abstract class CharacterBase {
+
+	public int HP;
 	
-	protected String[] skillList;
+	public String[] skillList;
 
 	public String getSkillList(){
 		StringBuilder sb = new StringBuilder("[ ");
-		boolean first = true;
+		int i = 1;
 		for(String skill : skillList){
-			if(first){
-				sb.append(skill);
-				first = false;
+			if(i!=1){
+				sb.append(", ");
 			}
-			else{
-				sb.append(" ," + skill);
-			}
+			sb.append("("+i+"): " + skill);
+			i++;
 		}
 		sb.append(" ]");
+		return sb.toString();
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("\tHP=");
+		sb.append(HP);
 		return sb.toString();
 	}
 	

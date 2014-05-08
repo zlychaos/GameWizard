@@ -105,7 +105,7 @@ public class Util {
 								sb.append("\tpublic static ");
 								String type = getStrType(ji.attr.type);
 								sb.append(type + " ");
-								sb.append(ji.attr.id + "=" + ji.attr.value + "\n");
+								sb.append(ji.attr.id + "=" + ji.attr.value + ";\n");
 								break;
 							case Function:
 								if("init".equals(ji.func.id)){
@@ -208,7 +208,7 @@ public class Util {
 			result = "String";
 			break;
 		case INTEGER:
-			result = "int ";
+			result = "int";
 			break;
 		case DOUBLE:
 			result = "double";
@@ -218,6 +218,15 @@ public class Util {
 			break;
 		case CARD:
 			result = "ICard";
+			break;
+		case LISTOFCARD:
+			result = "LinkList<ICard>";
+			break;
+		case LISTOFPLAYER:
+			result = "LinkList<Player>";
+			break;
+		case DICTINTTOCARD:
+			result = "HashMap<Integer, ICard>";
 			break;
 		case VOID:
 			result = "void";
@@ -265,7 +274,7 @@ public class Util {
 								sb.append("\tpublic ");
 								String type = getStrType(ji.attr.type);
 								sb.append(type + " ");
-								sb.append(ji.attr.id + "=" + ji.attr.value + "\n");
+								sb.append(ji.attr.id + "=" + ji.attr.value + ";\n");
 								break;
 							case Function:
 								if("method".equals(ji.func.id)){
@@ -308,7 +317,7 @@ public class Util {
 							if(ji.type == JsonItemType.Attribute){
 								sb.append("sb.append(\"\\\\t" + ji.attr.id + "=\");\n");
 								sb.append("\t\tsb.append(" + ji.attr.id + ");\n");
-								sb.append("\t\tsb.append(\"\\\\n\")\n;");
+								sb.append("\t\tsb.append(\"\\\\n\");\n");
 							}
 						}
 						line = data.replaceAll("###", sb.toString());
@@ -400,7 +409,7 @@ public class Util {
 							case Attribute:
 								sb.append("\tpublic ");
 								sb.append(getStrType(ji.attr.type) + " ");
-								sb.append(ji.attr.id + "=" + ji.attr.value + "\n");
+								sb.append(ji.attr.id + "=" + ji.attr.value + ";\n");
 								break;
 							case Function:
 								sb.append("\tpublic ");
@@ -428,9 +437,12 @@ public class Util {
 						line = data.replaceAll("###", sb.toString());
 						break;
 					case 3:
-						line = data.replaceAll("###", Integer.toString(skills.size()));
+						line = data.replaceAll("###", name);
 						break;
 					case 4:
+						line = data.replaceAll("###", Integer.toString(skills.size()));
+						break;
+					case 5:
 						sb = new StringBuilder();
 						int len = skills.size();
 						for(int j=0;j<len;j++){
@@ -438,20 +450,20 @@ public class Util {
 						}
 						line = data.replaceAll("###", sb.toString());
 						break;
-					case 5:
+					case 6:
 						line = data.replaceAll("###", name);
 						break;
-					case 6:
+					case 7:
 						sb = new StringBuilder();
 						for(Skill skill : skills){
-							sb.append("\t\tif(\""+skill.id+"\".equals(skillName){\n");
+							sb.append("\t\tif(\""+skill.id+"\".equals(skillName)){\n");
 							sb.append(skill.body);
-							sb.append("return true;");
+							sb.append("\t\t\treturn true;");
 							sb.append("\n\t\t}\n");
 						}
 						line = data.replaceAll("###", sb.toString());
 						break;
-					case 7:
+					case 8:
 						sb = new StringBuilder();
 						for(JsonItem ji : character.json){
 							if(ji.type == JsonItemType.Attribute){

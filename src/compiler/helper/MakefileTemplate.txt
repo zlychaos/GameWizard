@@ -32,7 +32,7 @@ CLASSES = \
 	zhllz/gamewizard/basic/CharacterBase.java \
 	zhllz/gamewizard/basic/Group.java \
 	zhllz/gamewizard/basic/ICard.java \
-	zhllz/gamewizard/basic/PlayerBase.java \
+	zhllz/gamewizard/basic/Player.java \
 	mygame/Game.java ###
 
 #
@@ -63,16 +63,16 @@ classes: $(CLASSES:.java=.class)
 #
 
 .java.class:
-	$(JC) $(JFLAGS) -classpath ../java-json.jar:zhllz/gamewizard/communication/:. $*.java
+	$(JC) $(JFLAGS) -classpath java-json.jar:zhllz/gamewizard/communication/:. $*.java
 
 server: classes
-	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
+	java -cp java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
 
 mygame: classes
-	java -cp ../java-json.jar:zhllz/gamewizard/communication/:zhllz/gamewizard/basic/:mygame/:mygame/cards:mygame/characters:. mygame.Game
+	java -cp java-json.jar:zhllz/gamewizard/communication/:zhllz/gamewizard/basic/:mygame/:mygame/cards:mygame/characters:. mygame.Game
 
 client: classes
-	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
+	java -cp java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
 
 
 #
@@ -81,3 +81,4 @@ client: classes
 
 clean:
 	$(RM) zhllz/gamewizard/communication/*.class
+	$(RM) zhllz/gamewizard/basic/*.class

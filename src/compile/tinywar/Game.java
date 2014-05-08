@@ -1,4 +1,4 @@
-package compile.helloworld;
+package compile.tinywar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import compile.helloworld.cards.*;
-import compile.helloworld.characters.*;
+import compile.tinywar.cards.*;
+import compile.tinywar.characters.*;
 import zhllz.gamewizard.communication.Server;
 
 public class Game {
@@ -30,62 +30,86 @@ public class Game {
 	
 
 	// compiling result
-	public static String game_name = "Hello World";
-	public static int num_of_players = 2;
-	public static int maximum_round = 2; 
+	public static String game_name = "Tiny War";
+	public static int num_of_players = 4;
+	public static int maximum_round = 10000; 
 		
 	public static void init(){
+		for(int i=0; i<40; i++){
+			cardStack.add(new Attack());
+		}
 		for(int i=0; i<10; i++){
-			cardStack.add(new CardOne());
-			cardStack.add(new CardTwo());
-			cardStack.add(new CardThree());
+			cardStack.add(new Dodge());
+			cardStack.add(new FirstAid());
+		}
+		for(int i=0; i<5; i++){
+			cardStack.add(new Diligenra());
 		}
 		shuffle(cardStack);
 		
-		for(Player p : playerList)
-			p.setCharacter(new RegularGuy());
+		playerList.get(0).setCharacter(new Doctor());
+		playerList.get(1).setCharacter(new Vampire());
+		playerList.get(2).setCharacter(new Vampire());
+		playerList.get(3).setCharacter(new Gambler());
+		for(Player p : playerList){
+			drawCard(p, 4);
+		}
+			
 		
 	}
 	
 	public static void round_begin(){
-		roundSummary.clear();
+		
 	}
 	
 	public static void round_end() {
-		int max=0;
-		int maxPlayer = -1;
-		String ret = "";
-	
-		for(int player_id : roundSummary.keySet()){
-			
-			int value = roundSummary.get(player_id).value;
-			
-			ret += "Player "+player_id+" : "+value+", ";
-			if(value>max){
-				max = value;
-				maxPlayer = player_id;
-			}
-		}
-		broadcast("Result:\n "+ret);
-		if( maxPlayer==-1){
-			broadcast("No winner this turn");
-		}
-		else{
-			broadcast("Player " + maxPlayer +" win!");
-		}
+		
 	}
 	
 	public static void turn(Player player){
 		
-		drawCard(player,1);
+		if(player.character.HP <= 0)
+			return;
+		
+		drawCard(player,2);
 		sendToOnePlayer(player, GameGeneralInfo());
-		CardBase c = putCard(player);
-		droppedCardStack.add(c);
+		boolean flag = true;
+		boolean firstSkill = true;
+		while(flag){
+			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
+			if(mode == 1 && firstSkill){
+				if(waitForSkill(player))
+					firstSkill = false;
+			}else if(mode == 2){
+				CardBase c = putCard(player);
+				c.method(player);
+			}else{
+				flag = false;
+			}
+		}
 		
 	}
+	
+	public static void dying(){
+		int numOfAlive = 0;
+		Player alivePlayer = null;
+		
+		for( Player player : playerList){
+			if(player.character.HP > 0){
+				numOfAlive = numOfAlive + 1;
+				alivePlayer = player;
+			}
+		}
+		if(numOfAlive == 1){
+			broadcast("Player "+alivePlayer.id+" wins!!");
+			broadcast("Others lose");
+			gameover = true;
+		}
+	}
+	
 	// compiling result end
 	
-public static void main(String[] args){
+	public static void main(String[] args){
 		
 		//int init_HP = 1;
 		
@@ -143,6 +167,7 @@ public static void main(String[] args){
 				gameover = true;
 				return ;
 			}
+			roundSummary.clear();
 			round_begin();
 		}
 		
@@ -175,6 +200,7 @@ public static void main(String[] args){
 		GameServer.closeServer();
 	}
 	
+
 	public static int waitForChoice(Player player, String promt, int range){
 		player.conn.sendBroadcast("#If you really do not want to make this choice, type \"cancel\".#\n"+promt);
 		String input = null;
@@ -193,6 +219,17 @@ public static void main(String[] args){
 			
 		}
 		return -1;
+	}
+	
+	public static boolean waitForSkill(Player player){
+		String promt = "Skill List( choose with the indexes ): " + player.character.getSkillList();
+		int range = playerList.size();
+		int choice = waitForChoice(player, promt, range);
+		if(choice != -1){
+			player.character.skill(player, player.character.skillList[choice-1]);
+			return true;
+		}
+		return false;
 	}
 	
 	public static Player waitForTarget(Player player){
