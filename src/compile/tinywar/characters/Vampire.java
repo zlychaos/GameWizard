@@ -23,6 +23,9 @@ public class Vampire extends CharacterBase{
 	public boolean skill(Player dealer, String skillName) {
 		if("Leech".equals(skillName)){
 			Player target = Game.waitForTarget(dealer);
+			if(target == null){
+				return false;
+			}
 			target.character.HP = target.character.HP-1;
 			if(target.character.HP == 0){
 				Game.dying();

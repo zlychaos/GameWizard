@@ -14,8 +14,9 @@ public class Diligenra extends CardBase {
 	}
 
 	@Override
-	public void method(Player dealer) {
+	public boolean method(Player dealer) {
 		Game.drawCard(dealer, 2);
+		return true;
 	}
 
 	

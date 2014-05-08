@@ -16,6 +16,6 @@ public abstract class CardBase {
 	}
 	
 	public abstract String getName();
-	public abstract void method(Player dealer);
+	public abstract boolean method(Player dealer);
 
 }

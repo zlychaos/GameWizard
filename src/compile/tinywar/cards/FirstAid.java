@@ -14,8 +14,9 @@ public class FirstAid extends CardBase {
 	}
 
 	@Override
-	public void method(Player dealer) {
+	public boolean method(Player dealer) {
 		dealer.character.HP = dealer.character.HP + 1;
+		return true;
 	}
 
 	

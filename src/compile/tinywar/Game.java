@@ -82,7 +82,15 @@ public class Game {
 					firstSkill = false;
 			}else if(mode == 2){
 				CardBase c = putCard(player);
-				c.method(player);
+				if(c != null){
+					if(c.method(player)){
+						droppedCardStack.add(c);
+					}
+					else{
+						player.handCards.add(c);
+					}
+				}
+				
 			}else{
 				flag = false;
 			}
@@ -226,8 +234,7 @@ public class Game {
 		int range = player.character.skillList.length;
 		int choice = waitForChoice(player, promt, range);
 		if(choice != -1){
-			player.character.skill(player, player.character.skillList[choice-1]);
-			return true;
+			return player.character.skill(player, player.character.skillList[choice-1]);
 		}
 		return false;
 	}

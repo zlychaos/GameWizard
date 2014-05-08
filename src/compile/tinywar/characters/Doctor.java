@@ -23,6 +23,8 @@ public class Doctor extends CharacterBase{
 	public boolean skill(Player dealer, String skillName) {
 		if("Heal".equals(skillName)){
 			Player target = Game.waitForTarget(dealer);
+			if(target == null)
+				return false;
 			target.character.HP = target.character.HP+2;
 			return true;
 		}

@@ -14,7 +14,8 @@ public class Dodge extends CardBase {
 	}
 
 	@Override
-	public void method(Player dealer) {
+	public boolean method(Player dealer) {
+		return false;
 	}
 
 	

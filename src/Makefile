@@ -97,3 +97,9 @@ client: classes
 
 clean:
 	$(RM) zhllz/gamewizard/communication/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/cards/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/characters/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/cards/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/characters/*.class
