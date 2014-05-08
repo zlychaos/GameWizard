@@ -24,10 +24,11 @@ public class Gambler extends CharacterBase{
 		if("Gamble".equals(skillName)){
 			int i = 0;
 			for(CardBase card : dealer.handCards){
-				dealer.handCards.remove(card);
+				//dealer.handCards.remove(card);
 				Game.droppedCardStack.add(card);
 				i = i+1;
 			}
+			dealer.handCards.clear();
 			Game.drawCard(dealer, i);
 			return true;
 		}
