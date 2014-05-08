@@ -11,24 +11,29 @@ define cards[
 	Attack{
 		value: 1;
 		method(Player dealer){
-			Player target = dealer.waitForTarget();
-			sendToOnePlayer(target, "You are attacked by Player " + dealer.id + ", please put a Dodge, otherwise you will lose one HP point.");
-			Card card= putCard(target);
-			
-			while( card!=null && !(card is Dodge) ){  //"is" -> "instanceof"
-				target.handCards.add(card);
-				card = putCard(target);
+		
+			Player target = waitForTarget(dealer);
+			if(target == null){
+				return false;
 			}
-			
-			if(card == null){  
+		
+			sendToOnePlayer(target, "You are attacked by Player " + dealer.id + ", please put a Dodge, otherwise you will lose one HP point.");
+			Card c = Game.putCard(target);		
+			while( c!=null && !(c is Dodge) ){//"is" -> "instanceof"
+				target.handCards.add(c);
+				c = Game.putCard(target);
+			}
+		
+			if(c == null){  
 				target.character.HP = target.character.HP-1;
 				if(target.character.HP == 0){
 					dying();
 				}
 			}
 			else{
-				droppedCardStack.add(card);
+				droppedCardStack.add(c);
 			}
+			return true;
 			
 		}
 	}
@@ -36,7 +41,7 @@ define cards[
 	Dodge{
 		value: 2;
 		method(Player dealer){
-			void
+			return false;
 		} 
 	}
 
@@ -44,6 +49,7 @@ define cards[
 		value: 3;
 		method(Player dealer){
 			dealer.character.HP = dealer.character.HP+1;
+			return true;
 		}
 	}
 	
@@ -51,6 +57,7 @@ define cards[
 		value: 4;
 		method(Player dealer){
 			drawCard(dealer, 2);
+			return true;
 		}
 	}
 ]
@@ -63,7 +70,10 @@ define characters[
 			Heal{
 				void method(Player dealer){
 					Player target = waitForTarget(dealer);
+					if(target == null)
+						return false;
 					target.character.HP = target.character.HP+2;
+					return true;
 				}
 			}
 		]
@@ -74,12 +84,16 @@ define characters[
 		skill: [
 			Leech{
 				void method(Player dealer){
-					Player target = dealer.waitFotTarget();
+					Player target = waitForTarget(dealer);
+					if(target == null){
+						return false;
+					}
 					target.character.HP = target.character.HP-1;
 					if(target.character.HP == 0){
 						dying();
 					}
 					dealer.character.HP = dealer.character.HP+1;
+					return true;
 				}	
 			}
 		]
@@ -97,6 +111,7 @@ define characters[
 						i = i+1;
 					}
 					drawCard(dealer, i);
+					return true;
 				}
 			}
 		]
