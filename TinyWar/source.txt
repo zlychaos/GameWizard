@@ -156,25 +156,32 @@ round{
 	}
 	
 	turn{
-		if(player.HP != 0){
-			drawCard(player, 2);
-			sendToOnePlayer(player, GameGeneralInfo());
-			
-			boolean flag = true;
-			boolean firstSkill = true;
-			while(flag){
-				int mode = waitForChoice("Please input the number:\n1:skill  2:card  3:end", 3);
-				if(mode == 1){
-					if(firstSkill){
-						if(waitForSkill(player))
-							firstSkill = false;
+	
+		if(player.character.HP <= 0)
+			return;
+		
+		drawCard(player,2);
+		sendToOnePlayer(player, GameGeneralInfo());
+		boolean flag = true;
+		boolean firstSkill = true;
+		while(flag){
+			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
+			if(mode == 1){
+				if(firstSkill && waitForSkill(player))
+					firstSkill = false;
+			}else if(mode == 2){
+				Card c = putCard(player);
+				if(c != null){
+					if(c.method(player)){
+						droppedCardStack.add(c);
 					}
-				}else if(mode == 2){
-					Card c = putCard(player);
-					c.method(player);
-				}else{
-					flag = false;
+					else{
+						player.handCards.add(c);
+					}
 				}
+				
+			}else{
+				flag = false;
 			}
 		}
 	}
