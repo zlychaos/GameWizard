@@ -68,7 +68,7 @@ define characters[
 		//name: "People"; Let's use RegulayGuy as name here
 		skill :[
 			Heal{
-				void method(Player dealer){
+				method(Player dealer){
 					Player target = waitForTarget(dealer);
 					if(target == null)
 						return false;
@@ -79,11 +79,11 @@ define characters[
 		]
 	},
 	
-	Vampaire{
+	Vampire{
 		HP: 3;
 		skill: [
 			Leech{
-				void method(Player dealer){
+				method(Player dealer){
 					Player target = waitForTarget(dealer);
 					if(target == null){
 						return false;
@@ -103,7 +103,7 @@ define characters[
 		HP: 3;
 		skill: [
 			Gamble{
-				void method(Player dealer){
+				method(Player dealer){
 					int i = 0;
 					foreach card in dealer.handCards{
 						dealer.handCards.remove(card);
