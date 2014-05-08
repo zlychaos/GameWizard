@@ -65,7 +65,6 @@ define cards[
 define characters[
 	Doctor{
 		HP: 2;
-		//name: "People"; Let's use RegulayGuy as name here
 		skill :[
 			Heal{
 				method(Player dealer){
