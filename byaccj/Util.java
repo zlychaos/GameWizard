@@ -24,6 +24,7 @@ public class Util {
 			"import java.util.HashMap;\n" + 
 			"import java.util.LinkedList;\n" + 
 			"import java.util.List;\n" + 
+			"import java.io.*;\n" + 
 			"\n" + 
 			"import compile.mygame.cards.*;\n" + 
 			"import compile.mygame.characters.*;\n" + 
@@ -51,7 +52,7 @@ public class Util {
 					
 			String post_methods_string = "	// compiling result end\n" + 
 					"	\n" + 
-					"	public static void main(String[] args){\n" + 
+					"	public static void main(String[] args) throws Exception{\n" + 
 					"		\n" + 
 					"		//int init_HP = 1;\n" + 
 					"		\n" + 
@@ -101,7 +102,7 @@ public class Util {
 					"		\n" + 
 					"	}\n" + 
 					"	\n" + 
-					"	public static void nextOnlinePlayer(){\n" + 
+					"	public static void nextOnlinePlayer() throws Exception{\n" + 
 					"		if(currentPlayerIndex == num_of_players){\n" + 
 					"			round_end();\n" + 
 					"			\n" + 
@@ -529,7 +530,7 @@ public class Util {
 			
 
 			String skillMethod_part1 = "@Override\n"
-					+ "	public boolean skill(Player p, String skillName) {\n";
+					+ "	public boolean skill(Player dealer, String skillName) {\n";
 
 			String skillMethod_part2 = "return false;\n" + "	}\n";
 
