@@ -115,7 +115,7 @@
 %type <sval> MethodCall
 %type <sval> MethodAccess
 %type <sval> ArgumentList
-%type <sval> NameKeyword
+%type <sval> KeyName
 
 %left '-' '+'
 
@@ -230,7 +230,7 @@ skill_list:
 	;
 
 init_block:
-	INIT '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}'
+	INIT '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' 
 	{
 		SymbolTable.popBlock();
 		String ret = "public static void init(){\n"+$4+"\n}\n";
@@ -295,13 +295,13 @@ STATEMENT_LIST
 ;
 
 ForeachStatement:
-	FOREACH '(' TypeSpecifier QualifiedName IN ROUNDSUMMARY ')'  Block
+	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
         {
 		String s = "for("+$3+" "+$4+":roundSummary.keySet())\n"+$8;
 		$$=s;
 	}
 |
-	FOREACH '(' TypeSpecifier QualifiedName IN QualifiedName ')' Block
+	FOREACH '(' TypeSpecifier ID IN QualifiedName ')' Block
         {
 		String s = "for("+$3+" "+$4+":"+$6+")\n"+$8;
 		$$=s;
@@ -463,8 +463,7 @@ ArgumentList
 
 QualifiedName
 : QualifiedName '.' ID  {$$=$1+"."+$3;}
-| QualifiedName '.' NameKeyword {$$=$1+"."+$3;}
-| MethodCall {$$=$1;}
+| QualifiedName '.' KeyName  {$$=$1+"."+$3;}
 | ID    
 	{
 		SymbolType type = SymbolTable.lookUpSymbolType($1);
@@ -474,6 +473,12 @@ QualifiedName
 			$$=$1;
 		}
 	}
+| KeyName {$$=$1;}
+
+;
+
+KeyName
+: METHOD    {$$="method";}
 | ROUNDSUMMARY {$$="Game.roundSummary";}
 | GAME_NM {$$="Game.game_name";}
 | PLAYER_C {$$="Game.num_of_players";}
@@ -481,9 +486,6 @@ QualifiedName
 | DEALER {$$="dealer";}
 | DYING {$$="Game.dying";}
 ;
-
-NameKeyword
-: METHOD    {$$="method";}
 
 
 PrimaryExpression

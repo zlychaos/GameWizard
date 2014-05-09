@@ -103,7 +103,6 @@ define characters[
 			Gamble{
 				method(Player dealer){
 					int i = 0;
-##
 					foreach (Card card in dealer.handCards){
 						droppedCardStack.add(card);
 						i = i+1;
@@ -131,6 +130,7 @@ init{
 		cardStack.add(FirstAid);
 		i=i+1;
 	}
+
 	i=0;
 	while(i<5){
 		cardStack.add(Diligenra);
@@ -138,12 +138,18 @@ init{
 	}
 	shuffle(cardStack);
 
-	
-	playerList.get(0).setCharacter(Doctor);
-	playerList.get(1).setCharacter(Vampire);
-	playerList.get(2).setCharacter(Vampire);
-	playerList.get(3).setCharacter(Gambler);
-	
+	Player p0 = playerList.get(0);
+	p0.setCharacter(Doctor);
+
+	Player p1 = playerList.get(1);
+	p1.setCharacter(Vampire);
+
+	Player p2 = playerList.get(2);
+	p2.setCharacter(Vampire);
+
+	Player p3 = playerList.get(3);
+	p3.setCharacter(Gambler);
+
 	foreach (Player player in playerList){
 		drawCard(player, 4);
 	}
@@ -208,7 +214,7 @@ round{
 dying{
 	int numOfAlive = 0;
 	Player alivePlayer = null;
-	##
+	
 	foreach (Player player in playerList){
 		if(player.HP > 0){
 			numOfAlive = numOfAlive + 1;
