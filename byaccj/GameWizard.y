@@ -44,6 +44,7 @@
 %token ROUND
 %token TURN
 %token DYING
+%token IS
 
 %token DECLR_INT
 %token DECLR_STR
@@ -531,6 +532,7 @@ EqualityExpression
 : RelationalExpression  {$$=$1;}
 | EqualityExpression OP_EQ RelationalExpression  {$$=$1+"=="+$3;}
 | EqualityExpression OP_NE RelationalExpression  {$$=$1+"!="+$3;}
+| EqualityExpression IS RelationalExpression    {$$=$1+" instanceof "+$3;}
 ;
 
 ConditionalAndExpression
