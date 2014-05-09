@@ -38,7 +38,7 @@ define cards[
 	Card Dodge{
 		value: 2;
 		method(Player dealer){
-			return false;
+			return;
 		} 
 	}
 
@@ -167,12 +167,12 @@ round{
 	turn{
 		
 		if(player.character.HP <= 0)
-			{return true;}
+			{return;}
 		
 		drawCard(player,2);
 		sendToOnePlayer(player, GameGeneralInfo());
-		boolean flag = true;
-		boolean firstSkill = true;
+		bool flag = true;
+		bool firstSkill = true;
 	
 		while(flag){
 			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
