@@ -25,8 +25,9 @@ public class Util {
 			"import java.util.LinkedList;\n" + 
 			"import java.util.List;\n" + 
 			"\n" + 
-			"import compile.tinywar.cards.*;\n" + 
-			"import compile.tinywar.characters.*;\n" + 
+			"import compile.mygame.cards.*;\n" + 
+			"import compile.mygame.characters.*;\n" + 
+			"import compile.mygame.*;\n" + 
 			"import zhllz.gamewizard.communication.Server;\n" + 
 			"\n" + 
 			"public class Game {\n" + 
@@ -292,7 +293,9 @@ public class Util {
 				cardBaseFile.createNewFile();
 				BufferedWriter outBase = new BufferedWriter(new FileWriter(cardBaseFile));
 				
-				outBase.write("package compile.tinywar;\n" + 
+				outBase.write("package compile.mygame;\n" + 
+						"import compile.mygame.*;\n" +
+						 "import compile.mygame.characters.*;\n"+
 						"\n" + 
 						"public abstract class CardBase {");
 				
@@ -347,9 +350,9 @@ public class Util {
 			outputFile.createNewFile();
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
 
-			out.write("package compile.mygame.cards;\n" + "\n");
+			out.write("package compile.mygame.cards;\n" + "import compile.mygame.*;\n" + "import compile.mygame.characters.*;\n");
 
-			out.write("public class " + card_name + " implements CardBase{\n");
+			out.write("public class " + card_name + " extends CardBase{\n");
 			
 			out.write("public "+card_name+"(){\n");
 
@@ -428,7 +431,7 @@ public class Util {
 				BufferedWriter outBase = new BufferedWriter(new FileWriter(characterBaseFile));
 				
 				outBase.write("package compile.mygame;\n" + 
-						"\n" + 
+						"import compile.mygame.*;\n" +"import compile.mygame.cards.*;\n"+
 						"public abstract class CharacterBase {\n");
 				
 				List<String> var_list = (List<String>) variable_list;
@@ -495,8 +498,7 @@ public class Util {
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
 
 			out.write("package compile.mygame.characters;\n" + "\n"
-					+ "import zhllz.gamewizard.basic.CharacterBase;\n"
-					+ "import zhllz.gamewizard.basic.Player;\n");
+					+ "import compile.mygame.*;\n" + "import compile.mygame.cards.*;\n");
 
 			out.write("public class " + character_name
 					+ " extends CharacterBase{\n");

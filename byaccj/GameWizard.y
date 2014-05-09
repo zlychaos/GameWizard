@@ -359,7 +359,7 @@ FieldVariableDeclaration
 	String val = arr[1];
 
 	checkDulDeclare(var);
-	if($1.equals("ICard ")){
+	if($1.equals("CardBase ")){
 		$$=$1+var+" = "+val;
 		SymbolTable.addRecordToCurrentBlock(var,SymbolType.LOCAL_CARD_DECLARE);
 	}else{
@@ -435,7 +435,7 @@ TypeSpecifier
 
 TypeName
 : PrimitiveType {System.out.println("0");$$=$1;}
-| CARD {$$="ICard ";}
+| CARD {$$="CardBase ";}
 | PLAYER {$$="Player ";}
 ;
 

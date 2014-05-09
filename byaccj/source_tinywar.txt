@@ -216,7 +216,7 @@ dying{
 	Player alivePlayer = null;
 	
 	foreach (Player player in playerList){
-		if(player.HP > 0){
+		if(player.character.HP > 0){
 			numOfAlive = numOfAlive + 1;
 			alivePlayer = player;
 		}
