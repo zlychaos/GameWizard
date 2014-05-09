@@ -66,14 +66,15 @@ define characters[
 			Heal{
 				method(Player dealer){
 					Player target = waitForTarget(dealer);
-					if(target == null)
+					if(target == null){
 						return false;
+					}
 					target.character.HP = target.character.HP+2;
 					return true;
 				}
 			}
 		]
-	},
+	}
 	
 	Vampire{
 		HP: 3;
@@ -93,7 +94,7 @@ define characters[
 				}	
 			}
 		]
-	},
+	}
 	
 	Gambler{
 		HP: 3;
@@ -101,7 +102,7 @@ define characters[
 			Gamble{
 				method(Player dealer){
 					int i = 0;
-					foreach card in dealer.handCards{
+					foreach(card in dealer.handCards){
 						droppedCardStack.add(card);
 						i = i+1;
 					}
@@ -141,7 +142,7 @@ init{
 	playerList.get(2).setCharacter(Vampire);
 	playerList.get(3).setCharacter(Gambler);
 	
-	foreach player in playerList{
+	foreach(player in playerList){
 		drawCard(player, 4);
 	}
 	
@@ -154,8 +155,9 @@ round{
 	
 	turn{
 	
-		if(player.character.HP <= 0)
+		if(player.character.HP <= 0){
 			return;
+		}
 		
 		drawCard(player,2);
 		sendToOnePlayer(player, GameGeneralInfo());
@@ -192,7 +194,7 @@ dying{
 	int numOfAlive = 0;
 	Player alivePlayer = null;
 	
-	foreach player in playerList{
+	foreach(player in playerList){
 		if(player.HP > 0){
 			numOfAlive = numOfAlive + 1;
 			alivePlayer = player;

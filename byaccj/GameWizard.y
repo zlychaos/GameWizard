@@ -475,6 +475,7 @@ QualifiedName
 | GAME_NM {$$="Game.game_name";}
 | PLAYER_C {$$="Game.num_of_players";}
 | MAX_ROUND {$$="Game.maximum_round";}
+| DEALER {$$="dealer";}
 ;
 
 PrimaryExpression
@@ -484,8 +485,8 @@ PrimaryExpression
 
 
 ComplexPrimary
-/*: '(' Expression ')'    {$$="("+$2+")";}*/
-: ComplexPrimaryNoParenthesis{$$=$1;}
+: '(' Expression ')'    {$$="("+$2+")";}
+| ComplexPrimaryNoParenthesis{$$=$1;}
 ;
 
 
