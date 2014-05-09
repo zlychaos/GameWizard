@@ -38,7 +38,7 @@ define cards[
 	Card Dodge{
 		value: 2;
 		method(Player dealer){
-			return true;
+			return false;
 		} 
 	}
 
