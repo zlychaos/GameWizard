@@ -45,7 +45,7 @@
 %token TURN
 %token DYING
 %token IS
-
+%token DEBUG
 %token DECLR_INT
 %token DECLR_STR
 %token DECLR_BOOL
@@ -115,6 +115,7 @@
 %type <sval> MethodCall
 %type <sval> MethodAccess
 %type <sval> ArgumentList
+%type <sval> NameKeyword
 
 %left '-' '+'
 
@@ -159,10 +160,10 @@ card_df_content: CARD ID '{' {curScope=$2; checkDulDeclare($2); SymbolTable.addR
 	SymbolTable.popBlock(); 
 	Util.writeCardsJava($2.toString(),$5,$13); }
 	;
-character_df :  CHARACTER_DF {pre_list=null;} '[' characters_df_content ']' {System.out.println("character_df");}
+character_df :  CHARACTER_DF {pre_list=null;} '[' characters_df_content ']' {System.out.println("=========================character_df");}
              ;
-characters_df_content : characters_df_content character_df_content {System.out.println("characters_df_content");}
-			| character_df_content {System.out.println("characters_df_content");}
+characters_df_content : characters_df_content character_df_content {System.out.println("=========================characters_df_content");}
+			| character_df_content {System.out.println("=========================characters_df_content");}
 			;
 character_df_content : ID '{' {curScope=$1; checkDulDeclare($1); SymbolTable.addRecordToCurrentBlock($1, SymbolType.CHARACTER);} 
 			variable_list
@@ -229,7 +230,7 @@ skill_list:
 	;
 
 init_block:
-	INIT '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}' 
+	INIT '{' {SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST '}'
 	{
 		SymbolTable.popBlock();
 		String ret = "public static void init(){\n"+$4+"\n}\n";
@@ -294,13 +295,13 @@ STATEMENT_LIST
 ;
 
 ForeachStatement:
-	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
+	FOREACH '(' TypeSpecifier QualifiedName IN ROUNDSUMMARY ')'  Block
         {
 		String s = "for("+$3+" "+$4+":roundSummary.keySet())\n"+$8;
 		$$=s;
 	}
 |
-	FOREACH '(' TypeSpecifier ID IN ID ')' Block 
+	FOREACH '(' TypeSpecifier QualifiedName IN QualifiedName ')' Block
         {
 		String s = "for("+$3+" "+$4+":"+$6+")\n"+$8;
 		$$=s;
@@ -462,6 +463,8 @@ ArgumentList
 
 QualifiedName
 : QualifiedName '.' ID  {$$=$1+"."+$3;}
+| QualifiedName '.' NameKeyword {$$=$1+"."+$3;}
+| MethodCall {$$=$1;}
 | ID    
 	{
 		SymbolType type = SymbolTable.lookUpSymbolType($1);
@@ -476,7 +479,12 @@ QualifiedName
 | PLAYER_C {$$="Game.num_of_players";}
 | MAX_ROUND {$$="Game.maximum_round";}
 | DEALER {$$="dealer";}
+| DYING {$$="Game.dying";}
 ;
+
+NameKeyword
+: METHOD    {$$="method";}
+
 
 PrimaryExpression
 : QualifiedName {$$=$1;}
@@ -497,6 +505,7 @@ ComplexPrimaryNoParenthesis
 | FALSE     {$$="false";}
 | ArrayAccess  {$$=$1;}
 | MethodCall   {$$=$1;}
+| DEBUG {System.out.println("debuging");}
 ;
 
  

@@ -61,14 +61,15 @@ define cards[
 
 define characters[
 	Doctor{
+	
 		HP: 2;
 		skill :[
 			Heal{
+				
 				method(Player dealer){
 					Player target = waitForTarget(dealer);
-					if(target == null){
-						return false;
-					}
+					if(target == null)
+						{return false;}
 					target.character.HP = target.character.HP+2;
 					return true;
 				}
@@ -102,7 +103,8 @@ define characters[
 			Gamble{
 				method(Player dealer){
 					int i = 0;
-					foreach(card in dealer.handCards){
+##
+					foreach (Card card in dealer.handCards){
 						droppedCardStack.add(card);
 						i = i+1;
 					}
@@ -135,46 +137,57 @@ init{
 		i=i+1;
 	}
 	shuffle(cardStack);
-	
+
 	
 	playerList.get(0).setCharacter(Doctor);
 	playerList.get(1).setCharacter(Vampire);
 	playerList.get(2).setCharacter(Vampire);
 	playerList.get(3).setCharacter(Gambler);
 	
-	foreach(player in playerList){
+	foreach (Player player in playerList){
 		drawCard(player, 4);
 	}
 	
 }
 
 round{
+
 	round_begin{
-		void		
+			
+	void		
+		
 	}
 	
 	turn{
-	
-		if(player.character.HP <= 0){
-			return;
-		}
+		
+		if(player.character.HP <= 0)
+			{return true;}
 		
 		drawCard(player,2);
 		sendToOnePlayer(player, GameGeneralInfo());
 		boolean flag = true;
 		boolean firstSkill = true;
+	
 		while(flag){
 			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
+		
 			if(mode == 1){
 				if(firstSkill && waitForSkill(player))
-					firstSkill = false;
-			}else if(mode == 2){
+					{firstSkill = false;}
+				
+			}else
+			{if(mode == 2){
 				Card c = putCard(player);
+
 				if(c != null){
+
 					if(c.method(player)){
+
 						droppedCardStack.add(c);
+
 					}
 					else{
+
 						player.handCards.add(c);
 					}
 				}
@@ -182,6 +195,8 @@ round{
 			}else{
 				flag = false;
 			}
+			}
+
 		}
 	}
 
@@ -193,8 +208,8 @@ round{
 dying{
 	int numOfAlive = 0;
 	Player alivePlayer = null;
-	
-	foreach(player in playerList){
+	##
+	foreach (Player player in playerList){
 		if(player.HP > 0){
 			numOfAlive = numOfAlive + 1;
 			alivePlayer = player;
