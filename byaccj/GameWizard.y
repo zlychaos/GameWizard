@@ -49,7 +49,7 @@
 %token DECLR_INT
 %token DECLR_STR
 %token DECLR_BOOL
-
+%token RETURN
 %token VOID
 
 
@@ -116,6 +116,7 @@
 %type <sval> MethodAccess
 %type <sval> ArgumentList
 %type <sval> KeyName
+%type <sval> ReturnStatement
 
 %left '-' '+'
 
@@ -292,7 +293,16 @@ STATEMENT_LIST
 |   STATEMENT_LIST Expression  {System.out.println("expression");$$=$1+$2;}
 |   ForeachStatement {$$=$1;}
 |   STATEMENT_LIST ForeachStatement {$$=$1+$2;}
+|   ReturnStatement {$$=$1;}
+|   STATEMENT_LIST ReturnStatement {$$=$1+$2;}
 ;
+
+
+ReturnStatement
+:   RETURN  TRUE    {$$="return true";}
+|   RETURN  FALSE   {$$="return false";}
+|   RETURN  INTEGER {$$="return "+$2;}
+
 
 ForeachStatement:
 	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
