@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.*;
 
 import compile.mygame.cards.*;
 import compile.mygame.characters.*;
@@ -72,12 +73,11 @@ public static void round_begin(){
 }
 public static void turn(Player player) throws IOException{if(player.character.HP<=0)
 {
-return true;
-}
+return;}
 Game.drawCard(player,2);
 Game.sendToOnePlayer(player,Game.GameGeneralInfo());
-booleanflag=true;
-booleanfirstSkill=true;
+Boolean flag=true;
+Boolean firstSkill=true;
 while(flag)
 {
 Integer mode=Game.waitForChoice(player,"Please input the number:\n1:skill  2:card  3:end",3);
@@ -93,7 +93,7 @@ else
 {
 if(mode==2)
 {
-ICard c = Game.putCard(player);
+CardBase c = Game.putCard(player);
 if(c!=null)
 {
 if(c.method(player))
@@ -123,7 +123,7 @@ Integer numOfAlive=0;
 Player alivePlayer=null;
 for(Player  player:Game.playerList)
 {
-if(player.HP>0)
+if(player.character.HP>0)
 {
 numOfAlive=numOfAlive+1;
 alivePlayer=player;
@@ -139,7 +139,7 @@ Game.gameover=true;
 }
 	// compiling result end
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception{
 		
 		//int init_HP = 1;
 		
@@ -189,7 +189,7 @@ Game.gameover=true;
 		
 	}
 	
-	public static void nextOnlinePlayer(){
+	public static void nextOnlinePlayer() throws Exception{
 		if(currentPlayerIndex == num_of_players){
 			round_end();
 			

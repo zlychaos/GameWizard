@@ -14,7 +14,7 @@ HP=3;
 		return "";
 	}
 @Override
-	public boolean skill(Player p, String skillName) {
+	public boolean skill(Player dealer, String skillName) {
 if("Leech".equals(skillName)){
 Player target=Game.waitForTarget(dealer);
 if(target==null)

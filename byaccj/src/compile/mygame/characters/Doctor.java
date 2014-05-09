@@ -14,7 +14,7 @@ HP=2;
 		return "";
 	}
 @Override
-	public boolean skill(Player p, String skillName) {
+	public boolean skill(Player dealer, String skillName) {
 if("Heal".equals(skillName)){
 Player target=Game.waitForTarget(dealer);
 if(target==null)

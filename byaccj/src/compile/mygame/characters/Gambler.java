@@ -14,10 +14,10 @@ HP=3;
 		return "";
 	}
 @Override
-	public boolean skill(Player p, String skillName) {
+	public boolean skill(Player dealer, String skillName) {
 if("Gamble".equals(skillName)){
 Integer i=0;
-for(ICard  card:dealer.handCards)
+for(CardBase  card:dealer.handCards)
 {
 Game.droppedCardStack.add(card);
 i=i+1;
