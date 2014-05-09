@@ -149,9 +149,17 @@ cards_df_content : card_df_content cards_df_content  {System.out.println("1");}
                | card_df_content {System.out.println("3");}
 		;
 card_df_content: CARD ID '{' {curScope=$2; checkDulDeclare($2); SymbolTable.addRecordToCurrentBlock($2, SymbolType.CARD);} variable_list METHOD '(' PLAYER DEALER ')' '{' { SymbolTable.pushNewBlock();} AUGED_STATEMENT_LIST  '}' '}'
-			{System.out.println("======================================================finished card_df_content"); SymbolTable.popBlock(); Util.writeCardsJava($2.toString(),$5,$13); }
+			
+	{
+	if(!Util.checkVarListSame(pre_list, $5)){
+		yyerror("Variables in all the cards must be the same!");	
+	}
+	pre_list = $5;
+	System.out.println("======================================================finished card_df_content"); 
+	SymbolTable.popBlock(); 
+	Util.writeCardsJava($2.toString(),$5,$13); }
 	;
-character_df :  CHARACTER_DF '[' characters_df_content ']' {System.out.println("character_df");}
+character_df :  CHARACTER_DF {pre_list=null;} '[' characters_df_content ']' {System.out.println("character_df");}
              ;
 characters_df_content : characters_df_content character_df_content {System.out.println("characters_df_content");}
 			| character_df_content {System.out.println("characters_df_content");}
@@ -159,7 +167,15 @@ characters_df_content : characters_df_content character_df_content {System.out.p
 character_df_content : ID '{' {curScope=$1; checkDulDeclare($1); SymbolTable.addRecordToCurrentBlock($1, SymbolType.CHARACTER);} 
 			variable_list
 			skill_df
-			'}'             {Util.writeCharacterJava($1,$4,$5); System.out.println("character_df_content");}
+			'}'            
+	{
+	
+	if(!Util.checkVarListSame(pre_list, $4)){
+		yyerror("Variables in all the characters must be the same!");	
+	}
+	pre_list = $4;
+	Util.writeCharacterJava($1,$4,$5); 
+	System.out.println("character_df_content");}
 		; 
 variable_list : ID ':' INTEGER ';' variable_list	
         {
@@ -326,6 +342,7 @@ FieldDeclaration
 FieldVariableDeclaration
 : TypeSpecifier VariableDeclarators 
   {
+	System.out.println("FieldVariableDeclaration");
 	String[] arr = $2.split("=");
 	String var = arr[0];
 	String val = arr[1];
@@ -450,10 +467,14 @@ QualifiedName
 		SymbolType type = SymbolTable.lookUpSymbolType($1);
                 if(type==SymbolType.GAME_JAVA){
                         $$="Game."+$1;
-                }
-		$$=$1;
+                }else{
+			$$=$1;
+		}
 	}
-| ROUNDSUMMARY {$$="roundSummary";}
+| ROUNDSUMMARY {$$="Game.roundSummary";}
+| GAME_NM {$$="Game.game_name";}
+| PLAYER_C {$$="Game.num_of_players";}
+| MAX_ROUND {$$="Game.maximum_round";}
 ;
 
 PrimaryExpression
@@ -589,6 +610,8 @@ Expression
     }
   }
 
+
+  public Object pre_list = null;
 
   public void yyerror (String error) {
     System.err.println ("Error: " + error);

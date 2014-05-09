@@ -369,7 +369,7 @@ public class Util {
 			out.write(getNameMethod);
 
 			out.write("\n@Override\n");
-			out.write("public void method(Player dealer){\n");
+			out.write("public boolean method(Player dealer){\n");
 			out.write(method_content);
 			out.write("\n} \n}");
 
@@ -378,6 +378,36 @@ public class Util {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public static boolean checkVarListSame(Object pre_obj_list,Object cur_obj_list){
+		if(pre_obj_list == null){
+			return true;
+		}
+		List<String> pre_list = (List<String>) pre_obj_list;
+		List<String> cur_list = (List<String>) cur_obj_list;
+		
+		boolean ret = true;
+		
+		for(int i=0;i<pre_list.size();i=i+3){
+			boolean thisMatch = false;
+			int j = 0;
+			for(;j<cur_list.size();j=j+3){
+				if(pre_list.get(i).equals(cur_list.get(j))){
+					if(pre_list.get(i+1).equals(cur_list.get(j+1))){
+						thisMatch = true;
+					}
+				}
+			}
+			if(!thisMatch){
+				ret = false;
+			}
+			
+			
+		}
+		
+		return ret;
+		
 	}
 	
 	
@@ -505,7 +535,7 @@ public class Util {
 			for (int i = 0; i < sk_list.size(); i = i + 2) {
 				skillMethod_mid.append("if(\"" + sk_list.get(i)
 						+ "\".equals(skillName)){\n" + sk_list.get(i + 1)
-						+ "\n			return true;\n" + "		}\n");
+						+ "		}\n");
 			}
 			out.write(skillMethod_part1 + skillMethod_mid.toString()
 					+ skillMethod_part2);

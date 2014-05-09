@@ -21,17 +21,10 @@ public class SymbolTable {
 		globalBlock.addRecord("String",SymbolType.KEYWORD);
 		globalBlock.addRecord("Integer",SymbolType.KEYWORD);
 		globalBlock.addRecord("boolean",SymbolType.KEYWORD);
-		globalBlock.addRecord("init",SymbolType.KEYWORD);
-		globalBlock.addRecord("round",SymbolType.KEYWORD);
-		globalBlock.addRecord("round_begin",SymbolType.KEYWORD);
-		globalBlock.addRecord("turn",SymbolType.KEYWORD);
-		globalBlock.addRecord("round_end",SymbolType.KEYWORD);
-		globalBlock.addRecord("dying",SymbolType.KEYWORD);
 		globalBlock.addRecord("true",SymbolType.KEYWORD);
 		globalBlock.addRecord("false",SymbolType.KEYWORD);
 		globalBlock.addRecord("Card",SymbolType.KEYWORD);
 		globalBlock.addRecord("in",SymbolType.KEYWORD);
-		globalBlock.addRecord("roundSummary",SymbolType.KEYWORD);
 		
 		/*below are the build-in methods and variables*/
 		
@@ -44,27 +37,43 @@ public class SymbolTable {
 		globalBlock.addRecord("List",SymbolType.BUILD_IN);
 		globalBlock.addRecord("GameServer",SymbolType.BUILD_IN);
 		globalBlock.addRecord("port",SymbolType.BUILD_IN);
-		globalBlock.addRecord("playerList",SymbolType.BUILD_IN);
-		globalBlock.addRecord("map",SymbolType.BUILD_IN);
-		globalBlock.addRecord("cardStack",SymbolType.BUILD_IN);
-		globalBlock.addRecord("droppedCardStack",SymbolType.BUILD_IN);
 		globalBlock.addRecord("currentPlayerIndex",SymbolType.BUILD_IN);
 		globalBlock.addRecord("roundCount",SymbolType.BUILD_IN);
-		globalBlock.addRecord("gameover",SymbolType.BUILD_IN);
-		globalBlock.addRecord("shuffle",SymbolType.BUILD_IN);
 		globalBlock.addRecord("Collections",SymbolType.BUILD_IN);
 		globalBlock.addRecord("Array",SymbolType.BUILD_IN);
-		globalBlock.addRecord("sendToOnePlayer",SymbolType.BUILD_IN);
-		globalBlock.addRecord("broadcast",SymbolType.BUILD_IN);
-		globalBlock.addRecord("close",SymbolType.BUILD_IN);
-		globalBlock.addRecord("putCard",SymbolType.BUILD_IN);
 		globalBlock.addRecord("ICard",SymbolType.BUILD_IN);
 		globalBlock.addRecord("CharacterBase",SymbolType.BUILD_IN);
-		globalBlock.addRecord("drawCard",SymbolType.BUILD_IN);
 		globalBlock.addRecord("nextOnlinePlayer",SymbolType.BUILD_IN);
-		globalBlock.addRecord("PlayersInfo",SymbolType.BUILD_IN);
-		globalBlock.addRecord("HandCardInfo",SymbolType.BUILD_IN);
-		globalBlock.addRecord("GameGeneralInfo",SymbolType.BUILD_IN);
+		
+		
+		
+		/*below are those needed to be Game.XXX */
+		globalBlock.addRecord("playerList",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("map",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("cardStack",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("droppedCardStack",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("gameover",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("roundSummary",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("game_name",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("num_of_players",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("maximum_round",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("init",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("round_begin",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("round_end",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("turn",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("dying",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("shuffle",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("sendToOnePlayer",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("broadcast",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("close",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("waitForChoice",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("waitForSkill",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("waitForTarget",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("putCard",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("drawCard",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("PlayersInfo",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("HandCardInfo",SymbolType.GAME_JAVA);
+		globalBlock.addRecord("GameGeneralInfo",SymbolType.GAME_JAVA);
 	}
 
 	public static void pushNewBlock() {
