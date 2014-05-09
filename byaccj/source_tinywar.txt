@@ -1,0 +1,210 @@
+define game{
+	game_name: "Tiny War";
+	num_of_players: 4;
+	maximum_round: 10;
+	//server_listening_port: 4115;
+	//In this version, let make the port pre-defined as 4119, 
+	//so that compiler would not touch Client.java in communication package
+}
+
+define cards[
+	Attack{
+		value: 1;
+		method(Player dealer){
+		
+			Player target = waitForTarget(dealer);
+			if(target == null){
+				return false;
+			}
+		
+			sendToOnePlayer(target, "You are attacked by Player " + dealer.id + ", please put a Dodge, otherwise you will lose one HP point.");
+			Card c = putCard(target);		
+			while( c!=null && !(c is Dodge) ){//"is" -> "instanceof"
+				target.handCards.add(c);
+				c = putCard(target);
+			}
+		
+			if(c == null){  
+				target.character.HP = target.character.HP-1;
+				if(target.character.HP == 0){
+					dying();
+				}
+			}
+			else{
+				droppedCardStack.add(c);
+			}
+			return true;
+			
+		}
+	}
+
+	Dodge{
+		value: 2;
+		method(Player dealer){
+			return false;
+		} 
+	}
+
+	FirstAid{
+		value: 3;
+		method(Player dealer){
+			dealer.character.HP = dealer.character.HP+1;
+			return true;
+		}
+	}
+	
+	Diligenra{
+		value: 4;
+		method(Player dealer){
+			drawCard(dealer, 2);
+			return true;
+		}
+	}
+]
+
+define characters[
+	Doctor{
+		HP: 2;
+		//name: "People"; Let's use RegulayGuy as name here
+		skill :[
+			Heal{
+				method(Player dealer){
+					Player target = waitForTarget(dealer);
+					if(target == null)
+						return false;
+					target.character.HP = target.character.HP+2;
+					return true;
+				}
+			}
+		]
+	},
+	
+	Vampire{
+		HP: 3;
+		skill: [
+			Leech{
+				method(Player dealer){
+					Player target = waitForTarget(dealer);
+					if(target == null){
+						return false;
+					}
+					target.character.HP = target.character.HP-1;
+					if(target.character.HP == 0){
+						dying();
+					}
+					dealer.character.HP = dealer.character.HP+1;
+					return true;
+				}	
+			}
+		]
+	},
+	
+	Gambler{
+		HP: 3;
+		skill: [
+			Gamble{
+				method(Player dealer){
+					int i = 0;
+					foreach card in dealer.handCards{
+						droppedCardStack.add(card);
+						i = i+1;
+					}
+					dealer.handCards.clear();
+					
+					drawCard(dealer, i);
+					return true;
+				}
+			}
+		]
+	}
+]
+
+
+init{
+	int i = 0;
+	while(i<40){
+		cardStack.add(Attack);
+		i=i+1;
+	}
+	i=0;
+	while(i<10){
+		cardStack.add(Dodge);
+		cardStack.add(FirstAid);
+		i=i+1;
+	}
+	i=0;
+	while(i<5){
+		cardStack.add(Diligenra);
+		i=i+1;
+	}
+	shuffle(cardStack);
+	
+	
+	playerList.get(0).setCharacter(Doctor);
+	playerList.get(1).setCharacter(Vampire);
+	playerList.get(2).setCharacter(Vampire);
+	playerList.get(3).setCharacter(Gambler);
+	
+	foreach player in playerList{
+		drawCard(player, 4);
+	}
+	
+}
+
+round{
+	round_begin{
+		void		
+	}
+	
+	turn{
+	
+		if(player.character.HP <= 0)
+			return;
+		
+		drawCard(player,2);
+		sendToOnePlayer(player, GameGeneralInfo());
+		boolean flag = true;
+		boolean firstSkill = true;
+		while(flag){
+			int mode = waitForChoice(player, "Please input the number:\n1:skill  2:card  3:end", 3);
+			if(mode == 1){
+				if(firstSkill && waitForSkill(player))
+					firstSkill = false;
+			}else if(mode == 2){
+				Card c = putCard(player);
+				if(c != null){
+					if(c.method(player)){
+						droppedCardStack.add(c);
+					}
+					else{
+						player.handCards.add(c);
+					}
+				}
+				
+			}else{
+				flag = false;
+			}
+		}
+	}
+
+	round_end{
+		void
+	}
+}
+
+dying{
+	int numOfAlive = 0;
+	Player alivePlayer = null;
+	
+	foreach player in playerList{
+		if(player.HP > 0){
+			numOfAlive = numOfAlive + 1;
+			alivePlayer = player;
+		}
+	}
+	if(numOfAlive == 1){
+		broadcast("Player"+alivePlayer.id+" wins!!");
+		broadcast("Others lose");
+		gameover = true;
+	}
+}

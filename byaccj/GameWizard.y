@@ -344,9 +344,9 @@ FieldVariableDeclaration
 			String postfix = val.substring(i+1,val.length());
 			SymbolType type;
 			type = SymbolTable.lookUpSymbolType(indicator);
-			if(type==SymbolType.LOCAL_CARD_DECLARE){
-				$$=genCardDownCast($1,indicator,postfix)+$1+var+" = tmp";
-			}else
+			//if(type==SymbolType.LOCAL_CARD_DECLARE){
+			//	$$=genCardDownCast($1,indicator,postfix)+$1+var+" = tmp";
+			//}else
 				$$=$1+$2;
 		}
 		else
@@ -444,7 +444,14 @@ ArgumentList
 
 QualifiedName
 : QualifiedName '.' ID  {$$=$1+"."+$3;}
-| ID    {$$=$1;}
+| ID    
+	{
+		SymbolType type = SymbolTable.lookUpSymbolType($1);
+                if(type==SymbolType.GAME_JAVA){
+                        $$="Game."+$1;
+                }
+		$$=$1;
+	}
 | ROUNDSUMMARY {$$="roundSummary";}
 ;
 
