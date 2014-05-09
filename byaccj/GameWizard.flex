@@ -127,7 +127,7 @@ ws = {delim}+
 "foreach" {return Parser.FOREACH;}
 {ROUNDSUMMARY} {return Parser.ROUNDSUMMARY;}
 "in" {return Parser.IN;} 
-
+"is" {return Parser.IS;}
 
 
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
