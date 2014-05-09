@@ -50,6 +50,8 @@
 %token DECLR_STR
 %token DECLR_BOOL
 %token RETURN
+%token BREAK
+%token CONTINUE
 %token VOID
 
 
@@ -117,6 +119,7 @@
 %type <sval> ArgumentList
 %type <sval> KeyName
 %type <sval> ReturnStatement
+%type <sval> JumpStatement
 
 %left '-' '+'
 
@@ -295,6 +298,14 @@ STATEMENT_LIST
 |   STATEMENT_LIST ForeachStatement {$$=$1+$2;}
 |   ReturnStatement {$$=$1;}
 |   STATEMENT_LIST ReturnStatement {$$=$1+$2;}
+|   JumpStatement   {$$=$1;}
+|   STATEMENT_LIST JumpStatement   {$$=$1+$2;}
+;
+
+JumpStatement
+: BREAK             ';'     {$$="break;";}
+| CONTINUE          ';'     {$$="continue;";}
+| RETURN            ';'     {$$="return;";}
 ;
 
 
@@ -302,6 +313,7 @@ ReturnStatement
 :   RETURN  TRUE    {$$="return true";}
 |   RETURN  FALSE   {$$="return false";}
 |   RETURN  INTEGER {$$="return "+$2;}
+;
 
 
 ForeachStatement:

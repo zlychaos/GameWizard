@@ -130,7 +130,8 @@ ws = {delim}+
 "is" {return Parser.IS;}
 "##" {return Parser.DEBUG;}
 "return"    {return Parser.RETURN;}
-
+"break"     {return Parser.BREAK;}
+"continue"  {return Parser.CONTINUE;}
 
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}
 
