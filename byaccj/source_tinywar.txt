@@ -20,9 +20,9 @@ define cards[
 				target.handCards.add(c);
 				c = putCard(target);
 			}
-		
-			if(c == null){  
-				target.character.HP = target.character.HP-1;
+
+			if(c == null){
+				target.character.HP = target.character.HP - 1;
 				if(target.character.HP == 0){
 					dying();
 				}
@@ -86,11 +86,11 @@ define characters[
 					if(target == null){
 						return false;
 					}
-					target.character.HP = target.character.HP-1;
+					target.character.HP = target.character.HP - 1;
 					if(target.character.HP == 0){
 						dying();
 					}
-					dealer.character.HP = dealer.character.HP+1;
+					dealer.character.HP = dealer.character.HP + 1;
 					return true;
 				}	
 			}

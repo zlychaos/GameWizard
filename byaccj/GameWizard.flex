@@ -142,7 +142,7 @@ ws = {delim}+
 
 
 /* whitespace */
-[ \t]+ { }
+//[ \t]+ { }
 
 \b     { System.err.println("Sorry, backspace doesn't work"); }
 

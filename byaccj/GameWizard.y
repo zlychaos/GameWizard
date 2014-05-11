@@ -86,7 +86,6 @@
 %type <sval> ComplexPrimary
 %type <sval> ComplexPrimaryNoParenthesis
 %type <sval> ArrayAccess
-%type <sval> FieldAccess
 %type <sval> PrimitiveType
 %type <sval> FieldDeclarations
 %type <sval> FieldDeclaration
@@ -120,8 +119,11 @@
 %type <sval> KeyName
 %type <sval> ReturnStatement
 %type <sval> JumpStatement
+%type <sval> ExpressionStatement
+//%type <sval> FieldAccess
 
-%left '-' '+'
+
+%left '-' '+' '.'
 
 %left '*' '/'
 %right '^'         /* exponentiation        */
@@ -292,8 +294,8 @@ STATEMENT_LIST
 |   STATEMENT_LIST IterationStatement  {System.out.println("iteration");$$=$1+$2;}
 |   EmptyStatement  {System.out.println("empty");$$=$1;}
 |   STATEMENT_LIST EmptyStatement   {System.out.println("empty");$$=$1+$2;}
-|   Expression  {System.out.println("expression");$$=$1;}
-|   STATEMENT_LIST Expression  {System.out.println("expression");$$=$1+$2;}
+|   ExpressionStatement  {System.out.println("expression statement");$$=$1;}
+|   STATEMENT_LIST ExpressionStatement  {System.out.println("expression");$$=$1+$2;}
 |   ForeachStatement {$$=$1;}
 |   STATEMENT_LIST ForeachStatement {$$=$1+$2;}
 |   ReturnStatement {$$=$1;}
@@ -301,6 +303,12 @@ STATEMENT_LIST
 |   JumpStatement   {$$=$1;}
 |   STATEMENT_LIST JumpStatement   {$$=$1+$2;}
 ;
+
+
+ExpressionStatement
+:   Expression ';'  {$$=$1+";";}
+;
+
 
 JumpStatement
 : BREAK             ';'     {$$="break;";}
@@ -317,12 +325,12 @@ ReturnStatement
 
 
 ForeachStatement:
-	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
-        {
-		String s = "for("+$3+" "+$4+":roundSummary.keySet())\n"+$8;
-		$$=s;
-	}
-|
+//	FOREACH '(' TypeSpecifier ID IN ROUNDSUMMARY ')'  Block 
+//        {
+//		String s = "for("+$3+" "+$4+":roundSummary.keySet())\n"+$8;
+//		$$=s;
+//	}
+//|
 	FOREACH '(' TypeSpecifier ID IN QualifiedName ')' Block
         {
 		String s = "for("+$3+" "+$4+":"+$6+")\n"+$8;
@@ -343,8 +351,10 @@ IterationStatement
 SelectionStatement
 :   IF '(' Expression ')' Block
     {System.out.println("6");String s = "if("+$3+")\n"+$5; $$=s;}
+    {System.out.println("selection statement");}
     |IF '(' Expression ')' Block ELSE Block
     {System.out.println("7");String s = "if("+$3+")\n"+$5+"\nelse\n"+$7+""; $$=s;}
+    {System.out.println("selection statement");}
 ;
 
 
@@ -501,12 +511,12 @@ QualifiedName
 
 KeyName
 : METHOD    {$$="method";}
-| ROUNDSUMMARY {$$="Game.roundSummary";}
 | GAME_NM {$$="Game.game_name";}
 | PLAYER_C {$$="Game.num_of_players";}
 | MAX_ROUND {$$="Game.maximum_round";}
 | DEALER {$$="dealer";}
 | DYING {$$="Game.dying";}
+| ROUNDSUMMARY {$$="Game.roundSummary";}
 ;
 
 
@@ -533,9 +543,9 @@ ComplexPrimaryNoParenthesis
 ;
 
  
-FieldAccess :
-	ComplexPrimary '.' ID {$$= $1+"."+$3;}
-;
+//FieldAccess :
+//	ComplexPrimary '.' ID {$$= $1+"."+$3;}
+//;
 
 ArrayAccess
 : QualifiedName '[' Expression ']'  {$$=$1+'['+$3+']';}
@@ -670,17 +680,8 @@ Expression
   }
 
 
-  static boolean interactive;
-
-   class foo{
-       public foo()
-       {
-           System.out.println("HAHAHA");
-       }
-   }
-
   public static void main(String args[]) throws IOException {
-    System.out.println("BYACC/Java with JFlex Calculator Demo");
+    System.out.println("BYACC/Java with JFlex compiler for GameWizzard");
 
     Parser yyparser;
     if ( args.length > 0 ) {
@@ -691,15 +692,11 @@ Expression
       // interactive mode
       System.out.println("[Quit with CTRL-D]");
       System.out.print("Expression: ");
-      interactive = true;
 	    yyparser = new Parser(new InputStreamReader(System.in));
     }
 
 
     yyparser.yyparse();
     
-    if (interactive) {
-      System.out.println();
-      System.out.println("Have a nice day");
-    }
+    System.out.println("Compiling Succeed!\nHave a nice day");
   }
