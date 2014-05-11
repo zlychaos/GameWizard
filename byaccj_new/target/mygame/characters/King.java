@@ -1,17 +1,15 @@
 package mygame.characters;
 
-import zhllz.gamewizard.basic.CharacterBase;
-import zhllz.gamewizard.basic.Player;
+import mygame.*;
 
-public class King extends CharacterBase {
+public class King extends CharacterBase{
+	public King(){
+				hp=5;
+		name="my king";
 
-	public int  hp=5
-	public String name="my king"
-
-	
-	public RegularGuy(){
 		skillList = new String[0];
 		
+		//skillList[0] = "Heal";
 	}
 	
 	@Override
@@ -25,20 +23,8 @@ public class King extends CharacterBase {
 	}
 
 	@Override
-	public boolean skill(Player p, String skillName) {
+	public boolean skill(Player dealer, String skillName) {
 		
 		return false;
-	}
-	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("\thp=");
-		sb.append(hp);
-		sb.append("\n");sb.append("\tname=");
-		sb.append(name);
-		sb.append("\n");
-		return sb.toString();
-	}
-
+	}	
 }

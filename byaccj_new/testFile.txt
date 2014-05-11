@@ -1,36 +1,43 @@
 define game{
 	game_name : "Hello World";
-	num_of_players : 4;
-	server_listening_port : 4133
+	num_of_players : 2;
+	maximum_round : 2;
 }
 
 define cards[
     Attack{
 		value : 3;
 		method{
-			dosomethinghere
+			int a = 0;
+            return true;
 		}
-    };
+    }
     Defense{
-    	value : 4
+    	value : 4;
     }
 ]
 
 define characters[
 	King{
 		hp: 5;
-		name : "my king"
-	};
+		name : "my king";
+	}
 	No_Val{
 		hp: 3;
+		name : "sdfas";
 		skill[
 			mercy{
-				dosomethinghere
+				int b = 0;
+				String strg= "sdf";
+				if( 0 == b ){
+					b = 1 ;
+				}
 			}
 		]
 	}
 ]
 
 init{
-dosomethinghere
+	int a;
 }
+

@@ -3,8 +3,6 @@ package compiler.helper;
 public class AttributeObj {
 	
 	public Type type;
-	public Type subType1; // for List and key of Dict
-	public Type subType2; // for value of Dict
 	public String value;
 	public String id;
 	
@@ -19,6 +17,18 @@ public class AttributeObj {
 		super();
 		this.type = type;
 		this.id = id;
+	}
+	
+	@Override
+	public boolean equals(Object attr){
+		if(! (attr instanceof AttributeObj))
+			return false;
+		AttributeObj aobj = (AttributeObj)attr;
+		return (this.type.equals(aobj.type) && this.id.equals(aobj.id));	
+	}
+	
+	public boolean equalsAsPara(AttributeObj para){
+		return this.type.equals(para.type);
 	}
 
 }

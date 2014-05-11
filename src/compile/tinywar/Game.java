@@ -17,8 +17,8 @@ public class Game {
 	
 	public static ArrayList<Player> playerList;
 	public static HashMap<Integer, Player> map;
-	public static LinkedList<CardBase> cardStack;
-	public static LinkedList<CardBase> droppedCardStack;
+	public static ArrayList<CardBase> cardStack;
+	public static ArrayList<CardBase> droppedCardStack;
 	
 	public static int currentPlayerIndex;
 	
@@ -123,8 +123,8 @@ public class Game {
 		
 		playerList = new ArrayList<Player>();
 		map = new HashMap<Integer, Player>();
-		cardStack = new LinkedList<CardBase>();
-		droppedCardStack = new LinkedList<CardBase>();
+		cardStack = new ArrayList<CardBase>();
+		droppedCardStack = new ArrayList<CardBase>();
 		
 		GameServer = new Server(port);
 		
@@ -271,13 +271,13 @@ public class Game {
 					GameServer.broadcast("Sorry, the card stack is empty.. The game can not carry on");
 				}
 				else{
-					LinkedList<CardBase> tmp = cardStack;
+					ArrayList<CardBase> tmp = cardStack;
 					cardStack = droppedCardStack;
 					droppedCardStack = tmp;
 					Collections.shuffle(cardStack);
 				}		
 			}
-			p.handCards.add(cardStack.poll());
+			p.handCards.add(cardStack.remove(0));
 			
 		}
 	}

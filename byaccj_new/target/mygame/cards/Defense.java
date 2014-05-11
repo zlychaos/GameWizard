@@ -1,30 +1,22 @@
 package mygame.cards;
 
-import zhllz.gamewizard.basic.ICard;
-import zhllz.gamewizard.basic.Player;
+import mygame.*;
 
-public class Defense implements ICard {
+public class Defense extends CardBase {
 	
-	public int  value=4
-	@Override
-	public void method(Player dealer){ }
+	public Defense(){
+		value=4;
 
+		//value = 1;
+	}
+	
 	@Override
 	public String getName() {
-		return "Defense";
+		return "Attack";
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder("Card ");
-		sb.append(getName());
-		sb.append(":{\n");
-		sb.append("\tvalue=");
-		sb.append(value);
-		sb.append("\n")
-;
-		sb.append("\n}");
-		return sb.toString();
-	}
+		@Override
+	public boolean method(Player dealer){ return true; }
+
 	
 }

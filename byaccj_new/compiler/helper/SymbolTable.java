@@ -7,6 +7,8 @@ public class SymbolTable {
 	public static int current; // 1 for Game, 2 for cards, 3 for characters, 4 for procedures
 	
 	public static ScopeBlock playerBlock = new ScopeBlock();
+	public static ScopeBlock listBlock = new ScopeBlock();
+	public static ScopeBlock dictBlock = new ScopeBlock();
 	
 	public static ScopeBlock reservedBlock = new ScopeBlock();
 	public static ScopeBlock gameBlock = new ScopeBlock();
@@ -197,43 +199,6 @@ public class SymbolTable {
 			reservedBlock.addRecord(id);
 			all_IDs.add(id);
 		}
-		
-		SymbolRecord sr;
-		Type type;
-		FunctionObj func;
-		sr = playerBlock.addRecord("id");
-		sr.setValue(true, new AttributeObj("id", Type.INTEGER));
-		sr = playerBlock.addRecord("handCards");
-		type = new Type(PrimaryType.LIST,Type.CARD,null);
-		AttributeObj attr = new AttributeObj("handCards", type);
-		sr.setValue(true, attr);
-		
-		sr = gameBlock.addRecord("cardStack");
-		sr.setValue(true, new AttributeObj("cardStack", new Type(PrimaryType.LIST, Type.CARD, null)));
-		sr = gameBlock.addRecord("droppedCardStack");
-		sr.setValue(true, new AttributeObj("droppedCardStack", new Type(PrimaryType.LIST, Type.CARD, null)));
-		sr = gameBlock.addRecord("gameover");
-		sr.setValue(true, new AttributeObj("gameover", Type.BOOLEAN));
-		
-		sr = gameBlock.addRecord("broadcast");
-		func = new FunctionObj();
-		func.id = "broadcast";
-		func.return_type = Type.VOID;
-		func.parameters = new ArrayList<AttributeObj>();
-		func.parameters.add(new AttributeObj("msg", Type.STRING));
-		sr.setValue(false, func);
-		
-		sr = gameBlock.addRecord("sendToOnePlayer");
-		func = new FunctionObj();
-		func.id = "sendToOnePlayer";
-		func.return_type = Type.VOID;
-		func.parameters = new ArrayList<AttributeObj>();
-		func.parameters.add(new AttributeObj("player", Type.PLAYER));
-		func.parameters.add(new AttributeObj("msg", Type.STRING));
-		sr.setValue(false, func);
-		
-		//String[] threefunction = {"PlayersInfo", "GameGeneralInfo"};
-		
 //		for(String id : game_wizard_reserved){
 //			globalBlock.addRecord(id, SymbolType.BUILD_IN);
 //			all_IDs.put(id, globalBlock);

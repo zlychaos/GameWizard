@@ -104,16 +104,20 @@ ws = {delim}+
 {ROUND_BEGIN} {return Parser.ROUND_BEGIN;}
 {TURN} {return Parser.TURN;}
 
+"return" {return Parser.RETURN;}
+
 "false" {return Parser.FALSE;}
 "true" {return Parser.TRUE;}
 "if" {return Parser.IF;}
 "else" {return Parser.ELSE;}
 "while"		{return Parser.WHILE;}
+"foreach"	{return Parser.FOREACH;}
+"in"	{return Parser.IN;}
 "int"   {return Parser.DECLR_INT;}
 "String"    {return Parser.DECLR_STR;}
 "bool"  {return Parser.DECLR_BOOL;}
 {VOID} {return Parser.VOID;}
-{STATLIST} {yyparser.yylval = new ParserVal(yytext()); ;return Parser.STATLIST;}
+{STATLIST} {yyparser.yylval = new ParserVal(""); ;return Parser.STATLIST;}
 
 
 {ID} { yyparser.yylval = new ParserVal(yytext()); return Parser.ID;}

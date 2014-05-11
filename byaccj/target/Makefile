@@ -29,14 +29,17 @@ CLASSES = \
 	zhllz/gamewizard/communication/ServerConnection.java \
 	zhllz/gamewizard/communication/Server.java \
 	zhllz/gamewizard/communication/Client.java \
-	mygame/Player.java \
-    mygame/CardBase.java \
-    mygame/CharacterBase.java \
-	mygame/Game.java  \
-	mygame/cards/Attack.java \
-	mygame/cards/Defense.java \
-	mygame/characters/King.java \
-	mygame/characters/No_Val.java
+	compile/mygame/cards/Attack.java \
+	compile/mygame/cards/Dodge.java \
+	compile/mygame/cards/FirstAid.java \
+	compile/mygame/cards/Diligenra.java \
+	compile/mygame/characters/Doctor.java \
+	compile/mygame/characters/Gambler.java \
+	compile/mygame/characters/Vampire.java \
+	compile/mygame/Player.java \
+    compile/mygame/CardBase.java \
+    compile/mygame/CharacterBase.java \
+	compile/mygame/Game.java
 #
 # the default make target entry
 #
@@ -65,16 +68,19 @@ classes: $(CLASSES:.java=.class)
 #
 
 .java.class:
-	$(JC) $(JFLAGS) -classpath ./java-json.jar:zhllz/gamewizard/communication/:mygame/:mygame/cards:mygame/characters:. $*.java
+	$(JC) $(JFLAGS) -classpath ../java-json.jar:zhllz/gamewizard/communication/:compile/helloworld/:compile/helloworld/cards:compile/helloworld/characters:compile/tinywar/:compile/tinywar/cards:compile/tinywar/characters:. $*.java
 
 server: classes
-	java -cp ./java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Server
 
-game: classes
-	java -cp ./java-json.jar:zhllz/gamewizard/communication/:mygame/:mygame/cards:mygame/characters:. mygame.Game
+helloworld: classes
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:compile/helloworld/:compile/helloworld/cards:compile/helloworld/characters:. compile.helloworld.Game
+
+tinywar: classes
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:compile/tinywar/:compile/tinywar/cards:compile/tinywar/characters:. compile.tinywar.Game
 
 client: classes
-	java -cp ./java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
+	java -cp ../java-json.jar:zhllz/gamewizard/communication/:. zhllz.gamewizard.communication.Client
 
 
 #
@@ -83,6 +89,9 @@ client: classes
 
 clean:
 	$(RM) zhllz/gamewizard/communication/*.class
-	$(RM) mygame/*.class
-	$(RM) mygame/cards/*.class
-	$(RM) mygame/characters/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/cards/*.class
+	$(RM) zhllz/gamewizard/compile/helloworld/characters/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/cards/*.class
+	$(RM) zhllz/gamewizard/compile/tinywar/characters/*.class

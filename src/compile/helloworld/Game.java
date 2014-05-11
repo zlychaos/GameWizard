@@ -55,7 +55,6 @@ public class Game {
 		int max=0;
 		int maxPlayer = -1;
 		String ret = "";
-	
 		for(int player_id : roundSummary.keySet()){
 			
 			int value = roundSummary.get(player_id).value;
