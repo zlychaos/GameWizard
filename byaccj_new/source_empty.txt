@@ -1,0 +1,27 @@
+define game{
+	game_name: "Empty";
+	num_of_players: 2;
+	maximum_round: 2;
+}
+
+define characters[
+	RegularGuy{
+        HP: 1;
+	}
+]
+
+define cards[
+	WhiteCard{
+        method#{
+            return true;
+        }
+	}
+]
+
+
+init#{
+	foreach(Player player in playerList){
+		player.setCharacter(RegularGuy);
+	}
+	
+}

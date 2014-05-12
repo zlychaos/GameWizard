@@ -548,9 +548,13 @@ block
         Expression exp = (Expression)$6;
         String dict_or_list = exp.code ;
         if(exp.return_type.primary_type == PrimaryType.DICT){
+            System.out.println("test msg1: foreach " + exp.code);
             dict_or_list = dict_or_list + ".keySet()";
         }
-		$$ = "for("+$3.toString()+" "+$4+" : "+ exp.code +"){\n"+$9 + "\n}\n";
+        else{
+            System.out.println("test msg2: foreach" + exp.code);
+        }
+		$$ = "for("+$3.toString()+" "+$4+" : "+ dict_or_list +"){\n"+$9 + "\n}\n";
 	}
 	;
 MethodCall
@@ -569,7 +573,8 @@ MethodCall
         for( int i =0;i<args.size();i++ ){
             Expression exp = args.get(i);
             AttributeObj para = func.parameters.get(i);
-            if(exp.return_type != para.type){
+            if(!exp.return_type.equalsAsPara(para.type)){
+                System.out.println(exp.return_type.toString() + " | " + para.type.toString());
                 yyerror("List of parameters does not match the definiton of "+ ((QuarlifiedName)$1).code);
             }
             if(i!=0)

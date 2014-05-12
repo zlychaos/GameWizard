@@ -159,6 +159,12 @@ public class Type {
 		return false;
 	}
 	
+	public boolean equalsAsPara(Type para){
+		return this.equals(para) 
+				|| (this.primary_type == PrimaryType.LIST 
+				&& para.primary_type == PrimaryType.LIST && para.second_type == null);
+	}
+	
 	@Override
 	public String toString(){
 		switch(primary_type){
