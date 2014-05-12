@@ -28,7 +28,9 @@ public class AttributeObj {
 	}
 	
 	public boolean equalsAsPara(AttributeObj para){
-		return this.type.equals(para.type);
+		return this.type.equals(para.type) 
+				|| (this.type.primary_type == PrimaryType.LIST 
+				&& para.type.primary_type == PrimaryType.LIST && para.type.second_type == null);
 	}
 
 }

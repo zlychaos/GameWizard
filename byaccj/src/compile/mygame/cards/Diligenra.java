@@ -11,8 +11,7 @@ value=4;
 	}
 @Override
 public boolean method(Player dealer){
-Game.drawCard(dealer,2);
-return true;
+Game.drawCard(dealer,2);return true;
 
 } 
 }

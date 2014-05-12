@@ -14,6 +14,14 @@ define cards[
     }
     Defense{
     	value : 4;
+        method{
+            Card c = putCard(dealer);
+            if(c is Attack){
+                broadcast(GameGeneralInfo());
+            }
+            cardStack.add(c);
+            return true;
+        }
     }
 ]
 
@@ -39,5 +47,9 @@ define characters[
 
 init{
 	int a;
+    foreach(Player player in playerList){
+        player.setCharacter(No_Val);
+        sendToOnePlayer(player, "hello");
+    }
 }
 

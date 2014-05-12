@@ -11,7 +11,7 @@ value=2;
 	}
 @Override
 public boolean method(Player dealer){
-return true;
+return false;
 
 } 
 }

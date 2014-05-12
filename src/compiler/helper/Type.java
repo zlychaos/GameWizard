@@ -7,8 +7,10 @@ public class Type {
 	public static Type INTEGER = new Type(PrimaryType.INTEGER, null, null);
 	public static Type BOOLEAN = new Type(PrimaryType.BOOLEAN, null, null);
 	public static Type VOID = new Type(PrimaryType.VOID, null, null);
+	public static Type NULL = new Type(PrimaryType.NULL, null, null);
 	public static Type STRING = new Type(PrimaryType.STRING, null, null);
 	public static Type PLAYER = new Type(PrimaryType.PLAYER, null, null);
+	public static Type CHARACTER = new Type(PrimaryType.CHARACTER, null, null);
 	public static Type CARD = new Type(PrimaryType.CARD, null, null);
 	
 	public PrimaryType primary_type;
@@ -138,6 +140,9 @@ public class Type {
 		if(type instanceof Type){
 			Type t = (Type)type;
 			if(this.primary_type!=t.primary_type){
+				if((this.primary_type == PrimaryType.CARD || this.primary_type == PrimaryType.PLAYER)
+						&& t.primary_type == PrimaryType.NULL)
+					return true;
 				return false;
 			}
 			if(this.primary_type!=PrimaryType.LIST && this.primary_type!=PrimaryType.DICT){

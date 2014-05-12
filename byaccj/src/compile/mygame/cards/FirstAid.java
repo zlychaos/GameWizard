@@ -11,8 +11,7 @@ value=3;
 	}
 @Override
 public boolean method(Player dealer){
-dealer.character.HP=dealer.character.HP+1;
-return true;
+dealer.character.HP=dealer.character.HP+1;return true;
 
 } 
 }

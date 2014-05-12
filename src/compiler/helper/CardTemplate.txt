@@ -11,7 +11,7 @@ public class ### extends CardBase {
 	
 	@Override
 	public String getName() {
-		return "Attack";
+		return "###";
 	}
 
 	###

@@ -17,17 +17,7 @@ HP=3;
 	public boolean skill(Player dealer, String skillName) {
 if("Leech".equals(skillName)){
 Player target=Game.waitForTarget(dealer);
-if(target==null)
-{
-return false;
-}
-target.character.HP=target.character.HP-1;
-if(target.character.HP==0)
-{
-Game.dying();
-}
-dealer.character.HP=dealer.character.HP+1;
-return true;
+nulltarget.character.HP=target.character.HP-1;nulldealer.character.HP=dealer.character.HP+1;return true;
 		}
 return false;
 	}

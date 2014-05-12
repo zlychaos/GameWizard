@@ -17,12 +17,7 @@ HP=2;
 	public boolean skill(Player dealer, String skillName) {
 if("Heal".equals(skillName)){
 Player target=Game.waitForTarget(dealer);
-if(target==null)
-{
-return false;
-}
-target.character.HP=target.character.HP+2;
-return true;
+nulltarget.character.HP=target.character.HP+2;return true;
 		}
 return false;
 	}

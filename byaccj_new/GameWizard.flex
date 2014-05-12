@@ -27,11 +27,11 @@ CARD_DF = "define cards"
 CHARACTER_DF = "define characters"
 
 /* built-in function names */
-METHOD = "method"
-INIT = "init"
-ROUND_BEGIN = "round_begin"
-ROUND_END = "round_end"
-TURN = "turn"
+METHOD = "method#"
+INIT = "init#"
+ROUND_BEGIN = "round_begin#"
+ROUND_END = "round_end#"
+TURN = "turn#"
 
 PLAYER = "Player"
 CARD = "Card"
@@ -98,6 +98,7 @@ ws = {delim}+
 {CHARACTER_DF} {return Parser.CHARACTER_DF;}
 {METHOD} {return Parser.METHOD;}
 {PLAYER} {return Parser.PLAYER;}
+{CARD} {return Parser.CARD;}
 {SKILL} {return Parser.SKILL;}
 {INIT} {return Parser.INIT;}
 {ROUND_END} {return Parser.ROUND_END;}
@@ -113,9 +114,11 @@ ws = {delim}+
 "while"		{return Parser.WHILE;}
 "foreach"	{return Parser.FOREACH;}
 "in"	{return Parser.IN;}
+"is"    {return Parser.IS;}
 "int"   {return Parser.DECLR_INT;}
 "String"    {return Parser.DECLR_STR;}
 "bool"  {return Parser.DECLR_BOOL;}
+"null"  {return Parser.NULL;}
 {VOID} {return Parser.VOID;}
 {STATLIST} {yyparser.yylval = new ParserVal(""); ;return Parser.STATLIST;}
 

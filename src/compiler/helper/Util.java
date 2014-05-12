@@ -326,6 +326,9 @@ public class Util {
 						line = data.replaceAll("###", sb.toString());
 						break;
 					case 4:
+						line = data.replaceAll("###", name);
+						break;
+					case 5:
 						boolean method_defined = false;
 						sb = new StringBuilder();
 						for(JsonItem ji : card.json){

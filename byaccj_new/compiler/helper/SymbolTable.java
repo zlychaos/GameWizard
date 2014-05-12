@@ -7,8 +7,6 @@ public class SymbolTable {
 	public static int current; // 1 for Game, 2 for cards, 3 for characters, 4 for procedures
 	
 	public static ScopeBlock playerBlock = new ScopeBlock();
-	public static ScopeBlock listBlock = new ScopeBlock();
-	public static ScopeBlock dictBlock = new ScopeBlock();
 	
 	public static ScopeBlock reservedBlock = new ScopeBlock();
 	public static ScopeBlock gameBlock = new ScopeBlock();
@@ -177,6 +175,21 @@ public class SymbolTable {
 		return true;
 	}
 	
+	public static void addAttributeRecordToScope(String id, ScopeBlock scope, Type type){
+		SymbolRecord sr = scope.addRecord(id);
+		sr.setValue(true, new AttributeObj(id, type));
+	}
+	
+	public static void addFunctionRecordToScope(String id, ScopeBlock scope, 
+			Type return_type, ArrayList<AttributeObj> parameters){
+		SymbolRecord sr = scope.addRecord(id);
+		FunctionObj func = new FunctionObj();
+		func.id = id;
+		func.return_type = return_type;
+		func.parameters = parameters;
+		sr.setValue(false, func);
+	}
+	
 	public static void initSymbolTable(){
 				
 		// Can not be used in GameWizard because they are types in Java 
@@ -199,42 +212,60 @@ public class SymbolTable {
 			reservedBlock.addRecord(id);
 			all_IDs.add(id);
 		}
-//		for(String id : game_wizard_reserved){
-//			globalBlock.addRecord(id, SymbolType.BUILD_IN);
-//			all_IDs.put(id, globalBlock);
-//		}
-//		// Already declared in templates of target code, can be accessed, but can not be used for new ID
-//		String[] game_wizard_already = {"playerList", "cardStack", "droppedCardStack", "shuffle", 
-//				"roundSummary", "sendToOnePlayer", "broadcast", "close", "putCard", "drawCard", 
-//				"PlayersInfo", "HandCardInfo", "GameGeneralInfo"};
-//		SymbolRecord tmp = null;
-//		tmp = globalBlock.addRecord("playerList",SymbolType.GAME);
-//		tmp.setValue(true, new AttributeObj("playerList", PrimaryType.LISTOFPLAYER));
-//		tmp = globalBlock.addRecord("cardStack",SymbolType.GAME);
-//		tmp.setValue(true, new AttributeObj("cardStack", PrimaryType.LISTOFCARD));
-//		globalBlock.addRecord("droppedCardStack",SymbolType.GAME);
-//		tmp.setValue(true, new AttributeObj("droppedCardStack", PrimaryType.LISTOFCARD));
-//		tmp = globalBlock.addRecord("roundSummary",SymbolType.GAME);
-//		tmp.setValue(true, new AttributeObj("roundSummary", PrimaryType.DICTINTTOCARD));
-//		
 		
-//		"gameover",
-//		globalBlock.addRecord("shuffle",SymbolType.GAME);
-//		globalBlock.addRecord("sendToOnePlayer",SymbolType.GAME);
-//		globalBlock.addRecord("broadcast",SymbolType.GAME);
-//		globalBlock.addRecord("close",SymbolType.GAME);
-//		globalBlock.addRecord("putCard",SymbolType.GAME);
-//		globalBlock.addRecord("drawCard",SymbolType.GAME);
-//		globalBlock.addRecord("PlayersInfo",SymbolType.GAME);
-//		globalBlock.addRecord("HandCardInfo",SymbolType.GAME);
-//		globalBlock.addRecord("GameGeneralInfo",SymbolType.GAME);
-//		
-//		for(String id : game_wizard_already){
-//			//globalBlock.addRecord(id, SymbolType.GAME);
-//			all_IDs.put(id, globalBlock);
-//		}
-//		
-//		table.add(globalBlock);
+		ArrayList<AttributeObj> parameters;
+		addAttributeRecordToScope("id", playerBlock, Type.INTEGER);
+		addAttributeRecordToScope("handCards", playerBlock, new Type(PrimaryType.LIST,Type.CARD,null));
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("character", Type.CHARACTER));
+		addFunctionRecordToScope("setCharacter", playerBlock, Type.VOID, parameters);
+		
+		addAttributeRecordToScope("playerList", gameBlock, new Type(PrimaryType.LIST, Type.PLAYER, null));
+		addAttributeRecordToScope("cardStack", gameBlock, new Type(PrimaryType.LIST, Type.CARD, null));
+		addAttributeRecordToScope("droppedCardStack", gameBlock, new Type(PrimaryType.LIST, Type.CARD, null));
+		addAttributeRecordToScope("gameover", gameBlock, Type.BOOLEAN);
+		addAttributeRecordToScope("roundSummary", gameBlock, new Type(PrimaryType.DICT, Type.INTEGER, Type.CARD));
+		
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("msg", Type.STRING));
+		addFunctionRecordToScope("broadcast", gameBlock, Type.VOID, parameters);
+		
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		parameters.add(new AttributeObj("msg", Type.STRING));
+		addFunctionRecordToScope("sendToOnePlayer", gameBlock, Type.VOID, parameters);
+		
+		parameters = new ArrayList<AttributeObj>();
+		addFunctionRecordToScope("GameGeneralInfo", gameBlock, Type.STRING, parameters);
+		parameters = new ArrayList<AttributeObj>();
+		addFunctionRecordToScope("PlayersInfo", gameBlock, Type.STRING, parameters);
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		addFunctionRecordToScope("HandCardInfo", gameBlock, Type.STRING, parameters);
+		
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		parameters.add(new AttributeObj("promt", Type.STRING));
+		parameters.add(new AttributeObj("range", Type.INTEGER));
+		addFunctionRecordToScope("waitForChoice", gameBlock, Type.INTEGER, parameters);
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		addFunctionRecordToScope("waitForSkill", gameBlock, Type.BOOLEAN, parameters);
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		addFunctionRecordToScope("waitForTarget", gameBlock, Type.PLAYER, parameters);
+		
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		addFunctionRecordToScope("putCard", gameBlock, Type.CARD, parameters);
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("player", Type.PLAYER));
+		parameters.add(new AttributeObj("num", Type.INTEGER));
+		addFunctionRecordToScope("drawCard", gameBlock, Type.VOID, parameters);
+		
+		parameters = new ArrayList<AttributeObj>();
+		parameters.add(new AttributeObj("list", new Type(PrimaryType.LIST, null, null)));
+		addFunctionRecordToScope("shuffle", gameBlock, Type.VOID, parameters);
 		
 	}
 

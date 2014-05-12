@@ -19,12 +19,8 @@ if("Gamble".equals(skillName)){
 Integer i=0;
 for(CardBase  card:dealer.handCards)
 {
-Game.droppedCardStack.add(card);
-i=i+1;
-}
-dealer.handCards.clear();
-Game.drawCard(dealer,i);
-return true;
+Game.droppedCardStack.add(card);i=i+1;}
+dealer.handCards.clear();Game.drawCard(dealer,i);return true;
 		}
 return false;
 	}

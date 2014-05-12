@@ -1,0 +1,204 @@
+define game{
+	game_name: "Tiny War";
+	num_of_players: 4;
+	maximum_round: 10;
+}
+
+define characters[
+	Doctor{
+	
+		HP: 1;
+		skill [
+			Heal{
+				
+                Player target = waitForTarget(dealer);
+                if(target == null)
+                    {return false;}
+                target.HP = target.HP+2;
+                return true;
+			}
+		]
+	}
+	
+	Vampire{
+		HP: 1;
+		skill [
+			Leech{
+                Player target = waitForTarget(dealer);
+                if(target == null){
+                    return false;
+                }
+                target.HP = target.HP - 1;
+                dealer.HP = dealer.HP + 1;
+                return true;
+			}
+		]
+	}
+	
+	Gambler{
+		HP: 1;
+		skill [
+			Gamble{
+                int i = 0;
+                foreach (Card card in dealer.handCards){
+                    droppedCardStack.add(card);
+                    i = i+1;
+                }
+                dealer.handCards.clear();
+                
+                drawCard(dealer, i);
+                return true;
+			}
+		]
+	}
+]
+
+define cards[
+	Dodge{
+		value: 2;
+		method#{
+			return false;
+		} 
+	}
+
+	Attack{
+		value: 1;
+		method#{
+		
+			Player target = waitForTarget(dealer);
+			if(target == null){
+				return false;
+			}
+		
+			sendToOnePlayer(target, "You are attacked by Player " + dealer.id + ", please put a Dodge, otherwise you will lose one HP point.");
+			Card c = putCard(target);		
+			while( c!=null && !(c is Dodge) ){
+				target.handCards.add(c);
+				c = putCard(target);
+			}
+
+			if(c == null){
+				target.HP = target.HP - 1;
+			}
+			else{
+				droppedCardStack.add(c);
+			}
+			return true;
+			
+		}
+	}
+
+	FirstAid{
+		value: 3;
+		method#{
+			dealer.HP = dealer.HP+1;
+			return true;
+		}
+	}
+	
+	Diligenra{
+		value: 4;
+		method#{
+			drawCard(dealer, 2);
+			return true;
+		}
+	}
+]
+
+init#{
+	int i = 0;
+	while(i<40){
+		cardStack.add(Attack);
+		i=i+1;
+	}
+	i=0;
+	while(i<10){
+		cardStack.add(Dodge);
+		cardStack.add(FirstAid);
+		i=i+1;
+	}
+
+	i=0;
+	while(i<5){
+		cardStack.add(Diligenra);
+		i=i+1;
+	}
+	shuffle(cardStack);
+
+	Player p0 = playerList.get(0);
+	p0.setCharacter(Doctor);
+
+	Player p1 = playerList.get(1);
+	p1.setCharacter(Vampire);
+
+	Player p2 = playerList.get(2);
+	p2.setCharacter(Vampire);
+
+	Player p3 = playerList.get(3);
+	p3.setCharacter(Gambler);
+
+	foreach (Player player in playerList){
+		drawCard(player, 4);
+	}
+	
+}
+
+void dying(){
+    int numOfAlive = 0;
+    Player alivePlayer = null;
+    
+    foreach (Player player in playerList){
+        if(player.HP > 0){
+            numOfAlive = numOfAlive + 1;
+            alivePlayer = player;
+        }
+    }
+    if(numOfAlive == 1){
+        broadcast("Player"+alivePlayer.id+" wins!!");
+        broadcast("Others lose");
+        gameover = true;
+    }
+}
+	
+turn#{
+    
+    if(player.HP <= 0)
+        {return;}
+    
+    drawCard(player,2);
+    sendToOnePlayer(player, GameGeneralInfo());
+    bool flag = true;
+    bool firstSkill = true;
+
+    while(flag){
+        int mode = waitForChoice(player, "Please input the number:1:skill  2:card  3:end", 3);
+    
+        if(mode == 1){
+            if(firstSkill && waitForSkill(player))
+                {firstSkill = false;}
+            
+        }else
+        {if(mode == 2){
+            Card c = putCard(player);
+
+            if(c != null){
+                int a;
+                if( c.method(player) ){
+                    int b;
+                    droppedCardStack.add(c);
+
+                }
+                else{
+
+                    player.handCards.add(c);
+                }
+            }
+            
+        }else{
+            flag = false;
+        }
+        }
+
+    }
+    dying();
+}

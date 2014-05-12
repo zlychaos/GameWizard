@@ -7,8 +7,10 @@ public class Type {
 	public static Type INTEGER = new Type(PrimaryType.INTEGER, null, null);
 	public static Type BOOLEAN = new Type(PrimaryType.BOOLEAN, null, null);
 	public static Type VOID = new Type(PrimaryType.VOID, null, null);
+	public static Type NULL = new Type(PrimaryType.NULL, null, null);
 	public static Type STRING = new Type(PrimaryType.STRING, null, null);
 	public static Type PLAYER = new Type(PrimaryType.PLAYER, null, null);
+	public static Type CHARACTER = new Type(PrimaryType.CHARACTER, null, null);
 	public static Type CARD = new Type(PrimaryType.CARD, null, null);
 	
 	public PrimaryType primary_type;
@@ -72,10 +74,61 @@ public class Type {
 			return sr;
 		}
 		else if(type.primary_type == PrimaryType.LIST){
-			return SymbolTable.listBlock.accessSymbolInThisScope(id);
+			if(id.equals("add")){
+				FunctionObj func = new FunctionObj();
+				func.id = "add";
+				func.return_type = Type.VOID;
+				func.parameters = new ArrayList<AttributeObj>();
+				func.parameters.add(new AttributeObj("obj", type.second_type));
+				SymbolRecord sr = new SymbolRecord("add");
+				sr.setValue(false, func);
+				return sr;
+			}
+			else if(id.equals("get")){
+				FunctionObj func = new FunctionObj();
+				func.id = "get";
+				func.return_type = type.second_type;
+				func.parameters = new ArrayList<AttributeObj>();
+				func.parameters.add(new AttributeObj("index", type.INTEGER));
+				SymbolRecord sr = new SymbolRecord("get");
+				sr.setValue(false, func);
+				return sr;
+			}
+			else if(id.equals("clear")){
+				FunctionObj func = new FunctionObj();
+				func.id = "clear";
+				func.return_type = Type.VOID;
+				func.parameters = new ArrayList<AttributeObj>();
+				SymbolRecord sr = new SymbolRecord("clear");
+				sr.setValue(false, func);
+				return sr;
+			}
+			return null;
 		}
 		else if(type.primary_type == PrimaryType.DICT){
-			return SymbolTable.listBlock.accessSymbolInThisScope(id);
+			if(id.equals("put")){
+				FunctionObj func = new FunctionObj();
+				func.id = "put";
+				func.return_type = Type.VOID;
+				func.parameters = new ArrayList<AttributeObj>();
+				func.parameters.add(new AttributeObj("key", type.second_type));
+				func.parameters.add(new AttributeObj("value", type.third_type));
+				SymbolRecord sr = new SymbolRecord("put");
+				sr.setValue(false, func);
+				return sr;
+			}
+			else if(id.equals("get")){
+				FunctionObj func = new FunctionObj();
+				func.id = "get";
+				func.return_type = type.third_type;
+				func.parameters = new ArrayList<AttributeObj>();
+				func.parameters.add(new AttributeObj("key", type.second_type));
+				SymbolRecord sr = new SymbolRecord("get");
+				sr.setValue(false, func);
+				return sr;
+			}
+			
+			return null;
 		}
 			
 		
@@ -87,6 +140,9 @@ public class Type {
 		if(type instanceof Type){
 			Type t = (Type)type;
 			if(this.primary_type!=t.primary_type){
+				if((this.primary_type == PrimaryType.CARD || this.primary_type == PrimaryType.PLAYER)
+						&& t.primary_type == PrimaryType.NULL)
+					return true;
 				return false;
 			}
 			if(this.primary_type!=PrimaryType.LIST && this.primary_type!=PrimaryType.DICT){

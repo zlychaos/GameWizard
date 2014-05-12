@@ -37,83 +37,31 @@ public static void init(){
 Integer i=0;
 while(i<40)
 {
-Game.cardStack.add(new Attack());
-i=i+1;
-}
-i=0;
-while(i<10)
+Game.cardStack.add(new Attack());i=i+1;}
+i=0;while(i<10)
 {
-Game.cardStack.add(new Dodge());
-Game.cardStack.add(new FirstAid());
-i=i+1;
-}
-i=0;
-while(i<5)
+Game.cardStack.add(new Dodge());Game.cardStack.add(new FirstAid());i=i+1;}
+i=0;while(i<5)
 {
-Game.cardStack.add(new Diligenra());
-i=i+1;
-}
-Game.shuffle(Game.cardStack);
-Player p0=Game.playerList.get(0);
-p0.setCharacter(new Doctor());
-Player p1=Game.playerList.get(1);
-p1.setCharacter(new Vampire());
-Player p2=Game.playerList.get(2);
-p2.setCharacter(new Vampire());
-Player p3=Game.playerList.get(3);
-p3.setCharacter(new Gambler());
-for(Player  player:Game.playerList)
+Game.cardStack.add(new Diligenra());i=i+1;}
+Game.shuffle(Game.cardStack);Player p0=Game.playerList.get(0);
+p0.setCharacter(new Doctor());Player p1=Game.playerList.get(1);
+p1.setCharacter(new Vampire());Player p2=Game.playerList.get(2);
+p2.setCharacter(new Vampire());Player p3=Game.playerList.get(3);
+p3.setCharacter(new Gambler());for(Player  player:Game.playerList)
 {
-Game.drawCard(player,4);
-}
+Game.drawCard(player,4);}
 
 }
 public static void round_begin(){
 
 }
-public static void turn(Player player) throws IOException{if(player.character.HP<=0)
-{
-return;}
-Game.drawCard(player,2);
-Game.sendToOnePlayer(player,Game.GameGeneralInfo());
-Boolean flag=true;
+public static void turn(Player player) throws IOException{nullGame.drawCard(player,2);Game.sendToOnePlayer(player,Game.GameGeneralInfo());Boolean flag=true;
 Boolean firstSkill=true;
 while(flag)
 {
 Integer mode=Game.waitForChoice(player,"Please input the number:\n1:skill  2:card  3:end",3);
-if(mode==1)
-{
-if(firstSkill&&Game.waitForSkill(player))
-{
-firstSkill=false;
-}
-}
-
-else
-{
-if(mode==2)
-{
-CardBase c = Game.putCard(player);
-if(c!=null)
-{
-if(c.method(player))
-{
-Game.droppedCardStack.add(c);
-}
-
-else
-{
-player.handCards.add(c);
-}
-}
-}
-
-else
-{
-flag=false;
-}
-}
-}
+null}
 
 }
 public static void round_end() throws Exception{
@@ -123,19 +71,8 @@ Integer numOfAlive=0;
 Player alivePlayer=null;
 for(Player  player:Game.playerList)
 {
-if(player.character.HP>0)
-{
-numOfAlive=numOfAlive+1;
-alivePlayer=player;
-}
-}
-if(numOfAlive==1)
-{
-Game.broadcast("Player"+alivePlayer.id+" wins!!");
-Game.broadcast("Others lose");
-Game.gameover=true;
-}
-
+null}
+null
 }
 	// compiling result end
 	

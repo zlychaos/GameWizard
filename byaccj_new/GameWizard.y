@@ -41,6 +41,7 @@
 %token TRUE
 %token FALSE
 %token FOREACH
+%token IS
 %token IN
 %token OP_EQ
 %token OP_LE
@@ -53,6 +54,7 @@
 %token DECLR_STR
 %token DECLR_BOOL
 %token VOID
+%token NULL
 
 %token <ival> INTEGER
 %token <sval> STRING
@@ -82,6 +84,7 @@
 %type <obj> primitive_type
 
 %type <sval> selection_statement
+%type <sval> if_condition_block
 %type <sval> foreach_statement
 %type <sval> while_loop_statement
 %type <sval> field_declaration
@@ -109,7 +112,7 @@
       
 %%
 
-source_code: { SymbolTable.initSymbolTable();} game_config cards_definition characters_definition procedures_list
+source_code: { SymbolTable.initSymbolTable();} game_config characters_definition cards_definition procedures_list
 	{
 		System.out.println("source_code finished");
 		ArrayList<FunctionObj> procedures = (ArrayList<FunctionObj>)$5;
@@ -134,6 +137,7 @@ cards_definition: CARD_DF { SymbolTable.current = 2; } config_list
 		System.out.println("cards_definition finished");
         ArrayList<Config> config_list = (ArrayList<Config>) $3;
         Util.genAllCards(config_list);
+        SymbolTable.current = 4;
     }
     ;
 characters_definition: CHARACTER_DF { SymbolTable.current = 3; } config_list
@@ -141,7 +145,6 @@ characters_definition: CHARACTER_DF { SymbolTable.current = 3; } config_list
 		System.out.println("characters_definition finished");
         ArrayList<Config> config_list = (ArrayList<Config>) $3;
         Util.genAllCharacters(config_list);
-        SymbolTable.current = 4;
     }
     ;
 config_list: '[' config_list_content ']' { $$ = $2; }
@@ -182,6 +185,7 @@ json
     {
         Config c = new Config();
         c.id = $1;
+        System.out.println($1 + " is successfully translated");
         c.json = (ArrayList<JsonItem>)$3;
         $$ = c;
     }
@@ -299,6 +303,7 @@ block
 		FunctionObj f = (FunctionObj) $1;
 		f.body = $3;
         SymbolTable.curFunction = null;
+        System.out.println("Function " + f.id + " is succesfully translated");
 		$$ = f;
 	}
 	;
@@ -448,9 +453,7 @@ statement
         }
     }
 | return_statement { $$=$1;}
-/*
 | foreach_statement { $$=$1;}
-*/
 	;
 return_statement
 : RETURN Expression ';'
@@ -474,21 +477,20 @@ return_statement
     }
     ;
 selection_statement
-: IF '(' Expression ')' {SymbolTable.newLocalBlock();} block
+: if_condition_block { $$ = $1; }
+| if_condition_block ELSE {SymbolTable.newLocalBlock();} block
+    {
+       $$ = $1 + "\nelse{\n" + $4 + "\n}\n"; 
+    }
+    ;
+if_condition_block:
+IF '(' Expression ')' {SymbolTable.newLocalBlock();} block
 	{
 		Expression condition = (Expression)$3;
 		if(condition.return_type != Type.BOOLEAN){
 			yyerror(condition.code + " does not return boolean!");
 		}
 		$$="if("+condition.code+"){\n"+$6+"\n}\n";
-	}
-| IF '(' Expression ')' {SymbolTable.newLocalBlock();} block ELSE {SymbolTable.newLocalBlock();} block
-	{
-		Expression condition = (Expression)$3;
-        if(condition.return_type != Type.BOOLEAN){
-			yyerror(condition.code + " does not return boolean!");
-        }
-		$$="if("+condition.code+"){\n"+$6+"\n}\nelse {\n"+$8+"\n}\n";
 	}
 	;
 field_declaration
@@ -500,20 +502,21 @@ field_declaration
         if(!SymbolTable.putInLocal($2, attr)){
             yyerror("Can not declare " + $2 + " at this block." );
         }
-        System.out.println("test2");
+        System.out.println($2 + " is successfully declared");
 		$$=type.toString()+" "+$2+";";
 	}
 | type ID '=' Expression ';' 
 	{
 		Type type = (Type)$1;
 		Expression exp = (Expression)$4;
-        if( !exp.return_type.equals(type) ){
+        if( !type.equals(exp.return_type) ){
 			yyerror($2 + " can not be assigned with (" + exp.code  + ")" );
         }
         AttributeObj attr = new AttributeObj($2, type);
         if(!SymbolTable.putInLocal($2, attr)){
             yyerror("Can not declare " + $2 + "at this block." );
         }
+        System.out.println($2 + " is successfully declared");
 		$$=type.toString()+" "+$2+" = "+exp.code +";";
 	}
 	;
@@ -523,16 +526,33 @@ while_loop_statement: WHILE '(' Expression ')' {SymbolTable.newLocalBlock();} bl
         if(condition.return_type != Type.BOOLEAN){
             yyerror(condition.code + " does not return boolean!");
         }
-		$$="while("+condition.code+"){\n"+$5+"\n}\n";
+		$$="while("+condition.code+"){\n"+$6+"\n}\n";
 	}
 	;
-/*
-foreach_statement: FOREACH '(' type ID IN ID ')' block
+foreach_statement: FOREACH '(' type ID IN Expression ')' 
+    {
+        Expression exp = (Expression)$6;
+        if( (exp.return_type.primary_type == PrimaryType.LIST && $3.equals(exp.return_type.second_type) )
+            || (exp.return_type.primary_type == PrimaryType.DICT && $3.equals(exp.return_type.second_type) )){
+            
+            SymbolTable.newLocalBlock(); 
+            SymbolTable.putInLocal($4, new AttributeObj($4, (Type)$3));
+                
+        }
+        else{
+            yyerror(exp.code + " can not be put in foreach statement");
+        }
+    }
+block
 	{
-		$$ = "foreach("+$3+$4+" in "+$6+")"+$8;
+        Expression exp = (Expression)$6;
+        String dict_or_list = exp.code ;
+        if(exp.return_type.primary_type == PrimaryType.DICT){
+            dict_or_list = dict_or_list + ".keySet()";
+        }
+		$$ = "for("+$3.toString()+" "+$4+" : "+ exp.code +"){\n"+$9 + "\n}\n";
 	}
 	;
-*/
 MethodCall
 : QuarlifiedName '(' ArgumentList ')'
 	{
@@ -544,13 +564,13 @@ MethodCall
         String method_call = qn.code+"(";
         ArrayList<Expression> args = (ArrayList<Expression>)$3;
         if(args.size() != func.parameters.size()){
-            yyerror("List of parameters does not match the definiton of "+ $1);
+            yyerror("List of parameters does not match the definiton of "+ ((QuarlifiedName)$1).code);
         }
         for( int i =0;i<args.size();i++ ){
             Expression exp = args.get(i);
             AttributeObj para = func.parameters.get(i);
             if(exp.return_type != para.type){
-                yyerror("List of parameters does not match the definiton of "+ $1);
+                yyerror("List of parameters does not match the definiton of "+ ((QuarlifiedName)$1).code);
             }
             if(i!=0)
                 method_call = method_call + ", ";
@@ -568,7 +588,7 @@ MethodCall
             yyerror(qn.code + " is not function.");
         }
         FunctionObj func = qn.sr.func;
-        String method_call = $1+"(";
+        String method_call = qn.code+"(";
         if(0 != func.parameters.size()){
             yyerror("List of parameters does not match the definiton of "+ $1);
         }
@@ -619,7 +639,21 @@ QuarlifiedName
         QuarlifiedName qn = new QuarlifiedName();
         SymbolRecord sr = SymbolTable.accessID($1);
         if( sr == null ){
-            yyerror($1 + " is unknown");
+            if( SymbolTable.card_names.contains($1) ){
+                qn.code = "new " + $1 + "()";
+                qn.sr = new SymbolRecord(null);
+                qn.sr.isAttribute = true;
+                qn.sr.attr = new AttributeObj(null, Type.CARD);
+            }
+            else if( SymbolTable.character_names.contains($1)){
+                qn.code = "new " + $1 + "()";
+                qn.sr = new SymbolRecord(null);
+                qn.sr.isAttribute = true;
+                qn.sr.attr = new AttributeObj(null, Type.CHARACTER);
+            }
+            else{
+                yyerror($1 + " is unknown");
+            }
         }
         else{
             qn.code = $1;
@@ -761,7 +795,8 @@ RelationalExpression
         Expression exp1 = (Expression)$1;
         Expression exp2 = (Expression)$3;
         if(!(exp1.return_type == Type.INTEGER && exp2.return_type == Type.INTEGER)){
-            yyerror("( " + exp1.code + " ) and ( " + exp2.code + " ) can not be connected with " + $2 + ", because at least one of them is not integer");
+            if( !exp1.return_type.equals(exp2.return_type) || !( $2.equals("==") || $2.equals("!=")) )
+                yyerror("( " + exp1.code + " ) and ( " + exp2.code + " ) can not be connected with " + $2 + ", because at least one of them is not integer");
         }
         String exp_code = exp1.code + $2 + exp2.code;
         Expression exp = new Expression();
@@ -802,7 +837,20 @@ ConditionalOrExpression
         $$=exp;
     }
 	;
-Expression: ConditionalOrExpression {$$=$1;}
+Expression
+: ConditionalOrExpression {$$=$1;}
+| Expression IS ID
+    {
+        Expression exp = (Expression)$1;
+        if(exp.return_type.equals(Type.CARD) && SymbolTable.card_names.contains($3)){
+            exp.code = "(" + exp.code + ") instanceof " + $3;
+            exp.return_type = Type.BOOLEAN;
+        }
+        else{
+            yyerror("Invalid usage of \"is\" between " + exp.code + " and " + $3);
+        }
+        $$ = exp;
+    }
 	;
 type
 : PLAYER { $$ = Type.PLAYER; }
@@ -820,6 +868,7 @@ value
 | STRING { $$=new AttributeObj(Type.STRING, $1); }
 | TRUE { $$=new AttributeObj(Type.BOOLEAN, "true"); }
 | FALSE { $$=new AttributeObj(Type.BOOLEAN, "false"); }
+| NULL { $$=new AttributeObj(Type.NULL, "null");}
     ;
 LogicalUnaryOperator
 : '~'   {$$="~";}
