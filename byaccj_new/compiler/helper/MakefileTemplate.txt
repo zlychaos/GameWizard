@@ -31,8 +31,8 @@ CLASSES = \
 	zhllz/gamewizard/communication/Client.java \
 	mygame/Player.java \
     mygame/CardBase.java \
-    mygame/CharacterBase.java \
-	mygame/Game.java ###
+    mygame/CharacterBase.java ###
+	mygame/Game.java 
 #
 # the default make target entry
 #

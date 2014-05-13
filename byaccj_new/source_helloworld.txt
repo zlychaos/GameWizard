@@ -1,86 +1,66 @@
 define game{
-	game_name: "Hello World";
-	num_of_players: 2;
-	maximum_round: 2;
+    game_name: "hellogame";
+    num_of_players: 2;
+    maximum_round: 1;
 }
 
 define characters[
-	RegularGuy{
-		HP: 1;
-	}
+    NormalCharacter{
+        HP: 1;
+    }
 ]
 
 define cards[
-	CardOne{
-		value: 1;
-		method#{
-            return true;
-        }
-	}
-
-	CardTwo{
-		value: 2;
-		method#{
-            return true;
-        } 
-	}
-
-	CardThree{
-		value: 3;
-		method#{
-            return true;
-        }
-	}
+    card0{
+        value: 0;
+        method#{return true;}
+    }
+    card1{
+        value: 1;
+        method#{return true;}
+    }
 ]
 
-
 init#{
-	int i = 0;
-	while(i<10){
-		cardStack.add(CardOne);
-		cardStack.add(CardTwo);
-		cardStack.add(CardThree);
-		i = i+1;
-	}
-	shuffle(cardStack);
-	
-	foreach(Player player in playerList){
-		player.setCharacter(RegularGuy);
-	}
-	
+    foreach (Player player in playerList){
+        player.setCharacter(NormalCharacter);
+    }
+    int i=0;
+    while(i<100){
+        cardStack.add(card0);
+        cardStack.add(card1);
+        i = i+1;
+    }
+    shuffle(cardStack);
 }
 
-round_begin#{
-}
+round_begin#{}
 
 turn#{
     drawCard(player, 1);
-    sendToOnePlayer(player, GameGeneralInfo());
-    
     Card card = putCard(player);
-    droppedCardStack.add(card);
+    while(card == null){
+        card = putCard(player);
+    }
+    if(card.value==0){
+        player.HP = player.HP - 1;
+    }
 }
 
 round_end#{
-    int max=0;
-    int maxPlayer = 0 - 1;
-    String ret = "";
-
-    foreach (int player_id in roundSummary){
-        Card card = roundSummary.get(player_id);
-        int value = card.value;
-        ret = ret+ "Player " + player_id + " : " + value + ", ";
-        if(value>max){
-            max = value;
-            maxPlayer = player_id;
-        }
+    int winID = 0;
+    Player player1 = playerList.get(0);
+    Player player2 = playerList.get(1);
+    if(player1.HP==0){
+        winID = 2;
     }
-    bool x = true;
-    broadcast("Result:"+ret);
-    if( maxPlayer==0-1){
-        broadcast("No winner this turn");
+    if(player2.HP==0){
+        winID = 1;
     }
-    else{
-        broadcast("Player " + maxPlayer +" win!");
+    if(winID!=0){
+        broadcast("Player"+winID+" wins!!");
+        broadcast("Others lose!");
+        gameover = true;
     }
 }
+

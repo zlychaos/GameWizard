@@ -49,6 +49,7 @@ public class Util {
 						for(String character : characters){
 							sb.append(" \\\\\n\tmygame/characters/" + character + ".java");
 						}
+						sb.append("\\\\");
 						line = data.replaceAll("###", sb.toString());
 						break;
 					default:

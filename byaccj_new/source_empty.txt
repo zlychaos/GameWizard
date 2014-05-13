@@ -25,3 +25,9 @@ init#{
 	}
 	
 }
+
+round_end#{
+    gameover = true;
+    Player player = playerList.get(0);
+    broadcast("Player " + player.id + " wins!!");
+}
