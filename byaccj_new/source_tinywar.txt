@@ -79,6 +79,7 @@ define cards[
 
 			if(c == null){
 				target.HP = target.HP - 1;
+                broadcast("Player " + dealer.id + " deals damage to Player " + target.id);
 			}
 			else{
 				droppedCardStack.add(c);
